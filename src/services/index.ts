@@ -9,6 +9,9 @@ export { validationService, ValidationService } from './api/ValidationService';
 // HTTP client
 export { httpClient, HttpClient } from './http/client';
 
+// Import httpClient for internal use
+import { httpClient } from './http/client';
+
 // Service configuration
 export const apiConfig = {
   baseURL: process.env.NODE_ENV === 'development' 

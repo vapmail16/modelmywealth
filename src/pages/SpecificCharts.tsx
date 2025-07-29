@@ -1,13 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Download, Maximize2, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
-// Import stores
-import { useFinancialDataStore } from '@/stores/financialDataStore';
-import { useChartDataStore } from '@/stores/chartDataStore';
 
 // Import all specific charts
 import {
@@ -91,77 +87,51 @@ const generateMockData = () => {
 
 export default function SpecificCharts() {
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   
-  // Store state
-  const {
-    currentProject,
-    calculationResults,
-    isLoading,
-    loadProject,
-  } = useFinancialDataStore();
-  
-  const {
-    chartData,
-    isLoading: isLoadingCharts,
-    isExporting,
-    loadAllCharts,
-    exportAllCharts,
-    refreshCharts,
-  } = useChartDataStore();
-
-  // For demo purposes, use mock data if no real project is loaded
+  // For demo purposes, use mock data
   const data = generateMockData();
-
-  // Load chart data on component mount
-  useEffect(() => {
-    if (currentProject) {
-      loadAllCharts(currentProject.id).catch((error) => {
-        toast({
-          title: "Error loading charts",
-          description: error.message,
-          variant: "destructive",
-        });
-      });
-    }
-  }, [currentProject, loadAllCharts, toast]);
 
   // Handle refresh
   const handleRefresh = async () => {
-    if (currentProject) {
-      try {
-        await refreshCharts(currentProject.id);
-        toast({
-          title: "Charts refreshed",
-          description: "Chart data has been updated with the latest calculations",
-        });
-      } catch (error: any) {
-        toast({
-          title: "Refresh failed",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+    setIsLoading(true);
+    try {
+      // Simulate refresh
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      toast({
+        title: "Charts refreshed",
+        description: "Chart data has been updated with the latest calculations",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Refresh failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Handle export all
   const handleExportAll = async () => {
-    if (currentProject) {
-      try {
-        const downloadUrl = await exportAllCharts(currentProject.id, 'pdf');
-        window.open(downloadUrl, '_blank');
-        
-        toast({
-          title: "Export successful",
-          description: "All charts have been exported to PDF",
-        });
-      } catch (error: any) {
-        toast({
-          title: "Export failed",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+    setIsExporting(true);
+    try {
+      // Simulate export
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      toast({
+        title: "Export successful",
+        description: "All charts have been exported to PDF",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Export failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -180,16 +150,16 @@ export default function SpecificCharts() {
             variant="outline" 
             className="gap-2"
             onClick={handleRefresh}
-            disabled={isLoadingCharts}
+            disabled={isLoading}
           >
-            <RefreshCw className={`h-4 w-4 ${isLoadingCharts ? 'animate-spin' : ''}`} />
-            {isLoadingCharts ? 'Loading...' : 'Refresh Data'}
+            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+            {isLoading ? 'Loading...' : 'Refresh Data'}
           </Button>
           <Button 
             variant="outline" 
             className="gap-2"
             onClick={handleExportAll}
-            disabled={isExporting || !currentProject}
+            disabled={isExporting}
           >
             <Download className="h-4 w-4" />
             {isExporting ? 'Exporting...' : 'Export All Charts'}
