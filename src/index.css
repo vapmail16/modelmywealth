@@ -8,35 +8,68 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Professional Financial Color Palette */
+    --background: 248 250 252; /* slate-50 */
+    --foreground: 203 23% 30%; /* Professional navy text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 255 255 255; /* Pure white cards */
+    --card-foreground: 203 23% 30%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 255 255 255;
+    --popover-foreground: 203 23% 30%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Professional navy primary */
+    --primary: 213 94% 14%; /* Deep navy blue */
+    --primary-foreground: 255 255 255;
+    --primary-glow: 213 94% 24%; /* Lighter navy for gradients */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Subtle secondary colors */
+    --secondary: 220 14% 96%; /* Light gray */
+    --secondary-foreground: 203 23% 30%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 14% 95%;
+    --muted-foreground: 215 20% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Gold accent for financial highlights */
+    --accent: 45 93% 47%; /* Professional gold */
+    --accent-foreground: 255 255 255;
+    --accent-subtle: 45 93% 95%; /* Light gold tint */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Success/Error for financial data */
+    --success: 142 71% 45%; /* Professional green */
+    --success-foreground: 255 255 255;
+    --warning: 38 92% 50%; /* Financial amber */
+    --warning-foreground: 255 255 255;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 255 255 255;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Borders and inputs */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 213 94% 14%;
 
-    --radius: 0.5rem;
+    /* Financial chart colors */
+    --chart-1: 213 94% 14%; /* Primary navy */
+    --chart-2: 45 93% 47%; /* Gold */
+    --chart-3: 142 71% 45%; /* Green */
+    --chart-4: 262 52% 47%; /* Purple */
+    --chart-5: 0 84% 60%; /* Red */
+
+    /* Financial gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(213 94% 14%), hsl(213 94% 24%));
+    --gradient-accent: linear-gradient(135deg, hsl(45 93% 47%), hsl(45 93% 57%));
+    --gradient-subtle: linear-gradient(180deg, hsl(248 250 252), hsl(241 245 249));
+
+    /* Professional shadows */
+    --shadow-elegant: 0 4px 20px -4px hsl(213 94% 14% / 0.15);
+    --shadow-card: 0 2px 8px -2px hsl(213 94% 14% / 0.1);
+    --shadow-glow: 0 0 32px hsl(45 93% 47% / 0.2);
+
+    /* Animation timings */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s ease-out;
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +89,53 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 203 23% 6%; /* Dark navy background */
+    --foreground: 220 14% 96%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 203 23% 9%; /* Slightly lighter navy cards */
+    --card-foreground: 220 14% 96%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 203 23% 9%;
+    --popover-foreground: 220 14% 96%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 45 93% 57%; /* Gold primary in dark mode */
+    --primary-foreground: 203 23% 6%;
+    --primary-glow: 45 93% 67%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 215 25% 15%;
+    --secondary-foreground: 220 14% 96%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 215 25% 12%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 45 93% 57%;
+    --accent-foreground: 203 23% 6%;
+    --accent-subtle: 45 93% 15%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --success: 142 71% 55%;
+    --success-foreground: 203 23% 6%;
+    --warning: 38 92% 60%;
+    --warning-foreground: 203 23% 6%;
+    --destructive: 0 84% 70%;
+    --destructive-foreground: 203 23% 6%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 215 25% 18%;
+    --input: 215 25% 18%;
+    --ring: 45 93% 57%;
+
+    --chart-1: 45 93% 57%;
+    --chart-2: 213 94% 24%;
+    --chart-3: 142 71% 55%;
+    --chart-4: 262 52% 57%;
+    --chart-5: 0 84% 70%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(45 93% 57%), hsl(45 93% 67%));
+    --gradient-accent: linear-gradient(135deg, hsl(213 94% 24%), hsl(213 94% 34%));
+    --gradient-subtle: linear-gradient(180deg, hsl(203 23% 6%), hsl(203 23% 9%));
+
+    --shadow-elegant: 0 4px 20px -4px hsl(0 0% 0% / 0.4);
+    --shadow-card: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
+    --shadow-glow: 0 0 32px hsl(45 93% 57% / 0.3);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +153,57 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-inter;
+  }
+}
+
+/* Custom utility classes for financial application */
+@layer utilities {
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-accent {
+    background: var(--gradient-accent);
+  }
+  
+  .gradient-subtle {
+    background: var(--gradient-subtle);
+  }
+  
+  .shadow-elegant {
+    box-shadow: var(--shadow-elegant);
+  }
+  
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .transition-fast {
+    transition: var(--transition-fast);
+  }
+  
+  .text-success {
+    color: hsl(var(--success));
+  }
+  
+  .text-warning {
+    color: hsl(var(--warning));
+  }
+  
+  .bg-success {
+    background-color: hsl(var(--success));
+  }
+  
+  .bg-warning {
+    background-color: hsl(var(--warning));
   }
 }
