@@ -2,6 +2,7 @@ import { Bell, User, Settings, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Link } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,17 +52,21 @@ export function Header() {
               <span className="hidden md:block font-medium">John Doe</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              Profile
+          <DropdownMenuContent align="end" className="w-56 bg-card border shadow-lg z-50">
+            <DropdownMenuItem asChild>
+              <Link to="/profile" className="flex items-center">
+                <User className="mr-2 h-4 w-4" />
+                Profile
+              </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
+            <DropdownMenuItem asChild>
+              <Link to="/settings" className="flex items-center">
+                <Settings className="mr-2 h-4 w-4" />
+                Settings
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem className="text-destructive cursor-pointer">
               Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
