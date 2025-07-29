@@ -46,10 +46,10 @@ export function Header() {
             <Button variant="ghost" className="flex items-center gap-2 hover:bg-secondary/80">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-primary text-primary-foreground text-sm">
-                  JD
+                  US
                 </AvatarFallback>
               </Avatar>
-              <span className="hidden md:block font-medium">John Doe</span>
+              <span className="hidden md:block font-medium">Umesh Sharma</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 bg-card border shadow-lg z-50">

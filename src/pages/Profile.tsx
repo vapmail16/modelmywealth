@@ -29,7 +29,7 @@ export default function Profile() {
             <div className="w-24 h-24 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-4">
               <User className="h-12 w-12 text-primary" />
             </div>
-            <CardTitle className="text-xl">John Doe</CardTitle>
+            <CardTitle className="text-xl">Umesh Sharma</CardTitle>
             <p className="text-muted-foreground">Financial Analyst</p>
             <Badge variant="outline" className="w-fit mx-auto mt-2">
               Premium Account
@@ -47,7 +47,7 @@ export default function Profile() {
               <Mail className="h-4 w-4 text-muted-foreground" />
               <div>
                 <div className="text-sm font-medium">Email</div>
-                <div className="text-sm text-muted-foreground">john.doe@company.com</div>
+                <div className="text-sm text-muted-foreground">umesh.sharma@company.com</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
