@@ -56,9 +56,9 @@ All colors MUST be HSL.
     --chart-5: 0 84% 60%; /* Red */
 
     /* Financial gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(213 94% 14%), hsl(213 94% 24%));
-    --gradient-accent: linear-gradient(135deg, hsl(45 93% 47%), hsl(45 93% 57%));
-    --gradient-subtle: linear-gradient(180deg, hsl(248 250 252), hsl(241 245 249));
+    --gradient-primary: linear-gradient(135deg, hsl(213, 94%, 14%), hsl(213, 94%, 24%));
+    --gradient-accent: linear-gradient(135deg, hsl(45, 93%, 47%), hsl(45, 93%, 57%));
+    --gradient-subtle: linear-gradient(180deg, hsl(248, 250%, 252%), hsl(241, 245%, 249%));
 
     /* Professional shadows */
     --shadow-elegant: 0 4px 20px -4px hsl(213 94% 14% / 0.15);
@@ -129,9 +129,9 @@ All colors MUST be HSL.
     --chart-4: 262 52% 57%;
     --chart-5: 0 84% 70%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(45 93% 57%), hsl(45 93% 67%));
-    --gradient-accent: linear-gradient(135deg, hsl(213 94% 24%), hsl(213 94% 34%));
-    --gradient-subtle: linear-gradient(180deg, hsl(203 23% 6%), hsl(203 23% 9%));
+    --gradient-primary: linear-gradient(135deg, hsl(45, 93%, 57%), hsl(45, 93%, 67%));
+    --gradient-accent: linear-gradient(135deg, hsl(213, 94%, 24%), hsl(213, 94%, 34%));
+    --gradient-subtle: linear-gradient(180deg, hsl(203, 23%, 6%), hsl(203, 23%, 9%));
 
     --shadow-elegant: 0 4px 20px -4px hsl(0 0% 0% / 0.4);
     --shadow-card: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
