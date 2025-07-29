@@ -9,61 +9,61 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Professional Financial Color Palette */
-    --background: 248 250 252; /* slate-50 */
-    --foreground: 203 23% 30%; /* Professional navy text */
+    --background: 248, 50%, 98%; /* slate-50 */
+    --foreground: 203, 23%, 30%; /* Professional navy text */
 
-    --card: 255 255 255; /* Pure white cards */
-    --card-foreground: 203 23% 30%;
+    --card: 0, 0%, 100%; /* Pure white cards */
+    --card-foreground: 203, 23%, 30%;
 
-    --popover: 255 255 255;
-    --popover-foreground: 203 23% 30%;
+    --popover: 0, 0%, 100%;
+    --popover-foreground: 203, 23%, 30%;
 
     /* Professional navy primary */
-    --primary: 213 94% 14%; /* Deep navy blue */
-    --primary-foreground: 255 255 255;
-    --primary-glow: 213 94% 24%; /* Lighter navy for gradients */
+    --primary: 213, 94%, 14%; /* Deep navy blue */
+    --primary-foreground: 0, 0%, 100%;
+    --primary-glow: 213, 94%, 24%; /* Lighter navy for gradients */
 
     /* Subtle secondary colors */
-    --secondary: 220 14% 96%; /* Light gray */
-    --secondary-foreground: 203 23% 30%;
+    --secondary: 220, 14%, 96%; /* Light gray */
+    --secondary-foreground: 203, 23%, 30%;
 
-    --muted: 220 14% 95%;
-    --muted-foreground: 215 20% 45%;
+    --muted: 220, 14%, 95%;
+    --muted-foreground: 215, 20%, 45%;
 
     /* Gold accent for financial highlights */
-    --accent: 45 93% 47%; /* Professional gold */
-    --accent-foreground: 255 255 255;
-    --accent-subtle: 45 93% 95%; /* Light gold tint */
+    --accent: 45, 93%, 47%; /* Professional gold */
+    --accent-foreground: 0, 0%, 100%;
+    --accent-subtle: 45, 93%, 95%; /* Light gold tint */
 
     /* Success/Error for financial data */
-    --success: 142 71% 45%; /* Professional green */
-    --success-foreground: 255 255 255;
-    --warning: 38 92% 50%; /* Financial amber */
-    --warning-foreground: 255 255 255;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 255 255 255;
+    --success: 142, 71%, 45%; /* Professional green */
+    --success-foreground: 0, 0%, 100%;
+    --warning: 38, 92%, 50%; /* Financial amber */
+    --warning-foreground: 0, 0%, 100%;
+    --destructive: 0, 84%, 60%;
+    --destructive-foreground: 0, 0%, 100%;
 
     /* Borders and inputs */
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 213 94% 14%;
+    --border: 220, 13%, 91%;
+    --input: 220, 13%, 91%;
+    --ring: 213, 94%, 14%;
 
     /* Financial chart colors */
-    --chart-1: 213 94% 14%; /* Primary navy */
-    --chart-2: 45 93% 47%; /* Gold */
-    --chart-3: 142 71% 45%; /* Green */
-    --chart-4: 262 52% 47%; /* Purple */
-    --chart-5: 0 84% 60%; /* Red */
+    --chart-1: 213, 94%, 14%; /* Primary navy */
+    --chart-2: 45, 93%, 47%; /* Gold */
+    --chart-3: 142, 71%, 45%; /* Green */
+    --chart-4: 262, 52%, 47%; /* Purple */
+    --chart-5: 0, 84%, 60%; /* Red */
 
     /* Financial gradients */
     --gradient-primary: linear-gradient(135deg, hsl(213, 94%, 14%), hsl(213, 94%, 24%));
     --gradient-accent: linear-gradient(135deg, hsl(45, 93%, 47%), hsl(45, 93%, 57%));
-    --gradient-subtle: linear-gradient(180deg, hsl(248, 250%, 252%), hsl(241, 245%, 249%));
+    --gradient-subtle: linear-gradient(180deg, hsl(248, 50%, 98%), hsl(241, 50%, 96%));
 
     /* Professional shadows */
-    --shadow-elegant: 0 4px 20px -4px hsl(213 94% 14% / 0.15);
-    --shadow-card: 0 2px 8px -2px hsl(213 94% 14% / 0.1);
-    --shadow-glow: 0 0 32px hsl(45 93% 47% / 0.2);
+    --shadow-elegant: 0 4px 20px -4px hsl(213, 94%, 14%, 0.15);
+    --shadow-card: 0 2px 8px -2px hsl(213, 94%, 14%, 0.1);
+    --shadow-glow: 0 0 32px hsl(45, 93%, 47%, 0.2);
 
     /* Animation timings */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -71,79 +71,72 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 0, 0%, 98%;
+    --sidebar-foreground: 240, 5.3%, 26.1%;
+    --sidebar-primary: 240, 5.9%, 10%;
+    --sidebar-primary-foreground: 0, 0%, 98%;
+    --sidebar-accent: 240, 4.8%, 95.9%;
+    --sidebar-accent-foreground: 240, 5.9%, 10%;
+    --sidebar-border: 220, 13%, 91%;
+    --sidebar-ring: 217.2, 91.2%, 59.8%;
   }
 
   .dark {
-    --background: 203 23% 6%; /* Dark navy background */
-    --foreground: 220 14% 96%;
+    --background: 203, 23%, 6%; /* Dark navy background */
+    --foreground: 220, 14%, 96%;
 
-    --card: 203 23% 9%; /* Slightly lighter navy cards */
-    --card-foreground: 220 14% 96%;
+    --card: 203, 23%, 9%; /* Slightly lighter navy cards */
+    --card-foreground: 220, 14%, 96%;
 
-    --popover: 203 23% 9%;
-    --popover-foreground: 220 14% 96%;
+    --popover: 203, 23%, 9%;
+    --popover-foreground: 220, 14%, 96%;
 
-    --primary: 45 93% 57%; /* Gold primary in dark mode */
-    --primary-foreground: 203 23% 6%;
-    --primary-glow: 45 93% 67%;
+    --primary: 45, 93%, 57%; /* Gold primary in dark mode */
+    --primary-foreground: 203, 23%, 6%;
+    --primary-glow: 45, 93%, 67%;
 
-    --secondary: 215 25% 15%;
-    --secondary-foreground: 220 14% 96%;
+    --secondary: 215, 25%, 15%;
+    --secondary-foreground: 220, 14%, 96%;
 
-    --muted: 215 25% 12%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 215, 25%, 12%;
+    --muted-foreground: 215, 20%, 65%;
 
-    --accent: 45 93% 57%;
-    --accent-foreground: 203 23% 6%;
-    --accent-subtle: 45 93% 15%;
+    --accent: 45, 93%, 57%;
+    --accent-foreground: 203, 23%, 6%;
+    --accent-subtle: 45, 93%, 15%;
 
-    --success: 142 71% 55%;
-    --success-foreground: 203 23% 6%;
-    --warning: 38 92% 60%;
-    --warning-foreground: 203 23% 6%;
-    --destructive: 0 84% 70%;
-    --destructive-foreground: 203 23% 6%;
+    --success: 142, 71%, 55%;
+    --success-foreground: 203, 23%, 6%;
+    --warning: 38, 92%, 60%;
+    --warning-foreground: 203, 23%, 6%;
+    --destructive: 0, 84%, 70%;
+    --destructive-foreground: 203, 23%, 6%;
 
-    --border: 215 25% 18%;
-    --input: 215 25% 18%;
-    --ring: 45 93% 57%;
+    --border: 215, 25%, 18%;
+    --input: 215, 25%, 18%;
+    --ring: 45, 93%, 57%;
 
-    --chart-1: 45 93% 57%;
-    --chart-2: 213 94% 24%;
-    --chart-3: 142 71% 55%;
-    --chart-4: 262 52% 57%;
-    --chart-5: 0 84% 70%;
+    --chart-1: 45, 93%, 57%;
+    --chart-2: 213, 94%, 24%;
+    --chart-3: 142, 71%, 55%;
+    --chart-4: 262, 52%, 57%;
+    --chart-5: 0, 84%, 70%;
 
     --gradient-primary: linear-gradient(135deg, hsl(45, 93%, 57%), hsl(45, 93%, 67%));
     --gradient-accent: linear-gradient(135deg, hsl(213, 94%, 24%), hsl(213, 94%, 34%));
     --gradient-subtle: linear-gradient(180deg, hsl(203, 23%, 6%), hsl(203, 23%, 9%));
 
-    --shadow-elegant: 0 4px 20px -4px hsl(0 0% 0% / 0.4);
-    --shadow-card: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
-    --shadow-glow: 0 0 32px hsl(45 93% 57% / 0.3);
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --shadow-elegant: 0 4px 20px -4px hsl(0, 0%, 0%, 0.4);
+    --shadow-card: 0 2px 8px -2px hsl(0, 0%, 0%, 0.3);
+    --shadow-glow: 0 0 32px hsl(45, 93%, 57%, 0.3);
+    --sidebar-background: 240, 5.9%, 10%;
+    --sidebar-foreground: 240, 4.8%, 95.9%;
+    --sidebar-primary: 224.3, 76.3%, 48%;
+    --sidebar-primary-foreground: 0, 0%, 100%;
+    --sidebar-accent: 240, 3.7%, 15.9%;
+    --sidebar-accent-foreground: 240, 4.8%, 95.9%;
+    --sidebar-border: 240, 3.7%, 15.9%;
+    --sidebar-ring: 217.2, 91.2%, 59.8%;
   }
 }
 
