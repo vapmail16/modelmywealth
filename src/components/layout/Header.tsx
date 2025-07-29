@@ -18,9 +18,9 @@ export function Header() {
         <SidebarTrigger />
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">FF</span>
+            <span className="text-primary-foreground font-bold text-sm">TTF</span>
           </div>
-          <span className="font-franklin font-semibold text-lg text-primary">FinanceFlow</span>
+          <span className="font-franklin font-semibold text-lg text-primary">TTF-Refinancing</span>
         </div>
       </div>
 
