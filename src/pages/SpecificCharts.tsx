@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Download, Maximize2, RefreshCw } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+// Import stores
+import { useFinancialDataStore } from '@/stores/financialDataStore';
+import { useChartDataStore } from '@/stores/chartDataStore';
 
 // Import all specific charts
 import {
@@ -84,8 +89,81 @@ const generateMockData = () => {
   });
 };
 
-export default function SpecificChartsPage() {
+export default function SpecificCharts() {
+  const { toast } = useToast();
+  
+  // Store state
+  const {
+    currentProject,
+    calculationResults,
+    isLoading,
+    loadProject,
+  } = useFinancialDataStore();
+  
+  const {
+    chartData,
+    isLoading: isLoadingCharts,
+    isExporting,
+    loadAllCharts,
+    exportAllCharts,
+    refreshCharts,
+  } = useChartDataStore();
+
+  // For demo purposes, use mock data if no real project is loaded
   const data = generateMockData();
+
+  // Load chart data on component mount
+  useEffect(() => {
+    if (currentProject) {
+      loadAllCharts(currentProject.id).catch((error) => {
+        toast({
+          title: "Error loading charts",
+          description: error.message,
+          variant: "destructive",
+        });
+      });
+    }
+  }, [currentProject, loadAllCharts, toast]);
+
+  // Handle refresh
+  const handleRefresh = async () => {
+    if (currentProject) {
+      try {
+        await refreshCharts(currentProject.id);
+        toast({
+          title: "Charts refreshed",
+          description: "Chart data has been updated with the latest calculations",
+        });
+      } catch (error: any) {
+        toast({
+          title: "Refresh failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  // Handle export all
+  const handleExportAll = async () => {
+    if (currentProject) {
+      try {
+        const downloadUrl = await exportAllCharts(currentProject.id, 'pdf');
+        window.open(downloadUrl, '_blank');
+        
+        toast({
+          title: "Export successful",
+          description: "All charts have been exported to PDF",
+        });
+      } catch (error: any) {
+        toast({
+          title: "Export failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -98,42 +176,25 @@ export default function SpecificChartsPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" className="gap-2">
-            <RefreshCw className="h-4 w-4" />
-            Refresh Data
+          <Button 
+            variant="outline" 
+            className="gap-2"
+            onClick={handleRefresh}
+            disabled={isLoadingCharts}
+          >
+            <RefreshCw className={`h-4 w-4 ${isLoadingCharts ? 'animate-spin' : ''}`} />
+            {isLoadingCharts ? 'Loading...' : 'Refresh Data'}
           </Button>
-          <Button variant="outline" className="gap-2">
+          <Button 
+            variant="outline" 
+            className="gap-2"
+            onClick={handleExportAll}
+            disabled={isExporting || !currentProject}
+          >
             <Download className="h-4 w-4" />
-            Export All Charts
+            {isExporting ? 'Exporting...' : 'Export All Charts'}
           </Button>
         </div>
-      </div>
-
-      {/* KPI Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {[
-          { name: "Debt/EBITDA", value: data[9]?.debtToEbitda.toFixed(2), status: "success" },
-          { name: "DSCR", value: data[9]?.dscr.toFixed(2), status: "success" },
-          { name: "LTV Ratio", value: `${(data[9]?.ltv * 100).toFixed(1)}%`, status: "warning" },
-          { name: "Interest Coverage", value: data[9]?.interestCoverage.toFixed(2), status: "success" },
-          { name: "Current Ratio", value: data[9]?.currentRatio.toFixed(2), status: "success" },
-          { name: "Operating Margin", value: `${(data[9]?.operatingMargin * 100).toFixed(1)}%`, status: "success" },
-        ].map((kpi, index) => (
-          <Card key={index} className="shadow-card">
-            <CardContent className="p-4">
-              <div className="text-center">
-                <p className="text-sm text-muted-foreground">{kpi.name}</p>
-                <p className="text-lg font-bold">{kpi.value}</p>
-                <Badge 
-                  variant={kpi.status === "success" ? "default" : "secondary"}
-                  className={kpi.status === "success" ? "bg-success text-success-foreground" : ""}
-                >
-                  {kpi.status === "success" ? "✓ Good" : "⚠ Watch"}
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
       </div>
 
       {/* Charts Grid - Exact 3-Column Layout */}
@@ -158,28 +219,12 @@ export default function SpecificChartsPage() {
           </Card>
 
           <Card className="shadow-card">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm">Chart 2: LTV & Coverage</CardTitle>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <Maximize2 className="h-3 w-3" />
-                </Button>
-              </div>
-            </CardHeader>
             <CardContent className="p-2">
               <LtvInterestCoverageChart data={data} />
             </CardContent>
           </Card>
 
           <Card className="shadow-card">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm">Chart 3: Debt/Equity & Margin</CardTitle>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <Maximize2 className="h-3 w-3" />
-                </Button>
-              </div>
-            </CardHeader>
             <CardContent className="p-2">
               <DebtEquityOperatingMarginChart data={data} />
             </CardContent>
@@ -191,42 +236,18 @@ export default function SpecificChartsPage() {
           <h2 className="text-xl font-semibold text-primary">Financial Performance</h2>
           
           <Card className="shadow-card">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm">Chart 4: Revenue & EBITDA</CardTitle>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <Maximize2 className="h-3 w-3" />
-                </Button>
-              </div>
-            </CardHeader>
             <CardContent className="p-2">
               <RevenueEbitdaChart data={data} />
             </CardContent>
           </Card>
 
           <Card className="shadow-card">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm">Chart 5: Debt Balance & Interest</CardTitle>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <Maximize2 className="h-3 w-3" />
-                </Button>
-              </div>
-            </CardHeader>
             <CardContent className="p-2">
               <DebtBalanceInterestChart data={data} />
             </CardContent>
           </Card>
 
           <Card className="shadow-card">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm">Chart 6: Cash, PPE & Equity</CardTitle>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <Maximize2 className="h-3 w-3" />
-                </Button>
-              </div>
-            </CardHeader>
             <CardContent className="p-2">
               <CashPpeEquityChart data={data} />
             </CardContent>
@@ -238,89 +259,24 @@ export default function SpecificChartsPage() {
           <h2 className="text-xl font-semibold text-primary">Profitability & Working Capital</h2>
           
           <Card className="shadow-card">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm">Chart 7: Profitability Ratios</CardTitle>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <Maximize2 className="h-3 w-3" />
-                </Button>
-              </div>
-            </CardHeader>
             <CardContent className="p-2">
               <ProfitabilityRatiosChart data={data} />
             </CardContent>
           </Card>
 
           <Card className="shadow-card">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm">Chart 8: AR & Inventory Cycles</CardTitle>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <Maximize2 className="h-3 w-3" />
-                </Button>
-              </div>
-            </CardHeader>
             <CardContent className="p-2">
               <ArInventoryCycleChart data={data} />
             </CardContent>
           </Card>
 
           <Card className="shadow-card">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm">Chart 9: Key Ratios Overview</CardTitle>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <Maximize2 className="h-3 w-3" />
-                </Button>
-              </div>
-            </CardHeader>
             <CardContent className="p-2">
               <KeyRatiosOverviewChart data={data} />
             </CardContent>
           </Card>
         </div>
       </div>
-
-      {/* Chart Configuration Info */}
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle>Chart Specifications</CardTitle>
-          <CardDescription>
-            These charts match your exact Streamlit application specifications
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div>
-              <h4 className="font-semibold mb-2">Chart Styling</h4>
-              <ul className="space-y-1 text-muted-foreground">
-                <li>• Light blue background (#f0f9ff)</li>
-                <li>• 6" × 2.5" dimensions</li>
-                <li>• 150 DPI export quality</li>
-                <li>• Grid lines on Y-axis</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">KPI Calculations</h4>
-              <ul className="space-y-1 text-muted-foreground">
-                <li>• 12 specific financial KPIs</li>
-                <li>• Monthly (120 months) calculations</li>
-                <li>• Annual (10 years) aggregations</li>
-                <li>• Working capital projections</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Interactive Features</h4>
-              <ul className="space-y-1 text-muted-foreground">
-                <li>• Hover tooltips with exact values</li>
-                <li>• Chart zooming and panning</li>
-                <li>• PNG export functionality</li>
-                <li>• Responsive mobile design</li>
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
