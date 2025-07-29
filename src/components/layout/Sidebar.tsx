@@ -9,6 +9,7 @@ import {
   PieChart,
   Settings,
   HelpCircle,
+  User,
 } from "lucide-react";
 import {
   Sidebar as SidebarPrimitive,
@@ -37,6 +38,7 @@ const financialTools = [
 ];
 
 const utilityNav = [
+  { title: "Profile", url: "/profile", icon: User },
   { title: "Settings", url: "/settings", icon: Settings },
   { title: "Help", url: "/help", icon: HelpCircle },
 ];
