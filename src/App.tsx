@@ -9,6 +9,9 @@ import DataEntry from "./pages/DataEntry";
 import Analytics from "./pages/Analytics";
 import Reports from "./pages/Reports";
 import SpecificCharts from "./pages/SpecificCharts";
+import DebtAnalysis from "./pages/DebtAnalysis";
+import CashFlow from "./pages/CashFlow";
+import KpiDashboard from "./pages/KpiDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,9 +28,9 @@ const App = () => (
             <Route path="data-entry" element={<DataEntry />} />
             <Route path="analytics" element={<SpecificCharts />} />
             <Route path="reports" element={<Reports />} />
-            <Route path="debt-analysis" element={<SpecificCharts />} />
-            <Route path="cash-flow" element={<SpecificCharts />} />
-            <Route path="kpi" element={<SpecificCharts />} />
+            <Route path="debt-analysis" element={<DebtAnalysis />} />
+            <Route path="cash-flow" element={<CashFlow />} />
+            <Route path="kpi" element={<KpiDashboard />} />
             <Route path="charts" element={<SpecificCharts />} />
           </Route>
           <Route path="*" element={<NotFound />} />
