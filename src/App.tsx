@@ -12,6 +12,9 @@ import SpecificCharts from "./pages/SpecificCharts";
 import DebtAnalysis from "./pages/DebtAnalysis";
 import CashFlow from "./pages/CashFlow";
 import KpiDashboard from "./pages/KpiDashboard";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
+import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +35,9 @@ const App = () => (
             <Route path="cash-flow" element={<CashFlow />} />
             <Route path="kpi" element={<KpiDashboard />} />
             <Route path="charts" element={<SpecificCharts />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="help" element={<Help />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
