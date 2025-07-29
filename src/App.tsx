@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import DataEntry from "./pages/DataEntry";
 import Analytics from "./pages/Analytics";
 import Reports from "./pages/Reports";
+import SpecificCharts from "./pages/SpecificCharts";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,11 +23,12 @@ const App = () => (
           <Route path="/" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="data-entry" element={<DataEntry />} />
-            <Route path="analytics" element={<Analytics />} />
+            <Route path="analytics" element={<SpecificCharts />} />
             <Route path="reports" element={<Reports />} />
-            <Route path="debt-analysis" element={<Analytics />} />
-            <Route path="cash-flow" element={<Analytics />} />
-            <Route path="kpi" element={<Analytics />} />
+            <Route path="debt-analysis" element={<SpecificCharts />} />
+            <Route path="cash-flow" element={<SpecificCharts />} />
+            <Route path="kpi" element={<SpecificCharts />} />
+            <Route path="charts" element={<SpecificCharts />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
