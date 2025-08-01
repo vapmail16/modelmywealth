@@ -13,6 +13,7 @@ import DebtAnalysis from "./pages/DebtAnalysis";
 import CashFlow from "./pages/CashFlow";
 import KpiDashboard from "./pages/KpiDashboard";
 import Governance from "./pages/Governance";
+import Introduction from "./pages/Introduction";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Help from "./pages/Help";
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="cash-flow" element={<CashFlow />} />
             <Route path="kpi" element={<KpiDashboard />} />
             <Route path="governance" element={<Governance />} />
+            <Route path="introduction" element={<Introduction />} />
             <Route path="charts" element={<SpecificCharts />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />

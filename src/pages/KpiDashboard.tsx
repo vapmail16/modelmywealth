@@ -297,7 +297,14 @@ export default function KpiDashboard() {
             className="gap-2"
           >
             <Users className="h-4 w-4" />
-            Collaborate
+            Internal
+          </Button>
+          <Button 
+            variant="outline" 
+            className="gap-2"
+          >
+            <Users className="h-4 w-4" />
+            External
           </Button>
           <Button 
             variant="outline" 
@@ -317,6 +324,20 @@ export default function KpiDashboard() {
             <Download className="h-4 w-4" />
             {isExporting ? 'Exporting...' : 'Export Dashboard'}
           </Button>
+        </div>
+        
+        {/* Book & Average Controls */}
+        <div className="flex items-center gap-2">
+          <Select value="average" onValueChange={() => {}}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="current">Current</SelectItem>
+              <SelectItem value="average">Average</SelectItem>
+              <SelectItem value="book">Book Value</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
