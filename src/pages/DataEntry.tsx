@@ -26,6 +26,8 @@ import {
   FileText,
   Calendar,
   Clock,
+  Plus,
+  Minus,
 } from "lucide-react";
 
 
@@ -134,6 +136,18 @@ export default function DataEntry() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleIncrement = (field: string, step: number = 0.1) => {
+    const currentValue = parseFloat(formData[field as keyof typeof formData] as string) || 0;
+    const newValue = (currentValue + step).toFixed(1);
+    handleInputChange(field, newValue);
+  };
+
+  const handleDecrement = (field: string, step: number = 0.1) => {
+    const currentValue = parseFloat(formData[field as keyof typeof formData] as string) || 0;
+    const newValue = Math.max(0, currentValue - step).toFixed(1);
+    handleInputChange(field, newValue);
   };
 
   const calculateGrossProfit = () => {
@@ -245,30 +259,70 @@ export default function DataEntry() {
                     {/* Revenue Section */}
                     <div className="space-y-4">
                       <h4 className="font-semibold text-primary">Revenue & Costs</h4>
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         <div>
-                          <Label htmlFor="revenue">Total Revenue</Label>
-                          <Input
-                            id="revenue"
-                            type="number"
-                            step="0.1"
-                            placeholder="125.5"
-                            value={formData.revenue}
-                            onChange={(e) => handleInputChange("revenue", e.target.value)}
-                            className="text-right"
-                          />
+                          <Label htmlFor="revenue">Revenue</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("revenue", 1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input
+                              id="revenue"
+                              type="number"
+                              step="0.1"
+                              placeholder="0.00"
+                              value={formData.revenue}
+                              onChange={(e) => handleInputChange("revenue", e.target.value)}
+                              className="text-center flex-1"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("revenue", 1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div>
-                          <Label htmlFor="cogs">Cost of Goods Sold</Label>
-                          <Input
-                            id="cogs"
-                            type="number"
-                            step="0.1"
-                            placeholder="75.2"
-                            value={formData.cogs}
-                            onChange={(e) => handleInputChange("cogs", e.target.value)}
-                            className="text-right"
-                          />
+                          <Label htmlFor="cogs">Cost of Goods Sold or Services</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("cogs", 1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input
+                              id="cogs"
+                              type="number"
+                              step="0.1"
+                              placeholder="0.00"
+                              value={formData.cogs}
+                              onChange={(e) => handleInputChange("cogs", e.target.value)}
+                              className="text-center flex-1"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("cogs", 1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div className="bg-accent/10 p-3 rounded-lg">
                           <div className="flex justify-between">
@@ -278,15 +332,35 @@ export default function DataEntry() {
                         </div>
                         <div>
                           <Label htmlFor="operatingExpenses">Operating Expenses</Label>
-                          <Input
-                            id="operatingExpenses"
-                            type="number"
-                            step="0.1"
-                            placeholder="25.8"
-                            value={formData.operatingExpenses}
-                            onChange={(e) => handleInputChange("operatingExpenses", e.target.value)}
-                            className="text-right"
-                          />
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("operatingExpenses", 1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input
+                              id="operatingExpenses"
+                              type="number"
+                              step="0.1"
+                              placeholder="0.00"
+                              value={formData.operatingExpenses}
+                              onChange={(e) => handleInputChange("operatingExpenses", e.target.value)}
+                              className="text-center flex-1"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("operatingExpenses", 1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div className="bg-primary/10 p-3 rounded-lg">
                           <div className="flex justify-between">
@@ -297,57 +371,137 @@ export default function DataEntry() {
                       </div>
                     </div>
 
-                    {/* Expenses & Income */}
+                    {/* Below EBITDA */}
                     <div className="space-y-4">
                       <h4 className="font-semibold text-primary">Below EBITDA</h4>
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         <div>
                           <Label htmlFor="depreciation">Depreciation & Amortization</Label>
-                          <Input
-                            id="depreciation"
-                            type="number"
-                            step="0.1"
-                            placeholder="3.8"
-                            value={formData.depreciation}
-                            onChange={(e) => handleInputChange("depreciation", e.target.value)}
-                            className="text-right"
-                          />
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("depreciation", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input
+                              id="depreciation"
+                              type="number"
+                              step="0.1"
+                              placeholder="0.00"
+                              value={formData.depreciation}
+                              onChange={(e) => handleInputChange("depreciation", e.target.value)}
+                              className="text-center flex-1"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("depreciation", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div>
                           <Label htmlFor="interestExpense">Interest Expense</Label>
-                          <Input
-                            id="interestExpense"
-                            type="number"
-                            step="0.1"
-                            placeholder="4.2"
-                            value={formData.interestExpense}
-                            onChange={(e) => handleInputChange("interestExpense", e.target.value)}
-                            className="text-right"
-                          />
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("interestExpense", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input
+                              id="interestExpense"
+                              type="number"
+                              step="0.1"
+                              placeholder="0.00"
+                              value={formData.interestExpense}
+                              onChange={(e) => handleInputChange("interestExpense", e.target.value)}
+                              className="text-center flex-1"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("interestExpense", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div>
-                          <Label htmlFor="taxes">Income Taxes</Label>
-                          <Input
-                            id="taxes"
-                            type="number"
-                            step="0.1"
-                            placeholder="2.8"
-                            value={formData.taxes}
-                            onChange={(e) => handleInputChange("taxes", e.target.value)}
-                            className="text-right"
-                          />
+                          <Label htmlFor="taxes">Income Tax Expense</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("taxes", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input
+                              id="taxes"
+                              type="number"
+                              step="0.1"
+                              placeholder="0.00"
+                              value={formData.taxes}
+                              onChange={(e) => handleInputChange("taxes", e.target.value)}
+                              className="text-center flex-1"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("taxes", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div>
                           <Label htmlFor="netIncome">Net Income</Label>
-                          <Input
-                            id="netIncome"
-                            type="number"
-                            step="0.1"
-                            placeholder="13.7"
-                            value={formData.netIncome}
-                            onChange={(e) => handleInputChange("netIncome", e.target.value)}
-                            className="text-right"
-                          />
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("netIncome", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input
+                              id="netIncome"
+                              type="number"
+                              step="0.1"
+                              placeholder="0.00"
+                              value={formData.netIncome}
+                              onChange={(e) => handleInputChange("netIncome", e.target.value)}
+                              className="text-center flex-1"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("netIncome", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
