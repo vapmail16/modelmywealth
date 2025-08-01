@@ -69,6 +69,7 @@ const generateMockData = () => {
       seniorSecuredDebt: inputs.seniorSecuredDebt,
       debtTranche1: inputs.debtTranche1,
       interestPaid: inputs.interestExpense,
+      operatingCashFlow: inputs.operatingCashFlow,
       ...kpis
     };
   });
@@ -240,6 +241,72 @@ export default function DebtAnalysis() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Enhanced Financial Statements Integration */}
+      <Card className="shadow-card mb-6">
+        <CardHeader>
+          <CardTitle className="text-lg">Financial Statements Integration</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="text-center p-4 border rounded-lg">
+              <div className="text-xl font-bold text-primary">${(currentData.revenue / 1000000).toFixed(1)}M</div>
+              <div className="text-sm font-medium mt-1">Revenue (IS)</div>
+              <div className="text-xs text-muted-foreground mt-1">Income Statement</div>
+            </div>
+            <div className="text-center p-4 border rounded-lg">
+              <div className="text-xl font-bold text-primary">${(currentData.ebitda / 1000000).toFixed(1)}M</div>
+              <div className="text-sm font-medium mt-1">EBITDA (IS)</div>
+              <div className="text-xs text-muted-foreground mt-1">Operating Performance</div>
+            </div>
+            <div className="text-center p-4 border rounded-lg">
+              <div className="text-xl font-bold text-primary">${((currentData.seniorSecuredDebt + currentData.debtTranche1) / 1000000).toFixed(1)}M</div>
+              <div className="text-sm font-medium mt-1">Total Debt (BS)</div>
+              <div className="text-xs text-muted-foreground mt-1">Balance Sheet</div>
+            </div>
+            <div className="text-center p-4 border rounded-lg">
+              <div className="text-xl font-bold text-primary">${(currentData.operatingCashFlow / 1000000).toFixed(1)}M</div>
+              <div className="text-sm font-medium mt-1">Op. Cash Flow (CF)</div>
+              <div className="text-xs text-muted-foreground mt-1">Cash Flow Statement</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Custom KPI Creation */}
+      <Card className="shadow-card mb-6">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">Create Your KPI</CardTitle>
+            <Button variant="outline" className="gap-2">
+              <TrendingUp className="h-4 w-4" />
+              Add Custom KPI
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">KPI Name</label>
+              <div className="p-3 border rounded bg-muted/50">
+                <span className="text-sm text-muted-foreground">e.g., Custom Debt Ratio</span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Formula</label>
+              <div className="p-3 border rounded bg-muted/50">
+                <span className="text-sm text-muted-foreground">e.g., Total Debt / Total Assets</span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Target Range</label>
+              <div className="p-3 border rounded bg-muted/50">
+                <span className="text-sm text-muted-foreground">e.g., &lt; 60%</span>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Debt Summary Table */}
       <Card className="shadow-card">

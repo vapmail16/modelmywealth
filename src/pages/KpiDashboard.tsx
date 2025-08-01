@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, Download, RefreshCw, TrendingUp, TrendingDown, AlertTriangle, Target, Activity } from "lucide-react";
+import { Calendar, Download, RefreshCw, TrendingUp, TrendingDown, AlertTriangle, Target, Activity, MessageSquare, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 // Import KPI overview charts
@@ -285,6 +285,20 @@ export default function KpiDashboard() {
               <SelectItem value="10-years">10 Years</SelectItem>
             </SelectContent>
           </Select>
+          <Button 
+            variant="outline" 
+            className="gap-2"
+          >
+            <MessageSquare className="h-4 w-4" />
+            Chat Enabled
+          </Button>
+          <Button 
+            variant="outline" 
+            className="gap-2"
+          >
+            <Users className="h-4 w-4" />
+            Collaborate
+          </Button>
           <Button 
             variant="outline" 
             className="gap-2"

@@ -277,7 +277,71 @@ export default function CashFlow() {
         </Card>
       </div>
 
-      {/* Cash Flow Statement Summary */}
+      {/* Enhanced Cash Flow Statement with PS-PL Integration */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Position Statement Integration */}
+        <Card className="shadow-card">
+          <CardHeader>
+            <CardTitle className="text-lg">Position Statement (PS) Impact</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-sm">Total Assets</span>
+              <span className="font-medium">${(currentData.revenue * 1.2 / 1000000).toFixed(1)}M</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm">Current Assets</span>
+              <span className="font-medium">${(currentData.revenue * 0.25 / 1000000).toFixed(1)}M</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm">PPE Assets</span>
+              <span className="font-medium">${(currentData.ppe / 1000000).toFixed(1)}M</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm">Total Equity</span>
+              <span className="font-medium">${(currentData.totalEquity / 1000000).toFixed(1)}M</span>
+            </div>
+            <div className="flex justify-between border-t pt-2">
+              <span className="font-medium">Asset-Cash Flow Ratio</span>
+              <span className="font-bold text-blue-600">
+                {((currentData.operatingCashFlow / (currentData.revenue * 1.2)) * 100).toFixed(1)}%
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Profit & Loss Integration */}
+        <Card className="shadow-card">
+          <CardHeader>
+            <CardTitle className="text-lg">Profit & Loss (PL) to Cash Flow</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-sm">Revenue</span>
+              <span className="font-medium">${(currentData.revenue / 1000000).toFixed(1)}M</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm">EBITDA</span>
+              <span className="font-medium">${(currentData.ebitda / 1000000).toFixed(1)}M</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm">Interest Expense</span>
+              <span className="font-medium text-red-600">-${(currentData.interestPaid / 1000000).toFixed(1)}M</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm">Working Capital Impact</span>
+              <span className="font-medium">-$2.1M</span>
+            </div>
+            <div className="flex justify-between border-t pt-2">
+              <span className="font-medium">Cash Conversion %</span>
+              <span className="font-bold text-green-600">
+                {((currentData.operatingCashFlow / currentData.ebitda) * 100).toFixed(1)}%
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="shadow-card">
           <CardHeader>
