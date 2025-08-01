@@ -64,6 +64,10 @@ export default function DataEntry() {
     equity: "",
     retainedEarnings: "",
     
+    // Balance Sheet - Additional Fields
+    capitalExpenditureAdditions: "",
+    assetDepreciatedOverYears: "",
+    
     // Debt Structure
     seniorSecuredDebt: "",
     seniorSecuredRate: "",
@@ -896,6 +900,77 @@ export default function DataEntry() {
                               <Plus className="h-4 w-4" />
                             </Button>
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  {/* Additional Balance Sheet Fields */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-primary">Additional Balance Sheet Items</h4>
+                    <div className="grid grid-cols-1 gap-4">
+                      <div>
+                        <Label>Capital Expenditure Additions</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("capitalExpenditureAdditions", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.capitalExpenditureAdditions}
+                            onChange={(e) => handleInputChange("capitalExpenditureAdditions", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("capitalExpenditureAdditions", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div>
+                        <Label>Asset Depreciated over years</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("assetDepreciatedOverYears", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.assetDepreciatedOverYears}
+                            onChange={(e) => handleInputChange("assetDepreciatedOverYears", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("assetDepreciatedOverYears", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
                     </div>
