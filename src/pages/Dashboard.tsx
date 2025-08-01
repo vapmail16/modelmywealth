@@ -95,9 +95,8 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Quick Actions */}
+      {/* Quick Actions */}
+      <div className="max-w-md">
         <Card className="shadow-card">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -133,73 +132,6 @@ export default function Dashboard() {
                 Scenario Analysis / Stress Testing
               </Link>
             </Button>
-          </CardContent>
-        </Card>
-
-        {/* Recent Activity */}
-        <Card className="shadow-card">
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>
-              Latest changes to your financial models
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="h-2 w-2 bg-success rounded-full animate-pulse" />
-              <div className="flex-1">
-                <p className="text-sm font-medium">Debt analysis updated</p>
-                <p className="text-xs text-muted-foreground">2 hours ago</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="h-2 w-2 bg-accent rounded-full" />
-              <div className="flex-1">
-                <p className="text-sm font-medium">Cash flow model revised</p>
-                <p className="text-xs text-muted-foreground">1 day ago</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="h-2 w-2 bg-primary rounded-full" />
-              <div className="flex-1">
-                <p className="text-sm font-medium">Report generated</p>
-                <p className="text-xs text-muted-foreground">3 days ago</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Model Status */}
-        <Card className="shadow-card">
-          <CardHeader>
-            <CardTitle>Model Status</CardTitle>
-            <CardDescription>
-              Current state of your financial models
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Data Completeness</span>
-                <Badge variant="secondary">85%</Badge>
-              </div>
-              <Progress value={85} className="h-2" />
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Model Validation</span>
-                <Badge className="bg-success text-success-foreground">Valid</Badge>
-              </div>
-              <Progress value={100} className="h-2" />
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Last Updated</span>
-                <Badge variant="outline">2 hours ago</Badge>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>
