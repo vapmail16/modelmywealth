@@ -91,15 +91,15 @@ export default function DataEntry() {
     freeCashFlow: "",
     debtService: "",
     
-    // Growth Assumptions
-    revenueGrowthY1: "",
-    revenueGrowthY2: "",
-    revenueGrowthY3: "",
-    ebitdaMarginY1: "",
-    ebitdaMarginY2: "",
-    ebitdaMarginY3: "",
-    capexPercent: "",
-    workingCapitalDays: "",
+    // Growth Assumptions - New Growth Rate Fields
+    grRevenue1: "", grRevenue2: "", grRevenue3: "", grRevenue4: "", grRevenue5: "", grRevenue6: "",
+    grRevenue7: "", grRevenue8: "", grRevenue9: "", grRevenue10: "", grRevenue11: "", grRevenue12: "",
+    grCost1: "", grCost2: "", grCost3: "", grCost4: "", grCost5: "", grCost6: "",
+    grCost7: "", grCost8: "", grCost9: "", grCost10: "", grCost11: "", grCost12: "",
+    grCostOper1: "", grCostOper2: "", grCostOper3: "", grCostOper4: "", grCostOper5: "", grCostOper6: "",
+    grCostOper7: "", grCostOper8: "", grCostOper9: "", grCostOper10: "", grCostOper11: "", grCostOper12: "",
+    grCapex1: "", grCapex2: "", grCapex3: "", grCapex4: "", grCapex5: "", grCapex6: "",
+    grCapex7: "", grCapex8: "", grCapex9: "", grCapex10: "", grCapex11: "", grCapex12: "",
     
     // Company Information
     industry: "",
@@ -1504,109 +1504,155 @@ export default function DataEntry() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <h3 className="text-lg font-semibold text-foreground">Growth Rate (GR, in %)</h3>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    {/* GR of Revenue Column */}
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">Revenue Growth (%)</h4>
-                      <div className="space-y-3">
-                        <div>
-                          <Label>Year 1</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="3.0" 
-                            value={formData.revenueGrowthY1}
-                            onChange={(e) => handleInputChange("revenueGrowthY1", e.target.value)}
-                            className="text-right" 
-                          />
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <div key={`revenue-${i + 1}`}>
+                          <Label>GR of Revenue p.a {i + 1}</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement(`grRevenue${i + 1}`, 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData[`grRevenue${i + 1}` as keyof typeof formData]}
+                              onChange={(e) => handleInputChange(`grRevenue${i + 1}`, e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement(`grRevenue${i + 1}`, 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
-                        <div>
-                          <Label>Year 2</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="2.8" 
-                            value={formData.revenueGrowthY2}
-                            onChange={(e) => handleInputChange("revenueGrowthY2", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                        <div>
-                          <Label>Year 3</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="2.5" 
-                            value={formData.revenueGrowthY3}
-                            onChange={(e) => handleInputChange("revenueGrowthY3", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                      </div>
+                      ))}
                     </div>
 
+                    {/* GR in Cost Column */}
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">EBITDA Margin (%)</h4>
-                      <div className="space-y-3">
-                        <div>
-                          <Label>Year 1</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="20.1" 
-                            value={formData.ebitdaMarginY1}
-                            onChange={(e) => handleInputChange("ebitdaMarginY1", e.target.value)}
-                            className="text-right" 
-                          />
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <div key={`cost-${i + 1}`}>
+                          <Label>GR in Cost p.a {i + 1}</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement(`grCost${i + 1}`, 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData[`grCost${i + 1}` as keyof typeof formData]}
+                              onChange={(e) => handleInputChange(`grCost${i + 1}`, e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement(`grCost${i + 1}`, 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
-                        <div>
-                          <Label>Year 2</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="20.3" 
-                            value={formData.ebitdaMarginY2}
-                            onChange={(e) => handleInputChange("ebitdaMarginY2", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                        <div>
-                          <Label>Year 3</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="20.5" 
-                            value={formData.ebitdaMarginY3}
-                            onChange={(e) => handleInputChange("ebitdaMarginY3", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                      </div>
+                      ))}
                     </div>
-                  </div>
 
-                  <Separator />
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label>CapEx as % of Revenue</Label>
-                      <Input 
-                        type="number" 
-                        step="0.1"
-                        placeholder="4.1" 
-                        value={formData.capexPercent}
-                        onChange={(e) => handleInputChange("capexPercent", e.target.value)}
-                        className="text-right" 
-                      />
+                    {/* GR in Cost (Oper) Column */}
+                    <div className="space-y-4">
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <div key={`costoper-${i + 1}`}>
+                          <Label>GR in Cost p.a (Oper) {i + 1}</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement(`grCostOper${i + 1}`, 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData[`grCostOper${i + 1}` as keyof typeof formData]}
+                              onChange={(e) => handleInputChange(`grCostOper${i + 1}`, e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement(`grCostOper${i + 1}`, 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div>
-                      <Label>Working Capital Days</Label>
-                      <Input 
-                        type="number" 
-                        placeholder="75" 
-                        value={formData.workingCapitalDays}
-                        onChange={(e) => handleInputChange("workingCapitalDays", e.target.value)}
-                        className="text-right" 
-                      />
+
+                    {/* GR in Capex Column */}
+                    <div className="space-y-4">
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <div key={`capex-${i + 1}`}>
+                          <Label>GR in Capex p.a {i + 1}</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement(`grCapex${i + 1}`, 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData[`grCapex${i + 1}` as keyof typeof formData]}
+                              onChange={(e) => handleInputChange(`grCapex${i + 1}`, e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement(`grCapex${i + 1}`, 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </CardContent>
