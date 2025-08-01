@@ -7,6 +7,7 @@ import {
   TrendingUp,
   DollarSign,
   PieChart,
+  Shield,
   Settings,
   HelpCircle,
   User,
@@ -35,6 +36,7 @@ const financialTools = [
   { title: "Debt Analysis", url: "/debt-analysis", icon: DollarSign },
   { title: "Cash Flow", url: "/cash-flow", icon: TrendingUp },
   { title: "KPI Dashboard", url: "/kpi", icon: PieChart },
+  { title: "Governance", url: "/governance", icon: Shield },
 ];
 
 const utilityNav = [

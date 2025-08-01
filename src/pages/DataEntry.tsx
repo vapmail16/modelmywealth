@@ -23,7 +23,68 @@ import {
   AlertCircle,
   CreditCard,
   BarChart3,
+  FileText,
 } from "lucide-react";
+
+// Business Case & Context Component
+const BusinessContextSection = () => (
+  <Card className="shadow-card mb-6">
+    <CardHeader>
+      <CardTitle className="text-lg flex items-center gap-2">
+        <FileText className="h-5 w-5" />
+        Business Case & Context
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">Business Case Description</Label>
+          <Textarea 
+            className="resize-none h-20" 
+            placeholder="Describe the purpose and context for this financial analysis..."
+          />
+        </div>
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">Key Business Drivers</Label>
+          <Textarea 
+            className="resize-none h-20" 
+            placeholder="List main factors affecting business performance..."
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">Seasonality Pattern</Label>
+          <Select>
+            <SelectTrigger>
+              <SelectValue placeholder="Select pattern" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">No seasonality</SelectItem>
+              <SelectItem value="q4">Q4 weighted (holiday retail)</SelectItem>
+              <SelectItem value="q1-q2">Q1-Q2 weighted (construction)</SelectItem>
+              <SelectItem value="summer">Summer weighted (tourism)</SelectItem>
+              <SelectItem value="custom">Custom pattern</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">Working Capital Cycle (Days)</Label>
+          <Input 
+            type="number" 
+            placeholder="e.g., 75"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">Peak Working Capital (% of Revenue)</Label>
+          <Input 
+            placeholder="e.g., 25%"
+          />
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+);
 
 export default function DataEntry() {
   const { toast } = useToast();
@@ -168,6 +229,9 @@ export default function DataEntry() {
           </Button>
         </div>
       </div>
+
+      {/* Business Context Section */}
+      <BusinessContextSection />
 
       {/* Navigation Steps - Removed completion tracking as requested */}
       <Card className="shadow-card">

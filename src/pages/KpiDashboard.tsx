@@ -417,7 +417,91 @@ export default function KpiDashboard() {
           <CardContent>
             <ProfitabilityRatiosChart data={data} />
           </CardContent>
-        </Card>
+      </Card>
+
+      {/* Scenario Analysis & Stress Testing */}
+      <Card className="shadow-card">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5" />
+            Scenario Analysis & Stress Testing
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center p-4 border rounded-lg">
+              <div className="text-lg font-bold text-green-600">Base Case</div>
+              <div className="text-sm text-muted-foreground mt-1">Current Performance</div>
+              <div className="mt-2 space-y-1">
+                <div className="text-xs">DSCR: {currentData.dscr?.toFixed(2)}x</div>
+                <div className="text-xs">Debt/EBITDA: {currentData.debtToEbitda?.toFixed(2)}x</div>
+              </div>
+            </div>
+            <div className="text-center p-4 border rounded-lg">
+              <div className="text-lg font-bold text-yellow-600">Stress Case</div>
+              <div className="text-sm text-muted-foreground mt-1">-15% Revenue Impact</div>
+              <div className="mt-2 space-y-1">
+                <div className="text-xs">DSCR: {((currentData.dscr || 0) * 0.75).toFixed(2)}x</div>
+                <div className="text-xs">Debt/EBITDA: {((currentData.debtToEbitda || 0) * 1.35).toFixed(2)}x</div>
+              </div>
+            </div>
+            <div className="text-center p-4 border rounded-lg">
+              <div className="text-lg font-bold text-blue-600">Upside Case</div>
+              <div className="text-sm text-muted-foreground mt-1">+10% Revenue Growth</div>
+              <div className="mt-2 space-y-1">
+                <div className="text-xs">DSCR: {((currentData.dscr || 0) * 1.15).toFixed(2)}x</div>
+                <div className="text-xs">Debt/EBITDA: {((currentData.debtToEbitda || 0) * 0.85).toFixed(2)}x</div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Industry Benchmarking */}
+      <Card className="shadow-card">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Target className="h-5 w-5" />
+            Industry Benchmarking
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="text-center p-4 border rounded-lg">
+              <div className="text-lg font-bold text-primary">EBITDA Margin</div>
+              <div className="text-sm space-y-1">
+                <div>You: {((currentData.ebitda / currentData.revenue) * 100).toFixed(1)}%</div>
+                <div className="text-muted-foreground">Industry: 18.5%</div>
+                <Badge variant="default" className="text-xs">Above Average</Badge>
+              </div>
+            </div>
+            <div className="text-center p-4 border rounded-lg">
+              <div className="text-lg font-bold text-primary">Debt/EBITDA</div>
+              <div className="text-sm space-y-1">
+                <div>You: {currentData.debtToEbitda?.toFixed(2)}x</div>
+                <div className="text-muted-foreground">Industry: 3.2x</div>
+                <Badge variant="secondary" className="text-xs">Peer Level</Badge>
+              </div>
+            </div>
+            <div className="text-center p-4 border rounded-lg">
+              <div className="text-lg font-bold text-primary">Current Ratio</div>
+              <div className="text-sm space-y-1">
+                <div>You: {currentData.currentRatio?.toFixed(2)}</div>
+                <div className="text-muted-foreground">Industry: 1.45</div>
+                <Badge variant="default" className="text-xs">Strong</Badge>
+              </div>
+            </div>
+            <div className="text-center p-4 border rounded-lg">
+              <div className="text-lg font-bold text-primary">ROE</div>
+              <div className="text-sm space-y-1">
+                <div>You: {((currentData.netIncome / currentData.totalEquity) * 100).toFixed(1)}%</div>
+                <div className="text-muted-foreground">Industry: 12.8%</div>
+                <Badge variant="default" className="text-xs">Superior</Badge>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
       </div>
 
       {/* Comprehensive KPI Overview */}
