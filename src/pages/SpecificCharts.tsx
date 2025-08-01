@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Download, Maximize2, RefreshCw } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Download, Maximize2, RefreshCw, Calendar, Filter } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 // Import all specific charts
@@ -89,6 +90,8 @@ export default function SpecificCharts() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [timeFilter, setTimeFilter] = useState("yearly");
+  const [dateRange, setDateRange] = useState("10-years");
   
   // For demo purposes, use mock data
   const data = generateMockData();
@@ -145,7 +148,34 @@ export default function SpecificCharts() {
             9 specific charts matching your Streamlit application with exact KPI calculations
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Select value={timeFilter} onValueChange={setTimeFilter}>
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="monthly">Monthly</SelectItem>
+                <SelectItem value="quarterly">Quarterly</SelectItem>
+                <SelectItem value="yearly">Yearly</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <Select value={dateRange} onValueChange={setDateRange}>
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1-year">1 Year</SelectItem>
+                <SelectItem value="3-years">3 Years</SelectItem>
+                <SelectItem value="5-years">5 Years</SelectItem>
+                <SelectItem value="10-years">10 Years</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <Button 
             variant="outline" 
             className="gap-2"

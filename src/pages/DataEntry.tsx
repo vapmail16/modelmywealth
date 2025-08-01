@@ -104,12 +104,12 @@ export default function DataEntry() {
   });
 
   const steps = [
-    { id: "profit-loss", title: "P&L Statement", icon: Calculator, completed: false },
-    { id: "balance-sheet", title: "Balance Sheet", icon: Building, completed: false },
-    { id: "debt-structure", title: "Debt Structure", icon: CreditCard, completed: false },
-    { id: "cash-flow", title: "Cash Flow", icon: DollarSign, completed: false },
-    { id: "projections", title: "Projections", icon: TrendingUp, completed: false },
-    { id: "company-info", title: "Company Info", icon: BarChart3, completed: false },
+    { id: "profit-loss", title: "P&L Statement", icon: Calculator },
+    { id: "balance-sheet", title: "Balance Sheet", icon: Building },
+    { id: "debt-structure", title: "Debt Structure", icon: CreditCard },
+    { id: "cash-flow", title: "Cash Flow", icon: DollarSign },
+    { id: "projections", title: "Projections", icon: TrendingUp },
+    { id: "company-info", title: "Company Info", icon: BarChart3 },
   ];
 
   const handleInputChange = (field: string, value: string) => {
@@ -169,42 +169,36 @@ export default function DataEntry() {
         </div>
       </div>
 
-      {/* Progress Steps */}
+      {/* Navigation Steps - Removed completion tracking as requested */}
       <Card className="shadow-card">
         <CardHeader>
-          <CardTitle className="text-lg">Data Entry Progress</CardTitle>
-          <CardDescription>Complete all sections for comprehensive analysis</CardDescription>
+          <CardTitle className="text-lg">Data Entry Sections</CardTitle>
+          <CardDescription>Navigate between different financial data sections</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <Progress value={completionPercentage} className="h-2" />
-            <div className="text-sm text-muted-foreground">
-              {completedFields} of {totalFields} fields completed ({completionPercentage}%)
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
-              {steps.map((step, index) => (
-                <div
-                  key={step.id}
-                  className={`flex flex-col items-center gap-2 p-3 rounded-lg border transition-colors cursor-pointer ${
-                    currentStep === step.id
-                      ? "bg-primary/10 border-primary"
-                      : "bg-secondary/50 border-border hover:bg-secondary"
-                  }`}
-                  onClick={() => setCurrentStep(step.id)}
-                >
-                  <div className={`p-2 rounded-md ${
-                    currentStep === step.id
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  }`}>
-                    <step.icon className="h-4 w-4" />
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs font-medium">{step.title}</p>
-                  </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+            {steps.map((step, index) => (
+              <div
+                key={step.id}
+                className={`flex flex-col items-center gap-2 p-3 rounded-lg border transition-colors cursor-pointer ${
+                  currentStep === step.id
+                    ? "bg-primary/10 border-primary"
+                    : "bg-secondary/50 border-border hover:bg-secondary"
+                }`}
+                onClick={() => setCurrentStep(step.id)}
+              >
+                <div className={`p-2 rounded-md ${
+                  currentStep === step.id
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground"
+                }`}>
+                  <step.icon className="h-4 w-4" />
                 </div>
-              ))}
-            </div>
+                <div className="text-center">
+                  <p className="text-xs font-medium">{step.title}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>

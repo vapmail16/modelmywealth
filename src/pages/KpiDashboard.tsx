@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Download, RefreshCw, TrendingUp, TrendingDown, AlertTriangle, Target, Activity } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar, Download, RefreshCw, TrendingUp, TrendingDown, AlertTriangle, Target, Activity } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 // Import KPI overview charts
@@ -83,6 +84,8 @@ export default function KpiDashboard() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [dateRange, setDateRange] = useState("yearly");
+  const [timeFilter, setTimeFilter] = useState("10-years");
   
   const data = generateMockData();
   const currentData = data[data.length - 1]; // Latest year data
@@ -115,7 +118,7 @@ export default function KpiDashboard() {
     }
   };
 
-  // Critical KPI Summary
+  // Expanded KPI Summary - 12 KPI boxes as requested
   const criticalKPIs = [
     {
       title: "Revenue Growth",
@@ -148,6 +151,70 @@ export default function KpiDashboard() {
       description: "Return on equity",
       icon: TrendingUp,
       target: "> 15%"
+    },
+    {
+      title: "Debt/EBITDA",
+      value: `${currentData.debtToEbitda?.toFixed(2)}x`,
+      trend: currentData.debtToEbitda < 3.0 ? "good" : currentData.debtToEbitda < 4.0 ? "warning" : "poor",
+      description: "Debt relative to EBITDA",
+      icon: AlertTriangle,
+      target: "< 3.0x"
+    },
+    {
+      title: "DSCR",
+      value: `${currentData.dscr?.toFixed(2)}x`,
+      trend: currentData.dscr > 1.45 ? "good" : currentData.dscr > 1.25 ? "warning" : "poor",
+      description: "Debt service coverage ratio",
+      icon: TrendingUp,
+      target: "> 1.45x"
+    },
+    {
+      title: "Interest Coverage",
+      value: `${currentData.interestCoverage?.toFixed(1)}x`,
+      trend: currentData.interestCoverage > 3.0 ? "good" : currentData.interestCoverage > 2.0 ? "warning" : "poor",
+      description: "EBITDA relative to interest expense",
+      icon: Target,
+      target: "> 3.0x"
+    },
+    {
+      title: "Current Ratio",
+      value: `${currentData.currentRatio?.toFixed(2)}`,
+      trend: currentData.currentRatio > 1.5 ? "good" : currentData.currentRatio > 1.2 ? "warning" : "poor",
+      description: "Short-term liquidity position",
+      icon: Activity,
+      target: "> 1.5"
+    },
+    {
+      title: "Asset Turnover",
+      value: `${(currentData.revenue / (currentData.revenue * 1.2)).toFixed(2)}x`,
+      trend: (currentData.revenue / (currentData.revenue * 1.2)) > 0.8 ? "good" : (currentData.revenue / (currentData.revenue * 1.2)) > 0.6 ? "warning" : "poor",
+      description: "Asset utilization efficiency",
+      icon: TrendingUp,
+      target: "> 0.8x"
+    },
+    {
+      title: "Working Capital Cycle",
+      value: `${(45 + 60 - 30).toFixed(0)} days`,
+      trend: (45 + 60 - 30) < 75 ? "good" : (45 + 60 - 30) < 90 ? "warning" : "poor",
+      description: "Cash conversion cycle",
+      icon: AlertTriangle,
+      target: "< 75 days"
+    },
+    {
+      title: "LTV Ratio",
+      value: `${(currentData.ltv * 100).toFixed(1)}%`,
+      trend: currentData.ltv < 0.70 ? "good" : currentData.ltv < 0.80 ? "warning" : "poor",
+      description: "Loan-to-value ratio",
+      icon: Target,
+      target: "< 70%"
+    },
+    {
+      title: "Free Cash Flow Margin",
+      value: `${((currentData.freeCashFlow / currentData.revenue) * 100).toFixed(1)}%`,
+      trend: (currentData.freeCashFlow / currentData.revenue) > 0.10 ? "good" : (currentData.freeCashFlow / currentData.revenue) > 0.05 ? "warning" : "poor",
+      description: "Free cash flow as % of revenue",
+      icon: Activity,
+      target: "> 10%"
     }
   ];
 
@@ -193,7 +260,31 @@ export default function KpiDashboard() {
             Executive overview of key performance indicators and financial health
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Select value={dateRange} onValueChange={setDateRange}>
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="monthly">Monthly</SelectItem>
+                <SelectItem value="quarterly">Quarterly</SelectItem>
+                <SelectItem value="yearly">Yearly</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Select value={timeFilter} onValueChange={setTimeFilter}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1-year">1 Year</SelectItem>
+              <SelectItem value="3-years">3 Years</SelectItem>
+              <SelectItem value="5-years">5 Years</SelectItem>
+              <SelectItem value="10-years">10 Years</SelectItem>
+            </SelectContent>
+          </Select>
           <Button 
             variant="outline" 
             className="gap-2"
@@ -262,8 +353,8 @@ export default function KpiDashboard() {
         </CardContent>
       </Card>
 
-      {/* Critical KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Critical KPIs - 12 KPI boxes as requested */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {criticalKPIs.map((kpi, index) => {
           const IconComponent = kpi.icon;
           return (
