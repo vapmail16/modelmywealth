@@ -101,6 +101,7 @@ export default function DataEntry() {
     region: "",
     employeeCount: "",
     founded: "",
+    projectionsYear: "",
     notes: "",
     
     // Working Capital Data
@@ -1340,6 +1341,37 @@ export default function DataEntry() {
                           value={formData.founded}
                           onChange={(e) => handleInputChange("founded", e.target.value)}
                         />
+                      </div>
+                      <div>
+                        <Label>Projections Year</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("projectionsYear", 1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="1"
+                            placeholder="12.00" 
+                            value={formData.projectionsYear}
+                            onChange={(e) => handleInputChange("projectionsYear", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("projectionsYear", 1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
