@@ -110,18 +110,13 @@ export default function DataEntry() {
     notes: "",
     
     // Working Capital Data
-    workingCapitalCycle: "",
-    peakWorkingCapital: "",
-    accountsReceivableDays: "",
-    inventoryDays: "",
-    accountsPayableDays: "",
+    accountReceivablePercent: "",
+    otherCurrentAssetsPercent: "",
+    inventoryPercent: "",
+    accountsPayablePercent: "",
     
     // Seasonality Data
     seasonalityPattern: "",
-    q1Revenue: "",
-    q2Revenue: "",
-    q3Revenue: "",
-    q4Revenue: "",
     seasonalWorkingCapital: "",
     // Monthly Revenue Seasonality
     january: "", february: "", march: "", april: "", may: "", june: "",
@@ -1787,64 +1782,137 @@ export default function DataEntry() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  <h3 className="text-lg font-semibold text-foreground">Working Capital Assumptions</h3>
+                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">Working Capital Cycle</h4>
-                      <div className="space-y-3">
-                        <div>
-                          <Label>Working Capital Cycle (Days)</Label>
+                      <div>
+                        <Label>Account Receivable as a % of 12 Months Forward Revenue (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("accountReceivablePercent", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
                           <Input 
                             type="number" 
-                            placeholder="75" 
-                            value={formData.workingCapitalCycle}
-                            onChange={(e) => handleInputChange("workingCapitalCycle", e.target.value)}
-                            className="text-right" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.accountReceivablePercent}
+                            onChange={(e) => handleInputChange("accountReceivablePercent", e.target.value)}
+                            className="text-center flex-1" 
                           />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("accountReceivablePercent", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
                         </div>
-                        <div>
-                          <Label>Peak Working Capital (% of Revenue)</Label>
+                      </div>
+                      
+                      <div>
+                        <Label>Inventory % of 12 Months Forward COGS (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("inventoryPercent", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
                           <Input 
-                            placeholder="25%" 
-                            value={formData.peakWorkingCapital}
-                            onChange={(e) => handleInputChange("peakWorkingCapital", e.target.value)}
-                            className="text-right" 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.inventoryPercent}
+                            onChange={(e) => handleInputChange("inventoryPercent", e.target.value)}
+                            className="text-center flex-1" 
                           />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("inventoryPercent", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
                     </div>
 
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">Component Analysis</h4>
-                      <div className="space-y-3">
-                        <div>
-                          <Label>Accounts Receivable Days</Label>
+                      <div>
+                        <Label>Other Current Assets % of 12 Months Forward Revenue (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("otherCurrentAssetsPercent", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
                           <Input 
                             type="number" 
-                            placeholder="45" 
-                            value={formData.accountsReceivableDays}
-                            onChange={(e) => handleInputChange("accountsReceivableDays", e.target.value)}
-                            className="text-right" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.otherCurrentAssetsPercent}
+                            onChange={(e) => handleInputChange("otherCurrentAssetsPercent", e.target.value)}
+                            className="text-center flex-1" 
                           />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("otherCurrentAssetsPercent", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
                         </div>
-                        <div>
-                          <Label>Inventory Days</Label>
+                      </div>
+                      
+                      <div>
+                        <Label>Accounts Payable as a % of 12 Months Forward COGS/OPEX (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("accountsPayablePercent", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
                           <Input 
                             type="number" 
-                            placeholder="60" 
-                            value={formData.inventoryDays}
-                            onChange={(e) => handleInputChange("inventoryDays", e.target.value)}
-                            className="text-right" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.accountsPayablePercent}
+                            onChange={(e) => handleInputChange("accountsPayablePercent", e.target.value)}
+                            className="text-center flex-1" 
                           />
-                        </div>
-                        <div>
-                          <Label>Accounts Payable Days</Label>
-                          <Input 
-                            type="number" 
-                            placeholder="30" 
-                            value={formData.accountsPayableDays}
-                            onChange={(e) => handleInputChange("accountsPayableDays", e.target.value)}
-                            className="text-right" 
-                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("accountsPayablePercent", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -1884,72 +1952,33 @@ export default function DataEntry() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">Quarterly Revenue Distribution (%)</h4>
-                      <div className="space-y-3">
-                        <div>
-                          <Label>Q1 Revenue</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="23.0" 
-                            value={formData.q1Revenue}
-                            onChange={(e) => handleInputChange("q1Revenue", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                        <div>
-                          <Label>Q2 Revenue</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="25.0" 
-                            value={formData.q2Revenue}
-                            onChange={(e) => handleInputChange("q2Revenue", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                        <div>
-                          <Label>Q3 Revenue</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="24.0" 
-                            value={formData.q3Revenue}
-                            onChange={(e) => handleInputChange("q3Revenue", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                        <div>
-                          <Label>Q4 Revenue</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="28.0" 
-                            value={formData.q4Revenue}
-                            onChange={(e) => handleInputChange("q4Revenue", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                      </div>
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Seasonality Pattern</Label>
+                      <Select value={formData.seasonalityPattern} onValueChange={(value) => handleInputChange("seasonalityPattern", value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select pattern" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">No seasonality</SelectItem>
+                          <SelectItem value="q4">Q4 weighted (holiday retail)</SelectItem>
+                          <SelectItem value="q1-q2">Q1-Q2 weighted (construction)</SelectItem>
+                          <SelectItem value="summer">Summer weighted (tourism)</SelectItem>
+                          <SelectItem value="custom">Custom pattern</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
-
-                    <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">Seasonal Working Capital</h4>
-                      <div className="space-y-3">
-                        <div>
-                          <Label>Peak Working Capital (% above average)</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="15.0" 
-                            value={formData.seasonalWorkingCapital}
-                            onChange={(e) => handleInputChange("seasonalWorkingCapital", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                      </div>
+                    
+                    <div>
+                      <Label>Peak Working Capital (% above average)</Label>
+                      <Input 
+                        type="number" 
+                        step="0.1"
+                        placeholder="15.0" 
+                        value={formData.seasonalWorkingCapital}
+                        onChange={(e) => handleInputChange("seasonalWorkingCapital", e.target.value)}
+                        className="text-right" 
+                      />
                     </div>
                   </div>
                   
