@@ -14,75 +14,14 @@ import {
   ArInventoryCycleChart,
 } from '@/components/charts/SpecificCharts2';
 
-import { FinancialKPICalculator, FinancialInputs } from '@/utils/kpiCalculations';
-
-// Mock data generator for demonstration
-const generateMockData = () => {
-  const years = Array.from({ length: 10 }, (_, i) => i + 1);
-  
-  return years.map(year => {
-    const baseRevenue = 125000000; // $125M
-    const growthRate = 0.03; // 3% annual growth
-    const revenue = baseRevenue * Math.pow(1 + growthRate, year - 1);
-    const cogs = revenue * 0.60; // 60% of revenue
-    const ebitda = revenue * 0.20; // 20% EBITDA margin
-    const totalDebt = 45200000; // $45.2M
-    const totalEquity = 74400000; // $74.4M
-    
-    // Calculate all KPIs using the calculator
-    const inputs: FinancialInputs = {
-      revenue,
-      cogs,
-      operatingExpenses: revenue * 0.15,
-      ebitda,
-      depreciation: revenue * 0.03,
-      interestExpense: totalDebt * 0.055, // 5.5% interest rate
-      netIncome: ebitda * 0.65, // After interest and tax
-      cash: 8700000 + (year - 1) * 500000,
-      accountsReceivable: revenue / 365 * 45, // 45 days
-      inventory: cogs / 365 * 60, // 60 days
-      currentAssets: revenue * 0.25,
-      ppe: 85300000 + (year - 1) * 2000000,
-      totalAssets: revenue * 1.2,
-      accountsPayable: cogs / 365 * 30, // 30 days
-      currentLiabilities: revenue * 0.15,
-      seniorSecuredDebt: totalDebt * 0.65,
-      debtTranche1: totalDebt * 0.35,
-      totalDebt,
-      totalEquity: totalEquity + (year - 1) * 3000000,
-      operatingCashFlow: ebitda * 0.85,
-      capitalExpenditures: revenue * 0.04,
-      freeCashFlow: ebitda * 0.85 - revenue * 0.04,
-      tangibleAssets: revenue * 1.1,
-      debtService: totalDebt * 0.12 // 12% debt service
-    };
-    
-    const kpis = FinancialKPICalculator.calculateAllKPIs(inputs);
-    
-    return {
-      year,
-      revenue,
-      cogs,
-      ebitda,
-      cash: inputs.cash,
-      ppe: inputs.ppe,
-      totalEquity: inputs.totalEquity,
-      seniorSecuredDebt: inputs.seniorSecuredDebt,
-      debtTranche1: inputs.debtTranche1,
-      interestPaid: inputs.interestExpense,
-      operatingCashFlow: inputs.operatingCashFlow,
-      freeCashFlow: inputs.freeCashFlow,
-      ...kpis
-    };
-  });
-};
+import { mockDataService } from '@/services';
 
 export default function CashFlow() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   
-  const data = generateMockData();
+  const data = mockDataService.generateMockData();
   const currentData = data[data.length - 1]; // Latest year data
 
   // Handle refresh

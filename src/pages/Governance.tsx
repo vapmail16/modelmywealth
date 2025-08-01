@@ -5,91 +5,15 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Shield, AlertTriangle, CheckCircle, Clock, FileText, Users, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { mockDataService } from '@/services';
 
 export default function Governance() {
   const { toast } = useToast();
   const [selectedCovenant, setSelectedCovenant] = useState<string | null>(null);
 
-  // Mock covenant data
-  const covenants = [
-    {
-      id: "dscr",
-      name: "Debt Service Coverage Ratio",
-      threshold: "≥ 1.25x",
-      current: "1.82x",
-      status: "compliant",
-      lastTested: "2024-01-31",
-      nextTest: "2024-04-30",
-      buffer: 45.6
-    },
-    {
-      id: "leverage",
-      name: "Total Leverage Ratio",
-      threshold: "≤ 4.0x",
-      current: "1.81x",
-      status: "compliant",
-      lastTested: "2024-01-31",
-      nextTest: "2024-04-30",
-      buffer: 121.0
-    },
-    {
-      id: "interest",
-      name: "Interest Coverage Ratio",
-      threshold: "≥ 3.0x",
-      current: "9.1x",
-      status: "compliant",
-      lastTested: "2024-01-31",
-      nextTest: "2024-04-30",
-      buffer: 203.3
-    },
-    {
-      id: "capex",
-      name: "Annual CapEx Limit",
-      threshold: "≤ $5.0M",
-      current: "$3.2M",
-      status: "compliant",
-      lastTested: "2024-01-31",
-      nextTest: "2024-04-30",
-      buffer: 56.3
-    },
-    {
-      id: "liquidity",
-      name: "Minimum Liquidity",
-      threshold: "≥ $2.0M",
-      current: "$8.7M",
-      status: "compliant",
-      lastTested: "2024-01-31",
-      nextTest: "2024-04-30",
-      buffer: 335.0
-    }
-  ];
-
-  const governanceItems = [
-    {
-      category: "Board Governance",
-      items: [
-        { name: "Monthly Board Reports", status: "current", dueDate: "2024-02-15" },
-        { name: "Quarterly Board Meeting", status: "scheduled", dueDate: "2024-03-20" },
-        { name: "Annual Strategy Review", status: "pending", dueDate: "2024-04-30" }
-      ]
-    },
-    {
-      category: "Lender Reporting",
-      items: [
-        { name: "Monthly Borrowing Base", status: "current", dueDate: "2024-02-10" },
-        { name: "Quarterly Compliance Certificate", status: "current", dueDate: "2024-01-31" },
-        { name: "Annual Financial Statements", status: "pending", dueDate: "2024-04-15" }
-      ]
-    },
-    {
-      category: "Regulatory Compliance",
-      items: [
-        { name: "Tax Filing - Federal", status: "scheduled", dueDate: "2024-03-15" },
-        { name: "Insurance Policy Review", status: "current", dueDate: "2024-06-30" },
-        { name: "Environmental Compliance", status: "current", dueDate: "2024-12-31" }
-      ]
-    }
-  ];
+  // Use centralized mock data service
+  const covenants = mockDataService.getMockCovenantData();
+  const governanceItems = mockDataService.getMockGovernanceItems();
 
   const handleCovenantClick = (covenantId: string) => {
     setSelectedCovenant(covenantId);

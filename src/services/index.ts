@@ -5,6 +5,7 @@ export { chartDataService, ChartDataService } from './api/ChartDataService';
 export { reportService, ReportService } from './api/ReportService';
 export { userService, UserService } from './api/UserService';
 export { validationService, ValidationService } from './api/ValidationService';
+export { mockDataService, MockDataService } from './api/MockDataService';
 
 // HTTP client
 export { httpClient, HttpClient } from './http/client';
