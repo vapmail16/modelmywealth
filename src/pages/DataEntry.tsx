@@ -52,26 +52,16 @@ export default function DataEntry() {
     cash: "",
     accountsReceivable: "",
     inventory: "",
-    prepaidExpenses: "",
-    currentAssets: "",
+    otherCurrentAssets: "",
     ppe: "",
-    intangibleAssets: "",
-    goodwill: "",
-    totalAssets: "",
+    otherAssets: "",
     
-    // Balance Sheet - Liabilities
-    accountsPayable: "",
-    accruedExpenses: "",
-    shortTermDebt: "",
-    currentLiabilities: "",
-    longTermDebt: "",
-    deferredTax: "",
-    totalLiabilities: "",
-    
-    // Equity
-    commonStock: "",
+    // Balance Sheet - Liabilities & Equity
+    accountsPayableProvisions: "",
+    seniorSecured: "",
+    debtTranche1: "",
+    equity: "",
     retainedEarnings: "",
-    totalEquity: "",
     
     // Debt Structure
     seniorSecuredDebt: "",
@@ -515,172 +505,364 @@ export default function DataEntry() {
               <Card className="shadow-card">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Building className="h-5 w-5 text-primary" />
-                    Balance Sheet Data (End of Period, $M)
+                    <BarChart3 className="h-5 w-5 text-primary" />
+                    Fill in the Balance Sheet Fields
                   </CardTitle>
+                  <CardDescription>
+                    Enter your balance sheet data with increment/decrement controls
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Assets */}
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">Assets</h4>
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         <div>
-                          <Label>Cash & Equivalents</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="8.7" 
-                            value={formData.cash}
-                            onChange={(e) => handleInputChange("cash", e.target.value)}
-                            className="text-right" 
-                          />
+                          <Label>Cash</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("cash", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.cash}
+                              onChange={(e) => handleInputChange("cash", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("cash", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div>
                           <Label>Accounts Receivable</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="15.2" 
-                            value={formData.accountsReceivable}
-                            onChange={(e) => handleInputChange("accountsReceivable", e.target.value)}
-                            className="text-right" 
-                          />
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("accountsReceivable", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.accountsReceivable}
+                              onChange={(e) => handleInputChange("accountsReceivable", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("accountsReceivable", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div>
                           <Label>Inventory</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="22.5" 
-                            value={formData.inventory}
-                            onChange={(e) => handleInputChange("inventory", e.target.value)}
-                            className="text-right" 
-                          />
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("inventory", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.inventory}
+                              onChange={(e) => handleInputChange("inventory", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("inventory", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div>
-                          <Label>PP&E, Net</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="85.3" 
-                            value={formData.ppe}
-                            onChange={(e) => handleInputChange("ppe", e.target.value)}
-                            className="text-right" 
-                          />
+                          <Label>Other Current Assets</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("otherCurrentAssets", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.otherCurrentAssets}
+                              onChange={(e) => handleInputChange("otherCurrentAssets", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("otherCurrentAssets", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div>
-                          <Label>Intangible Assets</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="12.8" 
-                            value={formData.intangibleAssets}
-                            onChange={(e) => handleInputChange("intangibleAssets", e.target.value)}
-                            className="text-right" 
-                          />
+                          <Label>Property, Plant & Equipment (Net)</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("ppe", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.ppe}
+                              onChange={(e) => handleInputChange("ppe", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("ppe", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Other Assets/DTA</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("otherAssets", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.otherAssets}
+                              onChange={(e) => handleInputChange("otherAssets", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("otherAssets", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Liabilities */}
+                    {/* Liabilities & Equity */}
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">Liabilities</h4>
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         <div>
-                          <Label>Accounts Payable</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="12.1" 
-                            value={formData.accountsPayable}
-                            onChange={(e) => handleInputChange("accountsPayable", e.target.value)}
-                            className="text-right" 
-                          />
+                          <Label>Accounts Payable/Provisions</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("accountsPayableProvisions", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.accountsPayableProvisions}
+                              onChange={(e) => handleInputChange("accountsPayableProvisions", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("accountsPayableProvisions", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div>
-                          <Label>Accrued Expenses</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="8.3" 
-                            value={formData.accruedExpenses}
-                            onChange={(e) => handleInputChange("accruedExpenses", e.target.value)}
-                            className="text-right" 
-                          />
+                          <Label>Senior Secured</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("seniorSecured", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.seniorSecured}
+                              onChange={(e) => handleInputChange("seniorSecured", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("seniorSecured", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div>
-                          <Label>Short-term Debt</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="5.5" 
-                            value={formData.shortTermDebt}
-                            onChange={(e) => handleInputChange("shortTermDebt", e.target.value)}
-                            className="text-right" 
-                          />
+                          <Label>Debt 1 - Tranche 1</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("debtTranche1", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.debtTranche1}
+                              onChange={(e) => handleInputChange("debtTranche1", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("debtTranche1", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div>
-                          <Label>Long-term Debt</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="39.7" 
-                            value={formData.longTermDebt}
-                            onChange={(e) => handleInputChange("longTermDebt", e.target.value)}
-                            className="text-right" 
-                          />
+                          <Label>Equity</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("equity", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.equity}
+                              onChange={(e) => handleInputChange("equity", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("equity", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <div>
-                          <Label>Deferred Tax Liabilities</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="2.8" 
-                            value={formData.deferredTax}
-                            onChange={(e) => handleInputChange("deferredTax", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Equity */}
-                    <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">Equity</h4>
-                      <div className="space-y-3">
-                        <div>
-                          <Label>Common Stock</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="5.0" 
-                            value={formData.commonStock}
-                            onChange={(e) => handleInputChange("commonStock", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                        <div>
-                          <Label>Retained Earnings</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="69.4" 
-                            value={formData.retainedEarnings}
-                            onChange={(e) => handleInputChange("retainedEarnings", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                        <div>
-                          <Label>Total Equity</Label>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="74.4" 
-                            value={formData.totalEquity}
-                            onChange={(e) => handleInputChange("totalEquity", e.target.value)}
-                            className="text-right" 
-                          />
+                          <Label>Retained Earning</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("retainedEarnings", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.retainedEarnings}
+                              onChange={(e) => handleInputChange("retainedEarnings", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("retainedEarnings", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
