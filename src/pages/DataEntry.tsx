@@ -24,71 +24,14 @@ import {
   CreditCard,
   BarChart3,
   FileText,
+  Calendar,
+  Clock,
 } from "lucide-react";
 
-// Business Case & Context Component
-const BusinessContextSection = () => (
-  <Card className="shadow-card mb-6">
-    <CardHeader>
-      <CardTitle className="text-lg flex items-center gap-2">
-        <FileText className="h-5 w-5" />
-        Business Case & Context
-      </CardTitle>
-    </CardHeader>
-    <CardContent className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label className="text-sm font-medium">Business Case Description</Label>
-          <Textarea 
-            className="resize-none h-20" 
-            placeholder="Describe the purpose and context for this financial analysis..."
-          />
-        </div>
-        <div className="space-y-2">
-          <Label className="text-sm font-medium">Key Business Drivers</Label>
-          <Textarea 
-            className="resize-none h-20" 
-            placeholder="List main factors affecting business performance..."
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="space-y-2">
-          <Label className="text-sm font-medium">Seasonality Pattern</Label>
-          <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="Select pattern" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">No seasonality</SelectItem>
-              <SelectItem value="q4">Q4 weighted (holiday retail)</SelectItem>
-              <SelectItem value="q1-q2">Q1-Q2 weighted (construction)</SelectItem>
-              <SelectItem value="summer">Summer weighted (tourism)</SelectItem>
-              <SelectItem value="custom">Custom pattern</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label className="text-sm font-medium">Working Capital Cycle (Days)</Label>
-          <Input 
-            type="number" 
-            placeholder="e.g., 75"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label className="text-sm font-medium">Peak Working Capital (% of Revenue)</Label>
-          <Input 
-            placeholder="e.g., 25%"
-          />
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-);
 
 export default function DataEntry() {
   const { toast } = useToast();
-  const [currentStep, setCurrentStep] = useState("profit-loss");
+  const [currentStep, setCurrentStep] = useState("company-info");
   const [formData, setFormData] = useState({
     // P&L Data
     revenue: "",
@@ -156,21 +99,37 @@ export default function DataEntry() {
     capexPercent: "",
     workingCapitalDays: "",
     
-    // Additional Data
+    // Company Information
     industry: "",
     region: "",
     employeeCount: "",
     founded: "",
     notes: "",
+    
+    // Working Capital Data
+    workingCapitalCycle: "",
+    peakWorkingCapital: "",
+    accountsReceivableDays: "",
+    inventoryDays: "",
+    accountsPayableDays: "",
+    
+    // Seasonality Data
+    seasonalityPattern: "",
+    q1Revenue: "",
+    q2Revenue: "",
+    q3Revenue: "",
+    q4Revenue: "",
+    seasonalWorkingCapital: "",
   });
 
   const steps = [
+    { id: "company-info", title: "Company Info", icon: Building },
     { id: "profit-loss", title: "P&L Statement", icon: Calculator },
-    { id: "balance-sheet", title: "Balance Sheet", icon: Building },
+    { id: "balance-sheet", title: "Balance Sheet", icon: BarChart3 },
     { id: "debt-structure", title: "Debt Structure", icon: CreditCard },
-    { id: "cash-flow", title: "Cash Flow", icon: DollarSign },
     { id: "projections", title: "Projections", icon: TrendingUp },
-    { id: "company-info", title: "Company Info", icon: BarChart3 },
+    { id: "working-capital", title: "Working Capital", icon: DollarSign },
+    { id: "seasonality", title: "Seasonality", icon: Calendar },
   ];
 
   const handleInputChange = (field: string, value: string) => {
@@ -230,9 +189,6 @@ export default function DataEntry() {
         </div>
       </div>
 
-      {/* Business Context Section */}
-      <BusinessContextSection />
-
       {/* Navigation Steps - Removed completion tracking as requested */}
       <Card className="shadow-card">
         <CardHeader>
@@ -240,7 +196,7 @@ export default function DataEntry() {
           <CardDescription>Navigate between different financial data sections</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2">
             {steps.map((step, index) => (
               <div
                 key={step.id}
@@ -952,6 +908,188 @@ export default function DataEntry() {
                       value={formData.notes}
                       onChange={(e) => handleInputChange("notes", e.target.value)}
                     />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Working Capital */}
+            <TabsContent value="working-capital">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <DollarSign className="h-5 w-5 text-primary" />
+                    Working Capital Analysis
+                  </CardTitle>
+                  <CardDescription>
+                    Detailed working capital cycle and seasonal requirements
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-primary">Working Capital Cycle</h4>
+                      <div className="space-y-3">
+                        <div>
+                          <Label>Working Capital Cycle (Days)</Label>
+                          <Input 
+                            type="number" 
+                            placeholder="75" 
+                            value={formData.workingCapitalCycle}
+                            onChange={(e) => handleInputChange("workingCapitalCycle", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                        <div>
+                          <Label>Peak Working Capital (% of Revenue)</Label>
+                          <Input 
+                            placeholder="25%" 
+                            value={formData.peakWorkingCapital}
+                            onChange={(e) => handleInputChange("peakWorkingCapital", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-primary">Component Analysis</h4>
+                      <div className="space-y-3">
+                        <div>
+                          <Label>Accounts Receivable Days</Label>
+                          <Input 
+                            type="number" 
+                            placeholder="45" 
+                            value={formData.accountsReceivableDays}
+                            onChange={(e) => handleInputChange("accountsReceivableDays", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                        <div>
+                          <Label>Inventory Days</Label>
+                          <Input 
+                            type="number" 
+                            placeholder="60" 
+                            value={formData.inventoryDays}
+                            onChange={(e) => handleInputChange("inventoryDays", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                        <div>
+                          <Label>Accounts Payable Days</Label>
+                          <Input 
+                            type="number" 
+                            placeholder="30" 
+                            value={formData.accountsPayableDays}
+                            onChange={(e) => handleInputChange("accountsPayableDays", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Seasonality */}
+            <TabsContent value="seasonality">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5 text-primary" />
+                    Seasonality Patterns
+                  </CardTitle>
+                  <CardDescription>
+                    Revenue distribution and seasonal working capital requirements
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Seasonality Pattern</Label>
+                      <Select value={formData.seasonalityPattern} onValueChange={(value) => handleInputChange("seasonalityPattern", value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select pattern" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">No seasonality</SelectItem>
+                          <SelectItem value="q4">Q4 weighted (holiday retail)</SelectItem>
+                          <SelectItem value="q1-q2">Q1-Q2 weighted (construction)</SelectItem>
+                          <SelectItem value="summer">Summer weighted (tourism)</SelectItem>
+                          <SelectItem value="custom">Custom pattern</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-primary">Quarterly Revenue Distribution (%)</h4>
+                      <div className="space-y-3">
+                        <div>
+                          <Label>Q1 Revenue</Label>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="23.0" 
+                            value={formData.q1Revenue}
+                            onChange={(e) => handleInputChange("q1Revenue", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                        <div>
+                          <Label>Q2 Revenue</Label>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="25.0" 
+                            value={formData.q2Revenue}
+                            onChange={(e) => handleInputChange("q2Revenue", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                        <div>
+                          <Label>Q3 Revenue</Label>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="24.0" 
+                            value={formData.q3Revenue}
+                            onChange={(e) => handleInputChange("q3Revenue", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                        <div>
+                          <Label>Q4 Revenue</Label>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="28.0" 
+                            value={formData.q4Revenue}
+                            onChange={(e) => handleInputChange("q4Revenue", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-primary">Seasonal Working Capital</h4>
+                      <div className="space-y-3">
+                        <div>
+                          <Label>Peak Working Capital (% above average)</Label>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="15.0" 
+                            value={formData.seasonalWorkingCapital}
+                            onChange={(e) => handleInputChange("seasonalWorkingCapital", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
