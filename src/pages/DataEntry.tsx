@@ -69,16 +69,21 @@ export default function DataEntry() {
     assetDepreciatedOverYears: "",
     
     // Debt Structure
-    seniorSecuredDebt: "",
-    seniorSecuredRate: "",
-    seniorSecuredMaturity: "",
-    secondLienDebt: "",
-    secondLienRate: "",
-    secondLienMaturity: "",
-    subordinatedDebt: "",
-    subordinatedRate: "",
-    subordinatedMaturity: "",
-    totalDebt: "",
+    seniorSecuredLoanType: "",
+    additionalLoanSeniorSecured: "",
+    bankBaseRateSeniorSecured: "",
+    liquidityPremiumsSeniorSecured: "",
+    creditRiskPremiumsSeniorSecured: "",
+    maturityYSeniorSecured: "",
+    amortizationYSeniorSecured: "",
+    
+    shortTermLoanType: "",
+    additionalLoanShortTerm: "",
+    bankBaseRateShortTerm: "",
+    liquidityPremiumsShortTerm: "",
+    creditRiskPremiumsShortTerm: "",
+    maturityYShortTerm: "",
+    amortizationYShortTerm: "",
     
     // Cash Flow
     operatingCashFlow: "",
@@ -993,93 +998,424 @@ export default function DataEntry() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="space-y-6">
-                    {/* Senior Secured Debt */}
+                  <h3 className="text-lg font-semibold text-foreground">Fill in the Required Fields</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Senior Secured Column */}
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">Senior Secured Debt</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <Label>Amount ($M)</Label>
+                      <div>
+                        <Label>Please select an option:</Label>
+                        <Select value={formData.seniorSecuredLoanType} onValueChange={(value) => handleInputChange("seniorSecuredLoanType", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Individual" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="individual">Individual</SelectItem>
+                            <SelectItem value="corporate">Corporate</SelectItem>
+                            <SelectItem value="institutional">Institutional</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label>Additional Loan on restructuring (Senior Secured)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("additionalLoanSeniorSecured", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
                           <Input 
                             type="number" 
                             step="0.1"
-                            placeholder="29.4" 
-                            value={formData.seniorSecuredDebt}
-                            onChange={(e) => handleInputChange("seniorSecuredDebt", e.target.value)}
-                            className="text-right" 
+                            placeholder="0.00" 
+                            value={formData.additionalLoanSeniorSecured}
+                            onChange={(e) => handleInputChange("additionalLoanSeniorSecured", e.target.value)}
+                            className="text-center flex-1" 
                           />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("additionalLoanSeniorSecured", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
                         </div>
-                        <div>
-                          <Label>Interest Rate (%)</Label>
+                      </div>
+                      
+                      <div>
+                        <Label>Bank Base Rate (Senior Secured, in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("bankBaseRateSeniorSecured", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
                           <Input 
                             type="number" 
-                            step="0.01"
-                            placeholder="5.25" 
-                            value={formData.seniorSecuredRate}
-                            onChange={(e) => handleInputChange("seniorSecuredRate", e.target.value)}
-                            className="text-right" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.bankBaseRateSeniorSecured}
+                            onChange={(e) => handleInputChange("bankBaseRateSeniorSecured", e.target.value)}
+                            className="text-center flex-1" 
                           />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("bankBaseRateSeniorSecured", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
                         </div>
-                        <div>
-                          <Label>Maturity Year</Label>
+                      </div>
+                      
+                      <div>
+                        <Label>Liquidity Premiums (Senior Secured, in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("liquidityPremiumsSeniorSecured", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
                           <Input 
                             type="number" 
-                            placeholder="2028" 
-                            value={formData.seniorSecuredMaturity}
-                            onChange={(e) => handleInputChange("seniorSecuredMaturity", e.target.value)}
-                            className="text-right" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.liquidityPremiumsSeniorSecured}
+                            onChange={(e) => handleInputChange("liquidityPremiumsSeniorSecured", e.target.value)}
+                            className="text-center flex-1" 
                           />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("liquidityPremiumsSeniorSecured", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Credit Risk Premiums (Senior Secured, in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("creditRiskPremiumsSeniorSecured", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.creditRiskPremiumsSeniorSecured}
+                            onChange={(e) => handleInputChange("creditRiskPremiumsSeniorSecured", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("creditRiskPremiumsSeniorSecured", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Maturity Y (Senior Secured)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("maturityYSeniorSecured", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.maturityYSeniorSecured}
+                            onChange={(e) => handleInputChange("maturityYSeniorSecured", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("maturityYSeniorSecured", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Amortization Y (Senior Secured)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("amortizationYSeniorSecured", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.amortizationYSeniorSecured}
+                            onChange={(e) => handleInputChange("amortizationYSeniorSecured", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("amortizationYSeniorSecured", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
                     </div>
 
-                    <Separator />
-
-                    {/* Second Lien Debt */}
+                    {/* Short Term Column */}
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">Second Lien Debt</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <Label>Amount ($M)</Label>
+                      <div>
+                        <Label>Please select an option:</Label>
+                        <Select value={formData.shortTermLoanType} onValueChange={(value) => handleInputChange("shortTermLoanType", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Individual" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="individual">Individual</SelectItem>
+                            <SelectItem value="corporate">Corporate</SelectItem>
+                            <SelectItem value="institutional">Institutional</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label>Additional Loan on restructuring (Short Term)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("additionalLoanShortTerm", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
                           <Input 
                             type="number" 
                             step="0.1"
-                            placeholder="15.8" 
-                            value={formData.secondLienDebt}
-                            onChange={(e) => handleInputChange("secondLienDebt", e.target.value)}
-                            className="text-right" 
+                            placeholder="0.00" 
+                            value={formData.additionalLoanShortTerm}
+                            onChange={(e) => handleInputChange("additionalLoanShortTerm", e.target.value)}
+                            className="text-center flex-1" 
                           />
-                        </div>
-                        <div>
-                          <Label>Interest Rate (%)</Label>
-                          <Input 
-                            type="number" 
-                            step="0.01"
-                            placeholder="8.75" 
-                            value={formData.secondLienRate}
-                            onChange={(e) => handleInputChange("secondLienRate", e.target.value)}
-                            className="text-right" 
-                          />
-                        </div>
-                        <div>
-                          <Label>Maturity Year</Label>
-                          <Input 
-                            type="number" 
-                            placeholder="2029" 
-                            value={formData.secondLienMaturity}
-                            onChange={(e) => handleInputChange("secondLienMaturity", e.target.value)}
-                            className="text-right" 
-                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("additionalLoanShortTerm", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
-                    </div>
-
-                    <div className="bg-accent/10 p-4 rounded-lg">
-                      <div className="flex justify-between">
-                        <span className="font-medium">Total Debt:</span>
-                        <span className="text-lg font-bold text-accent">
-                          ${((parseFloat(formData.seniorSecuredDebt) || 0) + (parseFloat(formData.secondLienDebt) || 0)).toFixed(1)}M
-                        </span>
+                      
+                      <div>
+                        <Label>Bank Base Rate (Short Term, in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("bankBaseRateShortTerm", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.bankBaseRateShortTerm}
+                            onChange={(e) => handleInputChange("bankBaseRateShortTerm", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("bankBaseRateShortTerm", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Liquidity Premiums (Short Term, in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("liquidityPremiumsShortTerm", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.liquidityPremiumsShortTerm}
+                            onChange={(e) => handleInputChange("liquidityPremiumsShortTerm", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("liquidityPremiumsShortTerm", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Credit Risk Premiums (Short Term, in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("creditRiskPremiumsShortTerm", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.creditRiskPremiumsShortTerm}
+                            onChange={(e) => handleInputChange("creditRiskPremiumsShortTerm", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("creditRiskPremiumsShortTerm", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Maturity Y (Short Term)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("maturityYShortTerm", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.maturityYShortTerm}
+                            onChange={(e) => handleInputChange("maturityYShortTerm", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("maturityYShortTerm", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Amortization Y (Short Term)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("amortizationYShortTerm", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.amortizationYShortTerm}
+                            onChange={(e) => handleInputChange("amortizationYShortTerm", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("amortizationYShortTerm", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
