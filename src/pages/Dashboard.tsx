@@ -20,9 +20,9 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground font-franklin">Financial Dashboard</h1>
+          <h1 className="text-3xl font-bold text-foreground font-franklin">TTF-Refinancing Dashboard</h1>
           <p className="text-muted-foreground mt-1">
-            Real-time insights into your debt restructuring analysis
+            Model My Wealth - Real-time insights for faster debt restructuring decisions
           </p>
         </div>
         <div className="flex gap-3">
