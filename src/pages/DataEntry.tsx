@@ -123,6 +123,9 @@ export default function DataEntry() {
     q3Revenue: "",
     q4Revenue: "",
     seasonalWorkingCapital: "",
+    // Monthly Revenue Seasonality
+    january: "", february: "", march: "", april: "", may: "", june: "",
+    july: "", august: "", september: "", october: "", november: "", december: "",
   });
 
   const steps = [
@@ -1947,6 +1950,51 @@ export default function DataEntry() {
                           />
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  {/* Monthly Revenue Seasonality */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-primary">Revenue Seasonality (in %)</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                      {[
+                        'january', 'february', 'march', 'april', 'may', 'june',
+                        'july', 'august', 'september', 'october', 'november', 'december'
+                      ].map((month) => (
+                        <div key={month}>
+                          <Label>{month.charAt(0).toUpperCase() + month.slice(1)}</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement(month, 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData[month as keyof typeof formData]}
+                              onChange={(e) => handleInputChange(month, e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement(month, 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </CardContent>
