@@ -46,6 +46,7 @@ export default function DataEntry() {
     interestExpense: "",
     pretaxIncome: "",
     taxes: "",
+    taxRates: "",
     netIncome: "",
     
     // Balance Sheet - Assets
@@ -456,6 +457,38 @@ export default function DataEntry() {
                               size="icon"
                               className="h-10 w-10"
                               onClick={() => handleIncrement("taxes", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <Label htmlFor="taxRates">Tax Rates (in %)</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("taxRates", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input
+                              id="taxRates"
+                              type="number"
+                              step="0.1"
+                              placeholder="0.00"
+                              value={formData.taxRates}
+                              onChange={(e) => handleInputChange("taxRates", e.target.value)}
+                              className="text-center flex-1"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("taxRates", 0.1)}
                             >
                               <Plus className="h-4 w-4" />
                             </Button>
