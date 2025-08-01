@@ -10,7 +10,8 @@ import {
   Calculator,
   FileText,
   AlertTriangle,
-  CheckCircle
+  CheckCircle,
+  Target
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -124,6 +125,12 @@ export default function Dashboard() {
               <Link to="/reports">
                 <FileText className="mr-2 h-4 w-4" />
                 Generate Report
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link to="/data-entry">
+                <Target className="mr-2 h-4 w-4" />
+                Scenario Analysis / Stress Testing
               </Link>
             </Button>
           </CardContent>
