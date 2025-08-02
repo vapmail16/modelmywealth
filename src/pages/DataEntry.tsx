@@ -1066,8 +1066,7 @@ export default function DataEntry() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="individual">Individual</SelectItem>
-                            <SelectItem value="corporate">Corporate</SelectItem>
-                            <SelectItem value="institutional">Institutional</SelectItem>
+                            <SelectItem value="consolidate">Consolidate</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -1201,7 +1200,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Maturity Y (Senior Secured)</Label>
+                        <Label>Maturity Period - Debt 1</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
@@ -1275,8 +1274,7 @@ export default function DataEntry() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="individual">Individual</SelectItem>
-                            <SelectItem value="corporate">Corporate</SelectItem>
-                            <SelectItem value="institutional">Institutional</SelectItem>
+                            <SelectItem value="consolidate">Consolidate</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -1410,7 +1408,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Maturity Y (Short Term)</Label>
+                        <Label>Maturity Period - Debt 2</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
