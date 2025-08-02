@@ -126,6 +126,7 @@ export default function DataEntry() {
   const steps = [
     { id: "company-info", title: "Company Info", icon: Building },
     { id: "profit-loss", title: "P&L Statement", icon: Calculator },
+    { id: "tax-rates", title: "Tax Rates", icon: FileText },
     { id: "balance-sheet", title: "Balance Sheet", icon: BarChart3 },
     { id: "debt-structure", title: "Debt Structure", icon: CreditCard },
     { id: "projections", title: "Projections", icon: TrendingUp },
@@ -471,38 +472,6 @@ export default function DataEntry() {
                           </div>
                         </div>
                         <div>
-                          <Label htmlFor="taxRates">Tax Rates (in %)</Label>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleDecrement("taxRates", 0.1)}
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
-                            <Input
-                              id="taxRates"
-                              type="number"
-                              step="0.1"
-                              placeholder="0.00"
-                              value={formData.taxRates}
-                              onChange={(e) => handleInputChange("taxRates", e.target.value)}
-                              className="text-center flex-1"
-                            />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleIncrement("taxRates", 0.1)}
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                        <div>
                           <Label htmlFor="netIncome">Net Income</Label>
                           <div className="flex items-center gap-2">
                             <Button
@@ -533,6 +502,65 @@ export default function DataEntry() {
                               <Plus className="h-4 w-4" />
                             </Button>
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Tax Rates */}
+            <TabsContent value="tax-rates">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-primary" />
+                    Tax Rates Configuration
+                  </CardTitle>
+                  <CardDescription>
+                    Set the tax rates for your financial projections
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-primary">Tax Rate Settings</h4>
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="taxRates">Tax Rates (in %)</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("taxRates", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input
+                              id="taxRates"
+                              type="number"
+                              step="0.1"
+                              placeholder="0.00"
+                              value={formData.taxRates}
+                              onChange={(e) => handleInputChange("taxRates", e.target.value)}
+                              className="text-center flex-1"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("taxRates", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Enter the effective tax rate as a percentage (e.g., 25.0 for 25%)
+                          </p>
                         </div>
                       </div>
                     </div>
