@@ -1233,7 +1233,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Amortization Y (Senior Secured)</Label>
+                        <Label>Interest Free Period</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
@@ -1442,7 +1442,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Amortization Y (Short Term)</Label>
+                        <Label>Interest Free Period</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
