@@ -216,6 +216,95 @@ export default function Reports() {
                     </div>
                   </div>
 
+                  {/* Business Context */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Business Case / Investment Thesis</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select business case type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="new-project-financing">New Project Financing</SelectItem>
+                          <SelectItem value="existing-debt-refinancing">Existing Debt Refinancing</SelectItem>
+                          <SelectItem value="debt-business-restructuring">Debt and Business Restructuring</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Industry Sector</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select industry" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="technology">Technology</SelectItem>
+                          <SelectItem value="healthcare">Healthcare</SelectItem>
+                          <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                          <SelectItem value="retail">Retail</SelectItem>
+                          <SelectItem value="financial-services">Financial Services</SelectItem>
+                          <SelectItem value="energy">Energy</SelectItem>
+                          <SelectItem value="real-estate">Real Estate</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Analysis Focus */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Analysis Period</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select time period" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="current-year">Current Year</SelectItem>
+                          <SelectItem value="trailing-12-months">Trailing 12 Months</SelectItem>
+                          <SelectItem value="3-year-trend">3-Year Trend</SelectItem>
+                          <SelectItem value="5-year-trend">5-Year Trend</SelectItem>
+                          <SelectItem value="custom">Custom Period</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Report Audience</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select primary audience" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="board-directors">Board of Directors</SelectItem>
+                          <SelectItem value="senior-management">Senior Management</SelectItem>
+                          <SelectItem value="lenders-banks">Lenders / Banks</SelectItem>
+                          <SelectItem value="investors">Investors</SelectItem>
+                          <SelectItem value="advisors">Financial Advisors</SelectItem>
+                          <SelectItem value="regulatory">Regulatory Bodies</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Key Metrics Focus */}
+                  <div className="space-y-2">
+                    <Label>Key Metrics to Emphasize</Label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select primary focus area" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="debt-coverage">Debt Coverage Ratios</SelectItem>
+                        <SelectItem value="liquidity">Liquidity Analysis</SelectItem>
+                        <SelectItem value="profitability">Profitability Trends</SelectItem>
+                        <SelectItem value="cash-flow">Cash Flow Analysis</SelectItem>
+                        <SelectItem value="covenant-compliance">Covenant Compliance</SelectItem>
+                        <SelectItem value="valuation">Valuation Metrics</SelectItem>
+                        <SelectItem value="working-capital">Working Capital Management</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
                   {/* Custom Instructions */}
                   <div className="space-y-2">
                     <Label htmlFor="instructions">Custom Instructions (Optional)</Label>
