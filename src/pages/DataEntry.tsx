@@ -317,7 +317,7 @@ export default function DataEntry() {
                          <TableRow>
                            <TableCell className="font-medium">Gross Profit</TableCell>
                            <TableCell className="text-right">
-                             <div className="w-32 ml-auto text-right font-semibold pr-3">
+                             <div className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent font-semibold px-3 py-2">
                                {calculateGrossProfit().toLocaleString()}
                              </div>
                            </TableCell>
@@ -344,7 +344,7 @@ export default function DataEntry() {
                          <TableRow>
                            <TableCell className="font-medium">EBITDA</TableCell>
                            <TableCell className="text-right">
-                             <div className="w-32 ml-auto text-right font-semibold pr-3">
+                             <div className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent font-semibold px-3 py-2">
                                {calculateEBITDA().toLocaleString()}
                              </div>
                            </TableCell>
@@ -388,7 +388,7 @@ export default function DataEntry() {
                          <TableRow>
                            <TableCell className="font-medium">Net Income Before Tax</TableCell>
                            <TableCell className="text-right">
-                             <div className="w-32 ml-auto text-right font-semibold pr-3">
+                             <div className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent font-semibold px-3 py-2">
                                {calculateNetIncomeBeforeTax().toLocaleString()}
                              </div>
                            </TableCell>
@@ -415,7 +415,7 @@ export default function DataEntry() {
                          <TableRow className="border-t-2">
                            <TableCell className="font-semibold">Net Income</TableCell>
                            <TableCell className="text-right">
-                             <div className="w-32 ml-auto text-right font-bold text-primary pr-3">
+                             <div className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent font-bold text-primary px-3 py-2">
                                {calculateNetIncome().toLocaleString()}
                              </div>
                            </TableCell>
