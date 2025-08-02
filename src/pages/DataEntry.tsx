@@ -313,13 +313,15 @@ export default function DataEntry() {
                           </TableCell>
                         </TableRow>
                         
-                        {/* Gross Profit - Calculated */}
-                        <TableRow>
-                          <TableCell className="font-medium">Gross Profit</TableCell>
-                          <TableCell className="text-right font-semibold">
-                            {calculateGrossProfit().toLocaleString()}
-                          </TableCell>
-                        </TableRow>
+                         {/* Gross Profit - Calculated */}
+                         <TableRow>
+                           <TableCell className="font-medium">Gross Profit</TableCell>
+                           <TableCell className="text-right">
+                             <div className="w-32 ml-auto text-right font-semibold pr-3">
+                               {calculateGrossProfit().toLocaleString()}
+                             </div>
+                           </TableCell>
+                         </TableRow>
                         
                         {/* Operating Expenses - Input */}
                         <TableRow>
@@ -338,13 +340,15 @@ export default function DataEntry() {
                           </TableCell>
                         </TableRow>
                         
-                        {/* EBITDA - Calculated */}
-                        <TableRow>
-                          <TableCell className="font-medium">EBITDA</TableCell>
-                          <TableCell className="text-right font-semibold">
-                            {calculateEBITDA().toLocaleString()}
-                          </TableCell>
-                        </TableRow>
+                         {/* EBITDA - Calculated */}
+                         <TableRow>
+                           <TableCell className="font-medium">EBITDA</TableCell>
+                           <TableCell className="text-right">
+                             <div className="w-32 ml-auto text-right font-semibold pr-3">
+                               {calculateEBITDA().toLocaleString()}
+                             </div>
+                           </TableCell>
+                         </TableRow>
                         
                         {/* Depreciation & Amortization - Input */}
                         <TableRow>
@@ -380,13 +384,15 @@ export default function DataEntry() {
                           </TableCell>
                         </TableRow>
                         
-                        {/* Net Income Before Tax - Calculated */}
-                        <TableRow>
-                          <TableCell className="font-medium">Net Income Before Tax</TableCell>
-                          <TableCell className="text-right font-semibold">
-                            {calculateNetIncomeBeforeTax().toLocaleString()}
-                          </TableCell>
-                        </TableRow>
+                         {/* Net Income Before Tax - Calculated */}
+                         <TableRow>
+                           <TableCell className="font-medium">Net Income Before Tax</TableCell>
+                           <TableCell className="text-right">
+                             <div className="w-32 ml-auto text-right font-semibold pr-3">
+                               {calculateNetIncomeBeforeTax().toLocaleString()}
+                             </div>
+                           </TableCell>
+                         </TableRow>
                         
                         {/* Income Tax Expense - Input */}
                         <TableRow>
@@ -405,13 +411,15 @@ export default function DataEntry() {
                           </TableCell>
                         </TableRow>
                         
-                        {/* Net Income - Calculated */}
-                        <TableRow className="border-t-2">
-                          <TableCell className="font-semibold">Net Income</TableCell>
-                          <TableCell className="text-right font-bold text-primary">
-                            {calculateNetIncome().toLocaleString()}
-                          </TableCell>
-                        </TableRow>
+                         {/* Net Income - Calculated */}
+                         <TableRow className="border-t-2">
+                           <TableCell className="font-semibold">Net Income</TableCell>
+                           <TableCell className="text-right">
+                             <div className="w-32 ml-auto text-right font-bold text-primary pr-3">
+                               {calculateNetIncome().toLocaleString()}
+                             </div>
+                           </TableCell>
+                         </TableRow>
                       </TableBody>
                      </Table>
                    </div>
