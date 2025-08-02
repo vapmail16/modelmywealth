@@ -973,6 +973,9 @@ export default function DataEntry() {
                             <Plus className="h-4 w-4" />
                           </Button>
                         </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Amount the business plans to spend as capital expenditures in the immediate next year
+                        </p>
                       </div>
                       <div>
                         <Label>Asset Depreciated over years</Label>
@@ -1004,6 +1007,32 @@ export default function DataEntry() {
                             <Plus className="h-4 w-4" />
                           </Button>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  {/* Data Tips Section */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-primary">Data Tips</h4>
+                    <div className="bg-secondary/30 p-4 rounded-lg space-y-3">
+                      <div>
+                        <h5 className="font-medium text-sm mb-1">Capital Expenditure Additions</h5>
+                        <p className="text-xs text-muted-foreground">
+                          This field represents the planned capital expenditures for the immediate next fiscal year. 
+                          Capital expenditures (CapEx) are funds used to acquire, upgrade, and maintain physical assets 
+                          such as property, industrial buildings, equipment, and technology. This amount should reflect 
+                          your business's investment plans for growth, maintenance, or replacement of fixed assets in 
+                          the upcoming year. It's crucial for cash flow projections and understanding future capital requirements.
+                        </p>
+                      </div>
+                      <div>
+                        <h5 className="font-medium text-sm mb-1">Asset Depreciation Period</h5>
+                        <p className="text-xs text-muted-foreground">
+                          The number of years over which assets are depreciated affects your annual depreciation expense 
+                          and impacts both your P&L and cash flow projections.
+                        </p>
                       </div>
                     </div>
                   </div>
