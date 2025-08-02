@@ -281,8 +281,7 @@ export default function DataEntry() {
                         {/* Revenue - Input */}
                         <TableRow>
                           <TableCell className="font-medium">
-                            Revenue
-                            <div className="text-xs text-muted-foreground">Input needed</div>
+                            Revenue *
                           </TableCell>
                           <TableCell className="text-right">
                             <Input
@@ -299,8 +298,7 @@ export default function DataEntry() {
                         {/* Cost of Goods Sold - Input */}
                         <TableRow>
                           <TableCell className="font-medium">
-                            Cost of Goods Sold or Services
-                            <div className="text-xs text-muted-foreground">Input needed</div>
+                            Cost of Goods Sold or Services *
                           </TableCell>
                           <TableCell className="text-right">
                             <Input
@@ -325,8 +323,7 @@ export default function DataEntry() {
                         {/* Operating Expenses - Input */}
                         <TableRow>
                           <TableCell className="font-medium">
-                            Operating Expenses
-                            <div className="text-xs text-muted-foreground">Input needed</div>
+                            Operating Expenses *
                           </TableCell>
                           <TableCell className="text-right">
                             <Input
@@ -351,8 +348,7 @@ export default function DataEntry() {
                         {/* Depreciation & Amortization - Input */}
                         <TableRow>
                           <TableCell className="font-medium">
-                            Depreciation & Amortization
-                            <div className="text-xs text-muted-foreground">Input needed</div>
+                            Depreciation & Amortization *
                           </TableCell>
                           <TableCell className="text-right">
                             <Input
@@ -369,8 +365,7 @@ export default function DataEntry() {
                         {/* Interest Expense - Input */}
                         <TableRow>
                           <TableCell className="font-medium">
-                            Interest Expense
-                            <div className="text-xs text-muted-foreground">Input needed</div>
+                            Interest Expense *
                           </TableCell>
                           <TableCell className="text-right">
                             <Input
@@ -395,8 +390,7 @@ export default function DataEntry() {
                         {/* Income Tax Expense - Input */}
                         <TableRow>
                           <TableCell className="font-medium">
-                            Income Tax Expense
-                            <div className="text-xs text-muted-foreground">Input needed</div>
+                            Income Tax Expense *
                           </TableCell>
                           <TableCell className="text-right">
                             <Input
@@ -419,6 +413,9 @@ export default function DataEntry() {
                         </TableRow>
                       </TableBody>
                      </Table>
+                   </div>
+                   <div className="text-xs text-muted-foreground mt-4">
+                     * Input needed
                    </div>
                  </CardContent>
                </Card>
