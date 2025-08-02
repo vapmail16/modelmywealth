@@ -1,292 +1,2073 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableRow, TableCell } from "@/components/ui/table"
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Calculator,
+  Building,
+  TrendingUp,
+  DollarSign,
+  Save,
+  Download,
+  Upload,
+  ChevronRight,
+  CheckCircle,
+  AlertCircle,
+  CreditCard,
+  BarChart3,
+  FileText,
+  Calendar,
+  Clock,
+  Plus,
+  Minus,
+} from "lucide-react";
 
-interface FinancialData {
-  revenue: number;
-  costOfGoodsSold: number;
-  salesMarketing: number;
-  administration: number;
-  depreciation: number;
-  amortization: number;
-  interestIncome: number;
-  interestExpense: number;
-  incomeTaxExpense: number;
-  extraordinaryItems: number;
-}
 
 export default function DataEntry() {
-  const [formData, setFormData] = useState<FinancialData>({
-    revenue: 1000000,
-    costOfGoodsSold: 600000,
-    salesMarketing: 100000,
-    administration: 50000,
-    depreciation: 20000,
-    amortization: 10000,
-    interestIncome: 5000,
-    interestExpense: 15000,
-    incomeTaxExpense: 30000,
-    extraordinaryItems: 5000,
+  const { toast } = useToast();
+  const [currentStep, setCurrentStep] = useState("company-info");
+  const [formData, setFormData] = useState({
+    // P&L Data
+    revenue: "",
+    cogs: "",
+    grossProfit: "",
+    operatingExpenses: "",
+    ebitda: "",
+    depreciation: "",
+    ebit: "",
+    interestExpense: "",
+    pretaxIncome: "",
+    taxes: "",
+    taxRates: "",
+    netIncome: "",
+    
+    // Balance Sheet - Assets
+    cash: "",
+    accountsReceivable: "",
+    inventory: "",
+    otherCurrentAssets: "",
+    ppe: "",
+    otherAssets: "",
+    
+    // Balance Sheet - Liabilities & Equity
+    accountsPayableProvisions: "",
+    seniorSecured: "",
+    debtTranche1: "",
+    equity: "",
+    retainedEarnings: "",
+    
+    // Balance Sheet - Additional Fields
+    capitalExpenditureAdditions: "",
+    assetDepreciatedOverYears: "",
+    
+    // Debt Structure
+    seniorSecuredLoanType: "",
+    additionalLoanSeniorSecured: "",
+    bankBaseRateSeniorSecured: "",
+    liquidityPremiumsSeniorSecured: "",
+    creditRiskPremiumsSeniorSecured: "",
+    maturityYSeniorSecured: "",
+    amortizationYSeniorSecured: "",
+    
+    shortTermLoanType: "",
+    additionalLoanShortTerm: "",
+    bankBaseRateShortTerm: "",
+    liquidityPremiumsShortTerm: "",
+    creditRiskPremiumsShortTerm: "",
+    maturityYShortTerm: "",
+    amortizationYShortTerm: "",
+    
+    // Cash Flow
+    operatingCashFlow: "",
+    capitalExpenditures: "",
+    freeCashFlow: "",
+    debtService: "",
+    
+    // Growth Assumptions - New Growth Rate Fields
+    grRevenue1: "", grRevenue2: "", grRevenue3: "", grRevenue4: "", grRevenue5: "", grRevenue6: "",
+    grRevenue7: "", grRevenue8: "", grRevenue9: "", grRevenue10: "", grRevenue11: "", grRevenue12: "",
+    grCost1: "", grCost2: "", grCost3: "", grCost4: "", grCost5: "", grCost6: "",
+    grCost7: "", grCost8: "", grCost9: "", grCost10: "", grCost11: "", grCost12: "",
+    grCostOper1: "", grCostOper2: "", grCostOper3: "", grCostOper4: "", grCostOper5: "", grCostOper6: "",
+    grCostOper7: "", grCostOper8: "", grCostOper9: "", grCostOper10: "", grCostOper11: "", grCostOper12: "",
+    grCapex1: "", grCapex2: "", grCapex3: "", grCapex4: "", grCapex5: "", grCapex6: "",
+    grCapex7: "", grCapex8: "", grCapex9: "", grCapex10: "", grCapex11: "", grCapex12: "",
+    
+    // Company Information
+    industry: "",
+    region: "",
+    businessCase: "",
+    employeeCount: "",
+    founded: "",
+    projectionsYear: "",
+    notes: "",
+    
+    // Working Capital Data
+    accountReceivablePercent: "",
+    otherCurrentAssetsPercent: "",
+    inventoryPercent: "",
+    accountsPayablePercent: "",
+    
+    // Seasonality Data
+    seasonalityPattern: "",
+    seasonalWorkingCapital: "",
+    // Monthly Revenue Seasonality
+    january: "", february: "", march: "", april: "", may: "", june: "",
+    july: "", august: "", september: "", october: "", november: "", december: "",
   });
 
-  useEffect(() => {
-    // Load data from local storage on component mount
-    const storedData = localStorage.getItem('financialData');
-    if (storedData) {
-      setFormData(JSON.parse(storedData));
-    }
-  }, []);
+  const steps = [
+    { id: "company-info", title: "Company Info", icon: Building },
+    { id: "profit-loss", title: "P&L Statement", icon: Calculator },
+    { id: "tax-rates", title: "Tax Rates", icon: FileText },
+    { id: "balance-sheet", title: "Balance Sheet", icon: BarChart3 },
+    { id: "debt-structure", title: "Debt Structure", icon: CreditCard },
+    { id: "projections", title: "Projections", icon: TrendingUp },
+    { id: "working-capital", title: "Working Capital", icon: DollarSign },
+    { id: "seasonality", title: "Seasonality", icon: Calendar },
+  ];
 
-  useEffect(() => {
-    // Save data to local storage whenever formData changes
-    localStorage.setItem('financialData', JSON.stringify(formData));
-  }, [formData]);
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleIncrement = (field: string, step: number = 0.1) => {
+    const currentValue = parseFloat(formData[field as keyof typeof formData] as string) || 0;
+    const newValue = (currentValue + step).toFixed(1);
+    handleInputChange(field, newValue);
+  };
+
+  const handleDecrement = (field: string, step: number = 0.1) => {
+    const currentValue = parseFloat(formData[field as keyof typeof formData] as string) || 0;
+    const newValue = Math.max(0, currentValue - step).toFixed(1);
+    handleInputChange(field, newValue);
+  };
 
   const calculateGrossProfit = () => {
-    return formData.revenue - formData.costOfGoodsSold;
+    const revenue = parseFloat(formData.revenue) || 0;
+    const cogs = parseFloat(formData.cogs) || 0;
+    return revenue - cogs;
   };
 
   const calculateEBITDA = () => {
-    return calculateGrossProfit() - formData.salesMarketing - formData.administration;
-  };
-
-  const calculateEBIT = () => {
-    return calculateEBITDA() - formData.depreciation - formData.amortization;
+    const grossProfit = calculateGrossProfit();
+    const opex = parseFloat(formData.operatingExpenses) || 0;
+    return grossProfit - opex;
   };
 
   const calculateNetIncomeBeforeTax = () => {
-    return calculateEBIT() + formData.interestIncome - formData.interestExpense;
+    const ebitda = calculateEBITDA();
+    const depreciation = parseFloat(formData.depreciation) || 0;
+    const interest = parseFloat(formData.interestExpense) || 0;
+    return ebitda - depreciation - interest;
   };
 
   const calculateNetIncome = () => {
-    return calculateNetIncomeBeforeTax() - formData.incomeTaxExpense + formData.extraordinaryItems;
+    const netIncomeBeforeTax = calculateNetIncomeBeforeTax();
+    const taxes = parseFloat(formData.taxes) || 0;
+    return netIncomeBeforeTax - taxes;
   };
 
-  const handleSubmit = () => {
-    alert(JSON.stringify(formData));
+  const handleSave = () => {
+    toast({
+      title: "Data saved",
+      description: "Your financial data has been saved as a draft.",
+    });
   };
 
-  // Helper function to format numbers with commas
-  const formatNumberInput = (value: number) => {
-    return value.toLocaleString();
+  const handleImport = () => {
+    toast({
+      title: "Import feature",
+      description: "CSV/Excel import functionality coming soon.",
+    });
   };
 
-  // Helper function to parse formatted input back to number
-  const parseNumberInput = (value: string) => {
-    return parseFloat(value.replace(/,/g, '')) || 0;
-  };
-
-  // Handle input change with formatting
-  const handleInputChange = (field: keyof FinancialData, value: string) => {
-    const numericValue = parseNumberInput(value);
-    setFormData(prev => ({
-      ...prev,
-      [field]: numericValue
-    }));
-  };
+  // Calculate completion percentage
+  const totalFields = Object.keys(formData).length;
+  const completedFields = Object.values(formData).filter(value => value !== "").length;
+  const completionPercentage = Math.round((completedFields / totalFields) * 100);
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Data Entry</h1>
-        <Button onClick={handleSubmit}>Save Data</Button>
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Financial Data Entry</h1>
+          <p className="text-muted-foreground mt-1">
+            Complete comprehensive financial data for TTF refinancing analysis
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <Button variant="outline" className="gap-2" onClick={handleSave}>
+            <Save className="h-4 w-4" />
+            Save Draft
+          </Button>
+          <Button variant="outline" className="gap-2" onClick={handleImport}>
+            <Upload className="h-4 w-4" />
+            Import Data
+          </Button>
+        </div>
       </div>
 
-      <Card>
+      {/* Navigation Steps - Removed completion tracking as requested */}
+      <Card className="shadow-card">
         <CardHeader>
-          <CardTitle>P&L Statement</CardTitle>
+          <CardTitle className="text-lg">Data Entry Sections</CardTitle>
+          <CardDescription>Navigate between different financial data sections</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableBody>
-              <TableRow>
-                <TableCell className="font-medium">Revenue</TableCell>
-                <TableCell className="text-right">
-                  <Input
-                    type="text"
-                    value={formatNumberInput(formData.revenue)}
-                    onChange={(e) => handleInputChange('revenue', e.target.value)}
-                    className="w-32 ml-auto text-right"
-                  />
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">Cost of Goods Sold</TableCell>
-                <TableCell className="text-right">
-                  <Input
-                    type="text"
-                    value={formatNumberInput(formData.costOfGoodsSold)}
-                    onChange={(e) => handleInputChange('costOfGoodsSold', e.target.value)}
-                    className="w-32 ml-auto text-right"
-                  />
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">Gross Profit</TableCell>
-                <TableCell className="text-right">
-                  <div className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent font-semibold px-3 py-2">
-                    {calculateGrossProfit().toLocaleString()}
-                  </div>
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">Sales & Marketing</TableCell>
-                <TableCell className="text-right">
-                  <Input
-                    type="text"
-                    value={formatNumberInput(formData.salesMarketing)}
-                    onChange={(e) => handleInputChange('salesMarketing', e.target.value)}
-                    className="w-32 ml-auto text-right"
-                  />
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">Administration</TableCell>
-                <TableCell className="text-right">
-                  <Input
-                    type="text"
-                    value={formatNumberInput(formData.administration)}
-                    onChange={(e) => handleInputChange('administration', e.target.value)}
-                    className="w-32 ml-auto text-right"
-                  />
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">EBITDA</TableCell>
-                <TableCell className="text-right">
-                  <div className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent font-semibold px-3 py-2">
-                    {calculateEBITDA().toLocaleString()}
-                  </div>
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">Depreciation</TableCell>
-                <TableCell className="text-right">
-                  <Input
-                    type="text"
-                    value={formatNumberInput(formData.depreciation)}
-                    onChange={(e) => handleInputChange('depreciation', e.target.value)}
-                    className="w-32 ml-auto text-right"
-                  />
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">Amortization</TableCell>
-                <TableCell className="text-right">
-                  <Input
-                    type="text"
-                    value={formatNumberInput(formData.amortization)}
-                    onChange={(e) => handleInputChange('amortization', e.target.value)}
-                    className="w-32 ml-auto text-right"
-                  />
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">EBIT</TableCell>
-                <TableCell className="text-right">
-                  <div className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent font-semibold px-3 py-2">
-                    {calculateEBIT().toLocaleString()}
-                  </div>
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">Interest Income</TableCell>
-                <TableCell className="text-right">
-                  <Input
-                    type="text"
-                    value={formatNumberInput(formData.interestIncome)}
-                    onChange={(e) => handleInputChange('interestIncome', e.target.value)}
-                    className="w-32 ml-auto text-right"
-                  />
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">Interest Expense</TableCell>
-                <TableCell className="text-right">
-                  <Input
-                    type="text"
-                    value={formatNumberInput(formData.interestExpense)}
-                    onChange={(e) => handleInputChange('interestExpense', e.target.value)}
-                    className="w-32 ml-auto text-right"
-                  />
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">Net Income Before Tax</TableCell>
-                <TableCell className="text-right">
-                  <div className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent font-semibold px-3 py-2">
-                    {calculateNetIncomeBeforeTax().toLocaleString()}
-                  </div>
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">Income Tax Expense</TableCell>
-                <TableCell className="text-right">
-                  <Input
-                    type="text"
-                    value={formatNumberInput(formData.incomeTaxExpense)}
-                    onChange={(e) => handleInputChange('incomeTaxExpense', e.target.value)}
-                    className="w-32 ml-auto text-right"
-                  />
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium">Extraordinary Items</TableCell>
-                <TableCell className="text-right">
-                  <Input
-                    type="text"
-                    value={formatNumberInput(formData.extraordinaryItems)}
-                    onChange={(e) => handleInputChange('extraordinaryItems', e.target.value)}
-                    className="w-32 ml-auto text-right"
-                  />
-                </TableCell>
-              </TableRow>
-
-              <TableRow className="border-t-2">
-                <TableCell className="font-semibold">Net Income</TableCell>
-                <TableCell className="text-right">
-                  <div className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent font-bold text-primary px-3 py-2">
-                    {calculateNetIncome().toLocaleString()}
-                  </div>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2">
+            {steps.map((step, index) => (
+              <div
+                key={step.id}
+                className={`flex flex-col items-center gap-2 p-3 rounded-lg border transition-colors cursor-pointer ${
+                  currentStep === step.id
+                    ? "bg-primary/10 border-primary"
+                    : "bg-secondary/50 border-border hover:bg-secondary"
+                }`}
+                onClick={() => setCurrentStep(step.id)}
+              >
+                <div className={`p-2 rounded-md ${
+                  currentStep === step.id
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground"
+                }`}>
+                  <step.icon className="h-4 w-4" />
+                </div>
+                <div className="text-center">
+                  <p className="text-xs font-medium">{step.title}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Balance Sheet</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Balance Sheet data entry form will be here.</p>
-        </CardContent>
-      </Card>
+      {/* Main Form */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Form Content */}
+        <div className="lg:col-span-3 space-y-6">
+          <Tabs value={currentStep} onValueChange={setCurrentStep}>
+            {/* Profit & Loss Statement */}
+            <TabsContent value="profit-loss">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calculator className="h-5 w-5 text-primary" />
+                    Profit & Loss Statement (Annual, $M)
+                  </CardTitle>
+                  <CardDescription>
+                    Enter your most recent fiscal year P&L data
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="font-semibold">Particulars</TableHead>
+                          <TableHead className="text-right font-semibold">Amount</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {/* Revenue - Input */}
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Revenue *
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={formData.revenue}
+                              onChange={(e) => handleInputChange("revenue", e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Cost of Goods Sold - Input */}
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Cost of Goods Sold or Services *
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={formData.cogs}
+                              onChange={(e) => handleInputChange("cogs", e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        
+                         {/* Gross Profit - Calculated */}
+                         <TableRow>
+                           <TableCell className="font-medium">Gross Profit</TableCell>
+                           <TableCell className="text-right">
+                             <div className="w-32 ml-auto text-right font-semibold pr-3">
+                               {calculateGrossProfit().toLocaleString()}
+                             </div>
+                           </TableCell>
+                         </TableRow>
+                        
+                        {/* Operating Expenses - Input */}
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Operating Expenses *
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={formData.operatingExpenses}
+                              onChange={(e) => handleInputChange("operatingExpenses", e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        
+                         {/* EBITDA - Calculated */}
+                         <TableRow>
+                           <TableCell className="font-medium">EBITDA</TableCell>
+                           <TableCell className="text-right">
+                             <div className="w-32 ml-auto text-right font-semibold pr-3">
+                               {calculateEBITDA().toLocaleString()}
+                             </div>
+                           </TableCell>
+                         </TableRow>
+                        
+                        {/* Depreciation & Amortization - Input */}
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Depreciation & Amortization *
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={formData.depreciation}
+                              onChange={(e) => handleInputChange("depreciation", e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Interest Expense - Input */}
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Interest Expense *
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={formData.interestExpense}
+                              onChange={(e) => handleInputChange("interestExpense", e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        
+                         {/* Net Income Before Tax - Calculated */}
+                         <TableRow>
+                           <TableCell className="font-medium">Net Income Before Tax</TableCell>
+                           <TableCell className="text-right">
+                             <div className="w-32 ml-auto text-right font-semibold pr-3">
+                               {calculateNetIncomeBeforeTax().toLocaleString()}
+                             </div>
+                           </TableCell>
+                         </TableRow>
+                        
+                        {/* Income Tax Expense - Input */}
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Income Tax Expense *
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={formData.taxes}
+                              onChange={(e) => handleInputChange("taxes", e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        
+                         {/* Net Income - Calculated */}
+                         <TableRow className="border-t-2">
+                           <TableCell className="font-semibold">Net Income</TableCell>
+                           <TableCell className="text-right">
+                             <div className="w-32 ml-auto text-right font-bold text-primary pr-3">
+                               {calculateNetIncome().toLocaleString()}
+                             </div>
+                           </TableCell>
+                         </TableRow>
+                      </TableBody>
+                     </Table>
+                   </div>
+                   <div className="text-xs text-muted-foreground mt-4">
+                     * Input needed
+                   </div>
+                 </CardContent>
+               </Card>
+             </TabsContent>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Cash Flow Statement</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Cash Flow Statement data entry form will be here.</p>
-        </CardContent>
-      </Card>
+            {/* Tax Rates */}
+            <TabsContent value="tax-rates">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-primary" />
+                    Tax Rates Configuration
+                  </CardTitle>
+                  <CardDescription>
+                    Set the tax rates for your financial projections
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-primary">Tax Rate Settings</h4>
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="taxRates">Tax Rates (in %)</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("taxRates", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input
+                              id="taxRates"
+                              type="number"
+                              step="0.1"
+                              placeholder="0.00"
+                              value={formData.taxRates}
+                              onChange={(e) => handleInputChange("taxRates", e.target.value)}
+                              className="text-center flex-1"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("taxRates", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Enter the effective tax rate as a percentage (e.g., 25.0 for 25%)
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Balance Sheet */}
+            <TabsContent value="balance-sheet">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5 text-primary" />
+                    Fill in the Balance Sheet Fields
+                  </CardTitle>
+                  <CardDescription>
+                    Enter your balance sheet data with increment/decrement controls
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Assets */}
+                    <div className="space-y-4">
+                      <div className="space-y-4">
+                        <div>
+                          <Label>Cash and Marketable Securities</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("cash", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.cash}
+                              onChange={(e) => handleInputChange("cash", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("cash", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Accounts Receivable</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("accountsReceivable", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.accountsReceivable}
+                              onChange={(e) => handleInputChange("accountsReceivable", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("accountsReceivable", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Inventory</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("inventory", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.inventory}
+                              onChange={(e) => handleInputChange("inventory", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("inventory", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Other Current Assets</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("otherCurrentAssets", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.otherCurrentAssets}
+                              onChange={(e) => handleInputChange("otherCurrentAssets", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("otherCurrentAssets", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Property, Plant & Equipment (Net)</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("ppe", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.ppe}
+                              onChange={(e) => handleInputChange("ppe", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("ppe", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Other Assets/DTA</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("otherAssets", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.otherAssets}
+                              onChange={(e) => handleInputChange("otherAssets", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("otherAssets", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Liabilities & Equity */}
+                    <div className="space-y-4">
+                      <div className="space-y-4">
+                        <div>
+                          <Label>Accounts Payable/Provisions</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("accountsPayableProvisions", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.accountsPayableProvisions}
+                              onChange={(e) => handleInputChange("accountsPayableProvisions", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("accountsPayableProvisions", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Debt 1</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("seniorSecured", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.seniorSecured}
+                              onChange={(e) => handleInputChange("seniorSecured", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("seniorSecured", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Other Long Term Debt 2</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("debtTranche1", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.debtTranche1}
+                              onChange={(e) => handleInputChange("debtTranche1", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("debtTranche1", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Equity</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("equity", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.equity}
+                              onChange={(e) => handleInputChange("equity", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("equity", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Retained Earning</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement("retainedEarnings", 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData.retainedEarnings}
+                              onChange={(e) => handleInputChange("retainedEarnings", e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement("retainedEarnings", 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  {/* Additional Balance Sheet Fields */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-primary">Additional Balance Sheet Items</h4>
+                    <div className="grid grid-cols-1 gap-4">
+                      <div>
+                        <Label>Capital Expenditure Additions</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("capitalExpenditureAdditions", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.capitalExpenditureAdditions}
+                            onChange={(e) => handleInputChange("capitalExpenditureAdditions", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("capitalExpenditureAdditions", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Amount the business plans to spend as capital expenditures in the immediate next year
+                        </p>
+                      </div>
+                      <div>
+                        <Label>Asset Depreciated over years</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("assetDepreciatedOverYears", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.assetDepreciatedOverYears}
+                            onChange={(e) => handleInputChange("assetDepreciatedOverYears", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("assetDepreciatedOverYears", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  {/* Guidance Section */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-primary">Guidance</h4>
+                    <div className="bg-secondary/30 p-4 rounded-lg space-y-3">
+                      <div>
+                        <h5 className="font-medium text-sm mb-1">Capital Expenditure Additions</h5>
+                        <p className="text-xs text-muted-foreground">
+                          This field represents the planned capital expenditures for the immediate next fiscal year. 
+                          Capital expenditures (CapEx) are funds used to acquire, upgrade, and maintain physical assets 
+                          such as property, industrial buildings, equipment, and technology. This amount should reflect 
+                          your business's investment plans for growth, maintenance, or replacement of fixed assets in 
+                          the upcoming year. It's crucial for cash flow projections and understanding future capital requirements.
+                        </p>
+                      </div>
+                      <div>
+                        <h5 className="font-medium text-sm mb-1">Asset Depreciation Period</h5>
+                        <p className="text-xs text-muted-foreground">
+                          The number of years over which assets are depreciated affects your annual depreciation expense 
+                          and impacts both your P&L and cash flow projections.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Debt Structure */}
+            <TabsContent value="debt-structure">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <CreditCard className="h-5 w-5 text-primary" />
+                    Debt Structure Details
+                  </CardTitle>
+                  <CardDescription>
+                    Detailed breakdown of debt instruments and terms
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <h3 className="text-lg font-semibold text-foreground">Fill in the Required Fields</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Senior Secured Column */}
+                    <div className="space-y-4">
+                      <h4 className="text-base font-medium text-foreground">Debt 1</h4>
+                      <div>
+                        <Label>Please select an option:</Label>
+                        <Select value={formData.seniorSecuredLoanType} onValueChange={(value) => handleInputChange("seniorSecuredLoanType", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Individual" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="individual">Individual</SelectItem>
+                            <SelectItem value="consolidate">Consolidate</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label>Additional Loan on restructuring</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("additionalLoanSeniorSecured", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.additionalLoanSeniorSecured}
+                            onChange={(e) => handleInputChange("additionalLoanSeniorSecured", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("additionalLoanSeniorSecured", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Bank Base Rate (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("bankBaseRateSeniorSecured", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.bankBaseRateSeniorSecured}
+                            onChange={(e) => handleInputChange("bankBaseRateSeniorSecured", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("bankBaseRateSeniorSecured", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Liquidity Premiums (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("liquidityPremiumsSeniorSecured", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.liquidityPremiumsSeniorSecured}
+                            onChange={(e) => handleInputChange("liquidityPremiumsSeniorSecured", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("liquidityPremiumsSeniorSecured", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Credit Risk Premiums (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("creditRiskPremiumsSeniorSecured", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.creditRiskPremiumsSeniorSecured}
+                            onChange={(e) => handleInputChange("creditRiskPremiumsSeniorSecured", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("creditRiskPremiumsSeniorSecured", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Maturity Period - Debt 1</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("maturityYSeniorSecured", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.maturityYSeniorSecured}
+                            onChange={(e) => handleInputChange("maturityYSeniorSecured", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("maturityYSeniorSecured", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Grace Period</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("amortizationYSeniorSecured", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.amortizationYSeniorSecured}
+                            onChange={(e) => handleInputChange("amortizationYSeniorSecured", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("amortizationYSeniorSecured", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Short Term Column */}
+                    <div className="space-y-4">
+                      <h4 className="text-base font-medium text-foreground">Debt 2</h4>
+                      <div>
+                        <Label>Please select an option:</Label>
+                        <Select value={formData.shortTermLoanType} onValueChange={(value) => handleInputChange("shortTermLoanType", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Individual" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="individual">Individual</SelectItem>
+                            <SelectItem value="consolidate">Consolidate</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label>Additional Loan on restructuring</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("additionalLoanShortTerm", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.additionalLoanShortTerm}
+                            onChange={(e) => handleInputChange("additionalLoanShortTerm", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("additionalLoanShortTerm", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Bank Base Rate (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("bankBaseRateShortTerm", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.bankBaseRateShortTerm}
+                            onChange={(e) => handleInputChange("bankBaseRateShortTerm", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("bankBaseRateShortTerm", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Liquidity Premiums (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("liquidityPremiumsShortTerm", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.liquidityPremiumsShortTerm}
+                            onChange={(e) => handleInputChange("liquidityPremiumsShortTerm", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("liquidityPremiumsShortTerm", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Credit Risk Premiums (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("creditRiskPremiumsShortTerm", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.creditRiskPremiumsShortTerm}
+                            onChange={(e) => handleInputChange("creditRiskPremiumsShortTerm", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("creditRiskPremiumsShortTerm", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Maturity Period - Debt 2</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("maturityYShortTerm", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.maturityYShortTerm}
+                            onChange={(e) => handleInputChange("maturityYShortTerm", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("maturityYShortTerm", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Grace Period</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("amortizationYShortTerm", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.amortizationYShortTerm}
+                            onChange={(e) => handleInputChange("amortizationYShortTerm", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("amortizationYShortTerm", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Guidance Section */}
+                  <div className="mt-8 p-6 bg-muted/50 rounded-lg border">
+                    <h3 className="text-lg font-semibold text-foreground mb-4">Terms Guidance for Loan Refinancing/Restructuring</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Base Rate</h4>
+                          <p className="text-sm text-muted-foreground">
+                            The benchmark interest rate set by the central bank or financial institution, serving as the foundation for calculating loan interest rates.
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Liquidity Premiums</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Additional interest charged to compensate lenders for the reduced liquidity of longer-term loans or loans that are harder to sell in secondary markets.
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Credit Risk Premiums</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Extra interest charged to compensate for the risk of borrower default, based on the borrower's creditworthiness and financial stability.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Maturity Period</h4>
+                          <p className="text-sm text-muted-foreground">
+                            The length of time until the loan must be fully repaid, affecting both risk assessment and interest rate calculations in restructuring scenarios.
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Grace Period</h4>
+                          <p className="text-sm text-muted-foreground">
+                            A temporary period during which no principal repayment or interest payment needs to be made, providing borrowers relief during financial difficulties.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Cash Flow */}
+            <TabsContent value="cash-flow">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <DollarSign className="h-5 w-5 text-primary" />
+                    Cash Flow Statement ($M)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-primary">Operating Activities</h4>
+                      <div className="space-y-3">
+                        <div>
+                          <Label>Operating Cash Flow</Label>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="18.2" 
+                            value={formData.operatingCashFlow}
+                            onChange={(e) => handleInputChange("operatingCashFlow", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                        <div>
+                          <Label>Capital Expenditures</Label>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="5.1" 
+                            value={formData.capitalExpenditures}
+                            onChange={(e) => handleInputChange("capitalExpenditures", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-primary">Financing</h4>
+                      <div className="space-y-3">
+                        <div>
+                          <Label>Free Cash Flow</Label>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="13.1" 
+                            value={formData.freeCashFlow}
+                            onChange={(e) => handleInputChange("freeCashFlow", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                        <div>
+                          <Label>Annual Debt Service</Label>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="5.4" 
+                            value={formData.debtService}
+                            onChange={(e) => handleInputChange("debtService", e.target.value)}
+                            className="text-right" 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Projections */}
+            <TabsContent value="projections">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-primary" />
+                    Growth Projections & Assumptions
+                  </CardTitle>
+                </CardHeader>
+                 <CardContent className="space-y-6">
+                   <h3 className="text-lg font-semibold text-foreground">Growth Rate (GR, in %)</h3>
+                   
+                   <div className="overflow-x-auto">
+                     <Table>
+                       <TableHeader>
+                         <TableRow>
+                           <TableHead className="text-center font-semibold">Years</TableHead>
+                           <TableHead className="text-center font-semibold">Revenue</TableHead>
+                           <TableHead className="text-center font-semibold">COGS/COR</TableHead>
+                           <TableHead className="text-center font-semibold">Opex</TableHead>
+                           <TableHead className="text-center font-semibold">Capex</TableHead>
+                         </TableRow>
+                       </TableHeader>
+                       <TableBody>
+                         {Array.from({ length: 12 }, (_, i) => (
+                           <TableRow key={`year-${i + 1}`}>
+                             <TableCell className="text-center font-medium">
+                               {i + 1}
+                             </TableCell>
+                             <TableCell className="text-center">
+                               <Input 
+                                 type="number" 
+                                 step="0.1"
+                                 placeholder="0.00" 
+                                 value={formData[`grRevenue${i + 1}` as keyof typeof formData]}
+                                 onChange={(e) => handleInputChange(`grRevenue${i + 1}`, e.target.value)}
+                                 className="text-center w-full border-0 focus:ring-0 focus:border-0 shadow-none" 
+                               />
+                             </TableCell>
+                             <TableCell className="text-center">
+                               <Input 
+                                 type="number" 
+                                 step="0.1"
+                                 placeholder="0.00" 
+                                 value={formData[`grCost${i + 1}` as keyof typeof formData]}
+                                 onChange={(e) => handleInputChange(`grCost${i + 1}`, e.target.value)}
+                                 className="text-center w-full border-0 focus:ring-0 focus:border-0 shadow-none" 
+                               />
+                             </TableCell>
+                             <TableCell className="text-center">
+                               <Input 
+                                 type="number" 
+                                 step="0.1"
+                                 placeholder="0.00" 
+                                 value={formData[`grCostOper${i + 1}` as keyof typeof formData]}
+                                 onChange={(e) => handleInputChange(`grCostOper${i + 1}`, e.target.value)}
+                                 className="text-center w-full border-0 focus:ring-0 focus:border-0 shadow-none" 
+                               />
+                             </TableCell>
+                             <TableCell className="text-center">
+                               <Input 
+                                 type="number" 
+                                 step="0.1"
+                                 placeholder="0.00" 
+                                 value={formData[`grCapex${i + 1}` as keyof typeof formData]}
+                                 onChange={(e) => handleInputChange(`grCapex${i + 1}`, e.target.value)}
+                                 className="text-center w-full border-0 focus:ring-0 focus:border-0 shadow-none" 
+                               />
+                             </TableCell>
+                           </TableRow>
+                         ))}
+                       </TableBody>
+                     </Table>
+                   </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Company Information */}
+            <TabsContent value="company-info">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5 text-primary" />
+                    Company Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div>
+                        <Label>Industry</Label>
+                        <Select value={formData.industry} onValueChange={(value) => handleInputChange("industry", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select industry" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                            <SelectItem value="healthcare">Healthcare</SelectItem>
+                            <SelectItem value="technology">Technology</SelectItem>
+                            <SelectItem value="retail">Retail</SelectItem>
+                            <SelectItem value="financial">Financial Services</SelectItem>
+                            <SelectItem value="energy">Energy</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label>Geographic Region</Label>
+                        <Select value={formData.region} onValueChange={(value) => handleInputChange("region", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select region" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="north-america">North America</SelectItem>
+                            <SelectItem value="europe">Europe</SelectItem>
+                            <SelectItem value="asia-pacific">Asia Pacific</SelectItem>
+                            <SelectItem value="latin-america">Latin America</SelectItem>
+                            <SelectItem value="global">Global</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label>Business Case</Label>
+                        <Select value={formData.businessCase} onValueChange={(value) => handleInputChange("businessCase", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select case" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="new-project-financing">New Project Financing</SelectItem>
+                            <SelectItem value="refinancing-existing-debt">Refinancing Existing Debt</SelectItem>
+                            <SelectItem value="restructuring-debt-operations">Restructuring Debt and Operations</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <Label>Employee Count</Label>
+                        <Input 
+                          type="number" 
+                          placeholder="450" 
+                          value={formData.employeeCount}
+                          onChange={(e) => handleInputChange("employeeCount", e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <Label>Year Founded</Label>
+                        <Input 
+                          type="number" 
+                          placeholder="1995" 
+                          value={formData.founded}
+                          onChange={(e) => handleInputChange("founded", e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <Label>Projections Year</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("projectionsYear", 1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="1"
+                            placeholder="12.00" 
+                            value={formData.projectionsYear}
+                            onChange={(e) => handleInputChange("projectionsYear", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("projectionsYear", 1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label>Additional Notes</Label>
+                    <Textarea
+                      placeholder="Any additional context about the company, recent events, or specific considerations for the refinancing analysis..."
+                      className="min-h-[120px]"
+                      value={formData.notes}
+                      onChange={(e) => handleInputChange("notes", e.target.value)}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Working Capital */}
+            <TabsContent value="working-capital">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <DollarSign className="h-5 w-5 text-primary" />
+                    Working Capital Analysis
+                  </CardTitle>
+                  <CardDescription>
+                    Detailed working capital cycle and seasonal requirements
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <h3 className="text-lg font-semibold text-foreground">Working Capital Assumptions</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div>
+                        <Label>Account Receivable as a % of 12 Months Forward Revenue (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("accountReceivablePercent", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.accountReceivablePercent}
+                            onChange={(e) => handleInputChange("accountReceivablePercent", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("accountReceivablePercent", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Inventory % of 12 Months Forward COGS (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("inventoryPercent", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.inventoryPercent}
+                            onChange={(e) => handleInputChange("inventoryPercent", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("inventoryPercent", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <Label>Other Current Assets % of 12 Months Forward Revenue (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("otherCurrentAssetsPercent", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.otherCurrentAssetsPercent}
+                            onChange={(e) => handleInputChange("otherCurrentAssetsPercent", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("otherCurrentAssetsPercent", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Accounts Payable as a % of 12 Months Forward COGS/OPEX (in %)</Label>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleDecrement("accountsPayablePercent", 0.1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <Input 
+                            type="number" 
+                            step="0.1"
+                            placeholder="0.00" 
+                            value={formData.accountsPayablePercent}
+                            onChange={(e) => handleInputChange("accountsPayablePercent", e.target.value)}
+                            className="text-center flex-1" 
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10"
+                            onClick={() => handleIncrement("accountsPayablePercent", 0.1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Seasonality */}
+            <TabsContent value="seasonality">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5 text-primary" />
+                    Seasonality Patterns
+                  </CardTitle>
+                  <CardDescription>
+                    Revenue distribution and seasonal working capital requirements
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Seasonality Pattern</Label>
+                      <Select value={formData.seasonalityPattern} onValueChange={(value) => handleInputChange("seasonalityPattern", value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select pattern" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">No seasonality</SelectItem>
+                          <SelectItem value="q4">Q4 weighted (holiday retail)</SelectItem>
+                          <SelectItem value="q1-q2">Q1-Q2 weighted (construction)</SelectItem>
+                          <SelectItem value="summer">Summer weighted (tourism)</SelectItem>
+                          <SelectItem value="custom">Custom pattern</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Seasonality Pattern</Label>
+                      <Select value={formData.seasonalityPattern} onValueChange={(value) => handleInputChange("seasonalityPattern", value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select pattern" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">No seasonality</SelectItem>
+                          <SelectItem value="q4">Q4 weighted (holiday retail)</SelectItem>
+                          <SelectItem value="q1-q2">Q1-Q2 weighted (construction)</SelectItem>
+                          <SelectItem value="summer">Summer weighted (tourism)</SelectItem>
+                          <SelectItem value="custom">Custom pattern</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <Label>Peak Working Capital (% above average)</Label>
+                      <Input 
+                        type="number" 
+                        step="0.1"
+                        placeholder="15.0" 
+                        value={formData.seasonalWorkingCapital}
+                        onChange={(e) => handleInputChange("seasonalWorkingCapital", e.target.value)}
+                        className="text-right" 
+                      />
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  {/* Monthly Revenue Seasonality */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-primary">Revenue Seasonality (in %)</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                      {[
+                        'january', 'february', 'march', 'april', 'may', 'june',
+                        'july', 'august', 'september', 'october', 'november', 'december'
+                      ].map((month) => (
+                        <div key={month}>
+                          <Label>{month.charAt(0).toUpperCase() + month.slice(1)}</Label>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleDecrement(month, 0.1)}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <Input 
+                              type="number" 
+                              step="0.1"
+                              placeholder="0.00" 
+                              value={formData[month as keyof typeof formData]}
+                              onChange={(e) => handleInputChange(month, e.target.value)}
+                              className="text-center flex-1" 
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => handleIncrement(month, 0.1)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+
+          {/* Navigation */}
+          <div className="flex justify-between">
+            <Button variant="outline">
+              Previous
+            </Button>
+            <Button className="gap-2" onClick={handleSave}>
+              Save & Continue
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+          {/* Validation Status */}
+          <Card className="shadow-card">
+            <CardHeader>
+              <CardTitle className="text-lg">Completion Status</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-3">
+                <CheckCircle className="h-5 w-5 text-success" />
+                <div>
+                  <p className="text-sm font-medium">Data Format</p>
+                  <p className="text-xs text-success">Valid</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                {completionPercentage >= 80 ? (
+                  <CheckCircle className="h-5 w-5 text-success" />
+                ) : (
+                  <AlertCircle className="h-5 w-5 text-warning" />
+                )}
+                <div>
+                  <p className="text-sm font-medium">Completeness</p>
+                  <p className={`text-xs ${completionPercentage >= 80 ? 'text-success' : 'text-warning'}`}>
+                    {completionPercentage}% Complete
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <AlertCircle className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-medium">Validation</p>
+                  <p className="text-xs text-muted-foreground">Ready for Analysis</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Quick Actions */}
+          <Card className="shadow-card">
+            <CardHeader>
+              <CardTitle className="text-lg">Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button variant="outline" className="w-full gap-2">
+                <Download className="h-4 w-4" />
+                Export Template
+              </Button>
+              <Button variant="outline" className="w-full gap-2">
+                <Upload className="h-4 w-4" />
+                Import CSV
+              </Button>
+              <Button variant="outline" className="w-full gap-2">
+                <Save className="h-4 w-4" />
+                Save as Template
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Data Tips */}
+          <Card className="shadow-card">
+            <CardHeader>
+              <CardTitle className="text-lg">Data Tips</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="p-3 bg-primary/10 rounded-lg">
+                <p className="text-sm font-medium text-primary">💡 Accuracy</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Use audited financial statements for the most reliable analysis
+                </p>
+              </div>
+              <div className="p-3 bg-accent/10 rounded-lg">
+                <p className="text-sm font-medium text-accent">⚡ Efficiency</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Save time by importing data directly from your existing spreadsheets
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
