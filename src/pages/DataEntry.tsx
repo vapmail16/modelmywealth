@@ -1653,7 +1653,8 @@ export default function DataEntry() {
                             <Input
                               type="number"
                               step="0.1"
-                              placeholder="30"
+                              min="0"
+                              placeholder="0"
                               value={formData.accountReceivablePercent}
                               onChange={(e) => handleInputChange("accountReceivablePercent", e.target.value)}
                               className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
@@ -1673,7 +1674,8 @@ export default function DataEntry() {
                             <Input
                               type="number"
                               step="0.1"
-                              placeholder="10"
+                              min="0"
+                              placeholder="0"
                               value={formData.inventoryPercent}
                               onChange={(e) => handleInputChange("inventoryPercent", e.target.value)}
                               className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
@@ -1693,7 +1695,8 @@ export default function DataEntry() {
                             <Input
                               type="number"
                               step="0.1"
-                              placeholder="10"
+                              min="0"
+                              placeholder="0"
                               value={formData.otherCurrentAssetsPercent}
                               onChange={(e) => handleInputChange("otherCurrentAssetsPercent", e.target.value)}
                               className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
@@ -1713,7 +1716,8 @@ export default function DataEntry() {
                             <Input
                               type="number"
                               step="0.1"
-                              placeholder="30"
+                              min="0"
+                              placeholder="0"
                               value={formData.accountsPayablePercent}
                               onChange={(e) => handleInputChange("accountsPayablePercent", e.target.value)}
                               className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
