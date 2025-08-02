@@ -742,14 +742,23 @@ export default function DataEntry() {
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="assetDepreciatedOverYearsNew">Asset Depreciated over Years</Label>
-                          <Input
-                            id="assetDepreciatedOverYearsNew"
-                            type="number"
-                            step="1"
-                            placeholder="0"
-                            value={formData.assetDepreciatedOverYearsNew}
-                            onChange={(e) => handleInputChange("assetDepreciatedOverYearsNew", e.target.value)}
-                          />
+                          <Select value={formData.assetDepreciatedOverYearsNew} onValueChange={(value) => handleInputChange("assetDepreciatedOverYearsNew", value)}>
+                            <SelectTrigger className="bg-background">
+                              <SelectValue placeholder="Select years" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-background border z-50">
+                              <SelectItem value="1">1 Year</SelectItem>
+                              <SelectItem value="2">2 Years</SelectItem>
+                              <SelectItem value="3">3 Years</SelectItem>
+                              <SelectItem value="4">4 Years</SelectItem>
+                              <SelectItem value="5">5 Years</SelectItem>
+                              <SelectItem value="6">6 Years</SelectItem>
+                              <SelectItem value="7">7 Years</SelectItem>
+                              <SelectItem value="8">8 Years</SelectItem>
+                              <SelectItem value="9">9 Years</SelectItem>
+                              <SelectItem value="10">10 Years</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
                       </div>
                     </div>
