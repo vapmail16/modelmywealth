@@ -279,8 +279,11 @@ export default function DataEntry() {
                       </TableHeader>
                       <TableBody>
                         {/* Revenue - Input */}
-                        <TableRow className="bg-green-50">
-                          <TableCell className="font-medium">Revenue</TableCell>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Revenue
+                            <div className="text-xs text-muted-foreground">Input needed</div>
+                          </TableCell>
                           <TableCell className="text-right">
                             <Input
                               type="number"
@@ -294,8 +297,11 @@ export default function DataEntry() {
                         </TableRow>
                         
                         {/* Cost of Goods Sold - Input */}
-                        <TableRow className="bg-green-50">
-                          <TableCell className="font-medium">Cost of Goods Sold or Services</TableCell>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Cost of Goods Sold or Services
+                            <div className="text-xs text-muted-foreground">Input needed</div>
+                          </TableCell>
                           <TableCell className="text-right">
                             <Input
                               type="number"
@@ -317,8 +323,11 @@ export default function DataEntry() {
                         </TableRow>
                         
                         {/* Operating Expenses - Input */}
-                        <TableRow className="bg-green-50">
-                          <TableCell className="font-medium">Operating Expenses</TableCell>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Operating Expenses
+                            <div className="text-xs text-muted-foreground">Input needed</div>
+                          </TableCell>
                           <TableCell className="text-right">
                             <Input
                               type="number"
@@ -340,8 +349,11 @@ export default function DataEntry() {
                         </TableRow>
                         
                         {/* Depreciation & Amortization - Input */}
-                        <TableRow className="bg-green-50">
-                          <TableCell className="font-medium">Depreciation & Amortization</TableCell>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Depreciation & Amortization
+                            <div className="text-xs text-muted-foreground">Input needed</div>
+                          </TableCell>
                           <TableCell className="text-right">
                             <Input
                               type="number"
@@ -355,8 +367,11 @@ export default function DataEntry() {
                         </TableRow>
                         
                         {/* Interest Expense - Input */}
-                        <TableRow className="bg-green-50">
-                          <TableCell className="font-medium">Interest Expense</TableCell>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Interest Expense
+                            <div className="text-xs text-muted-foreground">Input needed</div>
+                          </TableCell>
                           <TableCell className="text-right">
                             <Input
                               type="number"
@@ -378,8 +393,11 @@ export default function DataEntry() {
                         </TableRow>
                         
                         {/* Income Tax Expense - Input */}
-                        <TableRow className="bg-green-50">
-                          <TableCell className="font-medium">Income Tax Expense</TableCell>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Income Tax Expense
+                            <div className="text-xs text-muted-foreground">Input needed</div>
+                          </TableCell>
                           <TableCell className="text-right">
                             <Input
                               type="number"
