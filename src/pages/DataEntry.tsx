@@ -163,6 +163,19 @@ export default function DataEntry() {
     return grossProfit - opex;
   };
 
+  const calculateNetIncomeBeforeTax = () => {
+    const ebitda = calculateEBITDA();
+    const depreciation = parseFloat(formData.depreciation) || 0;
+    const interest = parseFloat(formData.interestExpense) || 0;
+    return ebitda - depreciation - interest;
+  };
+
+  const calculateNetIncome = () => {
+    const netIncomeBeforeTax = calculateNetIncomeBeforeTax();
+    const taxes = parseFloat(formData.taxes) || 0;
+    return netIncomeBeforeTax - taxes;
+  };
+
   const handleSave = () => {
     toast({
       title: "Data saved",
@@ -256,260 +269,142 @@ export default function DataEntry() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Revenue Section */}
-                    <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">Revenue & Costs</h4>
-                      <div className="space-y-4">
-                        <div>
-                          <Label htmlFor="revenue">Revenue</Label>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleDecrement("revenue", 1)}
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="font-semibold">Particulars</TableHead>
+                          <TableHead className="text-right font-semibold">Amount</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {/* Revenue - Input */}
+                        <TableRow className="bg-green-50">
+                          <TableCell className="font-medium">Revenue</TableCell>
+                          <TableCell className="text-right">
                             <Input
-                              id="revenue"
                               type="number"
-                              step="0.1"
-                              placeholder="0.00"
+                              step="1"
+                              placeholder="0"
                               value={formData.revenue}
                               onChange={(e) => handleInputChange("revenue", e.target.value)}
-                              className="text-center flex-1"
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
                             />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleIncrement("revenue", 1)}
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                        <div>
-                          <Label htmlFor="cogs">Cost of Goods Sold or Services</Label>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleDecrement("cogs", 1)}
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Cost of Goods Sold - Input */}
+                        <TableRow className="bg-green-50">
+                          <TableCell className="font-medium">Cost of Goods Sold or Services</TableCell>
+                          <TableCell className="text-right">
                             <Input
-                              id="cogs"
                               type="number"
-                              step="0.1"
-                              placeholder="0.00"
+                              step="1"
+                              placeholder="0"
                               value={formData.cogs}
                               onChange={(e) => handleInputChange("cogs", e.target.value)}
-                              className="text-center flex-1"
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
                             />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleIncrement("cogs", 1)}
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                        <div className="bg-accent/10 p-3 rounded-lg">
-                          <div className="flex justify-between">
-                            <span className="text-sm font-medium">Gross Profit:</span>
-                            <span className="font-bold">${calculateGrossProfit().toFixed(1)}M</span>
-                          </div>
-                        </div>
-                        <div>
-                          <Label htmlFor="operatingExpenses">Operating Expenses</Label>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleDecrement("operatingExpenses", 1)}
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Gross Profit - Calculated */}
+                        <TableRow>
+                          <TableCell className="font-medium">Gross Profit</TableCell>
+                          <TableCell className="text-right font-semibold">
+                            {calculateGrossProfit().toLocaleString()}
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Operating Expenses - Input */}
+                        <TableRow className="bg-green-50">
+                          <TableCell className="font-medium">Operating Expenses</TableCell>
+                          <TableCell className="text-right">
                             <Input
-                              id="operatingExpenses"
                               type="number"
-                              step="0.1"
-                              placeholder="0.00"
+                              step="1"
+                              placeholder="0"
                               value={formData.operatingExpenses}
                               onChange={(e) => handleInputChange("operatingExpenses", e.target.value)}
-                              className="text-center flex-1"
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
                             />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleIncrement("operatingExpenses", 1)}
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                        <div className="bg-primary/10 p-3 rounded-lg">
-                          <div className="flex justify-between">
-                            <span className="text-sm font-medium">EBITDA:</span>
-                            <span className="font-bold text-primary">${calculateEBITDA().toFixed(1)}M</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Below EBITDA */}
-                    <div className="space-y-4">
-                      <h4 className="font-semibold text-primary">Below EBITDA</h4>
-                      <div className="space-y-4">
-                        <div>
-                          <Label htmlFor="depreciation">Depreciation & Amortization</Label>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleDecrement("depreciation", 0.1)}
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* EBITDA - Calculated */}
+                        <TableRow>
+                          <TableCell className="font-medium">EBITDA</TableCell>
+                          <TableCell className="text-right font-semibold">
+                            {calculateEBITDA().toLocaleString()}
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Depreciation & Amortization - Input */}
+                        <TableRow className="bg-green-50">
+                          <TableCell className="font-medium">Depreciation & Amortization</TableCell>
+                          <TableCell className="text-right">
                             <Input
-                              id="depreciation"
                               type="number"
-                              step="0.1"
-                              placeholder="0.00"
+                              step="1"
+                              placeholder="0"
                               value={formData.depreciation}
                               onChange={(e) => handleInputChange("depreciation", e.target.value)}
-                              className="text-center flex-1"
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
                             />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleIncrement("depreciation", 0.1)}
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                        <div>
-                          <Label htmlFor="interestExpense">Interest Expense</Label>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleDecrement("interestExpense", 0.1)}
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Interest Expense - Input */}
+                        <TableRow className="bg-green-50">
+                          <TableCell className="font-medium">Interest Expense</TableCell>
+                          <TableCell className="text-right">
                             <Input
-                              id="interestExpense"
                               type="number"
-                              step="0.1"
-                              placeholder="0.00"
+                              step="1"
+                              placeholder="0"
                               value={formData.interestExpense}
                               onChange={(e) => handleInputChange("interestExpense", e.target.value)}
-                              className="text-center flex-1"
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
                             />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleIncrement("interestExpense", 0.1)}
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                        <div>
-                          <Label htmlFor="taxes">Income Tax Expense</Label>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleDecrement("taxes", 0.1)}
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Net Income Before Tax - Calculated */}
+                        <TableRow>
+                          <TableCell className="font-medium">Net Income Before Tax</TableCell>
+                          <TableCell className="text-right font-semibold">
+                            {calculateNetIncomeBeforeTax().toLocaleString()}
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Income Tax Expense - Input */}
+                        <TableRow className="bg-green-50">
+                          <TableCell className="font-medium">Income Tax Expense</TableCell>
+                          <TableCell className="text-right">
                             <Input
-                              id="taxes"
                               type="number"
-                              step="0.1"
-                              placeholder="0.00"
+                              step="1"
+                              placeholder="0"
                               value={formData.taxes}
                               onChange={(e) => handleInputChange("taxes", e.target.value)}
-                              className="text-center flex-1"
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
                             />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleIncrement("taxes", 0.1)}
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                        <div>
-                          <Label htmlFor="netIncome">Net Income</Label>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleDecrement("netIncome", 0.1)}
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
-                            <Input
-                              id="netIncome"
-                              type="number"
-                              step="0.1"
-                              placeholder="0.00"
-                              value={formData.netIncome}
-                              onChange={(e) => handleInputChange("netIncome", e.target.value)}
-                              className="text-center flex-1"
-                            />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              className="h-10 w-10"
-                              onClick={() => handleIncrement("netIncome", 0.1)}
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Net Income - Calculated */}
+                        <TableRow className="border-t-2">
+                          <TableCell className="font-semibold">Net Income</TableCell>
+                          <TableCell className="text-right font-bold text-primary">
+                            {calculateNetIncome().toLocaleString()}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                     </Table>
+                   </div>
+                 </CardContent>
+               </Card>
+             </TabsContent>
 
             {/* Tax Rates */}
             <TabsContent value="tax-rates">
