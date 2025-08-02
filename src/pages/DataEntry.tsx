@@ -1576,6 +1576,115 @@ export default function DataEntry() {
                 </CardContent>
               </Card>
             </TabsContent>
+
+            {/* Working Capital Section */}
+            <TabsContent value="working-capital">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <DollarSign className="h-5 w-5 text-primary" />
+                    Working Capital Assumptions
+                  </CardTitle>
+                  <CardDescription>
+                    Enter working capital percentages for forward-looking projections
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="font-semibold">Working Capital Item</TableHead>
+                          <TableHead className="font-semibold">Calculation Base</TableHead>
+                          <TableHead className="text-right font-semibold">Percentage (%)</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {/* Account Receivable */}
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Account Receivable
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            AR as a % of 12 Months Forward Revenue
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              placeholder="30"
+                              value={formData.accountReceivablePercent}
+                              onChange={(e) => handleInputChange("accountReceivablePercent", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Inventory */}
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Inventory
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            Inventory % of 12 Months Forward COGS
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              placeholder="10"
+                              value={formData.inventoryPercent}
+                              onChange={(e) => handleInputChange("inventoryPercent", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Other Current Assets */}
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Other Current Assets
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            Other CA % of 12 Months Forward Revenue
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              placeholder="10"
+                              value={formData.otherCurrentAssetsPercent}
+                              onChange={(e) => handleInputChange("otherCurrentAssetsPercent", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Accounts Payable */}
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Accounts Payable
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            AP as a % of 12 Months Forward COGS/OPEX
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              placeholder="30"
+                              value={formData.accountsPayablePercent}
+                              onChange={(e) => handleInputChange("accountsPayablePercent", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
           </Tabs>
 
           {/* Navigation */}
