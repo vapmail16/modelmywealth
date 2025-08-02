@@ -1697,6 +1697,19 @@ export default function DataEntry() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  {/* Guidance Note */}
+                  <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
+                    <h3 className="text-lg font-semibold text-amber-900 dark:text-amber-100 mb-2 flex items-center gap-2">
+                      <AlertCircle className="h-5 w-5" />
+                      Guidance
+                    </h3>
+                    <div className="text-sm text-amber-800 dark:text-amber-200 space-y-2">
+                      <p>To simplify assumptions and capture changes in growth rates, the working capital has been designed as a forward-looking metric.</p>
+                      <p><strong>Example:</strong> Account Receivable is calculated as a percentage of forward 12 months Revenue. Therefore, the growth rates of Revenue in the Projections section will directly influence the working capital calculations.</p>
+                      <p><strong>Cost Components:</strong> The same principle applies to cost-related working capital items - they are tied to forward-looking cost projections, ensuring that growth assumptions automatically flow through to working capital requirements.</p>
+                      <p className="text-xs font-medium">This approach ensures that your working capital projections remain consistent with your overall growth strategy and financial projections.</p>
+                    </div>
+                  </div>
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
