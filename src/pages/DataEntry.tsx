@@ -66,6 +66,8 @@ export default function DataEntry() {
     retainedEarnings: "",
     
     // Balance Sheet - Additional Fields
+    shortTermDebt: "",
+    otherLongTermDebt: "",
     capitalExpenditureAdditions: "",
     assetDepreciatedOverYears: "",
     
