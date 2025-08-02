@@ -111,6 +111,12 @@ export default function DataEntry() {
     projectionsYear: "",
     notes: "",
     
+    // Currency Information
+    baseCurrency: "",
+    functionalCurrency: "",
+    reportingCurrency: "",
+    exchangeRateAssumptions: "",
+    
     // Working Capital Data
     accountReceivablePercent: "",
     otherCurrentAssetsPercent: "",
@@ -1699,6 +1705,87 @@ export default function DataEntry() {
                       </div>
                     </div>
                   </div>
+
+                  <Separator className="my-6" />
+                  
+                  {/* Currencies Section */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-primary flex items-center gap-2">
+                      <DollarSign className="h-4 w-4" />
+                      Currencies
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div>
+                          <Label>Base Currency</Label>
+                          <Select value={formData.baseCurrency} onValueChange={(value) => handleInputChange("baseCurrency", value)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select base currency" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="USD">USD - US Dollar</SelectItem>
+                              <SelectItem value="EUR">EUR - Euro</SelectItem>
+                              <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                              <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
+                              <SelectItem value="CAD">CAD - Canadian Dollar</SelectItem>
+                              <SelectItem value="AUD">AUD - Australian Dollar</SelectItem>
+                              <SelectItem value="CHF">CHF - Swiss Franc</SelectItem>
+                              <SelectItem value="CNY">CNY - Chinese Yuan</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label>Functional Currency</Label>
+                          <Select value={formData.functionalCurrency} onValueChange={(value) => handleInputChange("functionalCurrency", value)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select functional currency" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="USD">USD - US Dollar</SelectItem>
+                              <SelectItem value="EUR">EUR - Euro</SelectItem>
+                              <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                              <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
+                              <SelectItem value="CAD">CAD - Canadian Dollar</SelectItem>
+                              <SelectItem value="AUD">AUD - Australian Dollar</SelectItem>
+                              <SelectItem value="CHF">CHF - Swiss Franc</SelectItem>
+                              <SelectItem value="CNY">CNY - Chinese Yuan</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <Label>Reporting Currency</Label>
+                          <Select value={formData.reportingCurrency} onValueChange={(value) => handleInputChange("reportingCurrency", value)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select reporting currency" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="USD">USD - US Dollar</SelectItem>
+                              <SelectItem value="EUR">EUR - Euro</SelectItem>
+                              <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                              <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
+                              <SelectItem value="CAD">CAD - Canadian Dollar</SelectItem>
+                              <SelectItem value="AUD">AUD - Australian Dollar</SelectItem>
+                              <SelectItem value="CHF">CHF - Swiss Franc</SelectItem>
+                              <SelectItem value="CNY">CNY - Chinese Yuan</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label>Exchange Rate Assumptions</Label>
+                          <Textarea
+                            placeholder="Describe any exchange rate assumptions, hedging strategies, or currency risk considerations..."
+                            className="min-h-[80px]"
+                            value={formData.exchangeRateAssumptions}
+                            onChange={(e) => handleInputChange("exchangeRateAssumptions", e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator className="my-6" />
 
                   <div>
                     <Label>Additional Notes</Label>
