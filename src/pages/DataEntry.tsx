@@ -1375,11 +1375,102 @@ export default function DataEntry() {
                       </div>
                       <div>
                         <Label>Country</Label>
-                        <Input 
-                          placeholder="Enter country of incorporation" 
-                          value={formData.country}
-                          onChange={(e) => handleInputChange("country", e.target.value)}
-                        />
+                        <Select value={formData.country} onValueChange={(value) => handleInputChange("country", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select country" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="afghanistan">Afghanistan</SelectItem>
+                            <SelectItem value="albania">Albania</SelectItem>
+                            <SelectItem value="algeria">Algeria</SelectItem>
+                            <SelectItem value="argentina">Argentina</SelectItem>
+                            <SelectItem value="armenia">Armenia</SelectItem>
+                            <SelectItem value="australia">Australia</SelectItem>
+                            <SelectItem value="austria">Austria</SelectItem>
+                            <SelectItem value="azerbaijan">Azerbaijan</SelectItem>
+                            <SelectItem value="bahrain">Bahrain</SelectItem>
+                            <SelectItem value="bangladesh">Bangladesh</SelectItem>
+                            <SelectItem value="belarus">Belarus</SelectItem>
+                            <SelectItem value="belgium">Belgium</SelectItem>
+                            <SelectItem value="bolivia">Bolivia</SelectItem>
+                            <SelectItem value="brazil">Brazil</SelectItem>
+                            <SelectItem value="bulgaria">Bulgaria</SelectItem>
+                            <SelectItem value="cambodia">Cambodia</SelectItem>
+                            <SelectItem value="canada">Canada</SelectItem>
+                            <SelectItem value="chile">Chile</SelectItem>
+                            <SelectItem value="china">China</SelectItem>
+                            <SelectItem value="colombia">Colombia</SelectItem>
+                            <SelectItem value="croatia">Croatia</SelectItem>
+                            <SelectItem value="czech-republic">Czech Republic</SelectItem>
+                            <SelectItem value="denmark">Denmark</SelectItem>
+                            <SelectItem value="ecuador">Ecuador</SelectItem>
+                            <SelectItem value="egypt">Egypt</SelectItem>
+                            <SelectItem value="estonia">Estonia</SelectItem>
+                            <SelectItem value="finland">Finland</SelectItem>
+                            <SelectItem value="france">France</SelectItem>
+                            <SelectItem value="georgia">Georgia</SelectItem>
+                            <SelectItem value="germany">Germany</SelectItem>
+                            <SelectItem value="ghana">Ghana</SelectItem>
+                            <SelectItem value="greece">Greece</SelectItem>
+                            <SelectItem value="hong-kong">Hong Kong</SelectItem>
+                            <SelectItem value="hungary">Hungary</SelectItem>
+                            <SelectItem value="iceland">Iceland</SelectItem>
+                            <SelectItem value="india">India</SelectItem>
+                            <SelectItem value="indonesia">Indonesia</SelectItem>
+                            <SelectItem value="iran">Iran</SelectItem>
+                            <SelectItem value="iraq">Iraq</SelectItem>
+                            <SelectItem value="ireland">Ireland</SelectItem>
+                            <SelectItem value="israel">Israel</SelectItem>
+                            <SelectItem value="italy">Italy</SelectItem>
+                            <SelectItem value="japan">Japan</SelectItem>
+                            <SelectItem value="jordan">Jordan</SelectItem>
+                            <SelectItem value="kazakhstan">Kazakhstan</SelectItem>
+                            <SelectItem value="kenya">Kenya</SelectItem>
+                            <SelectItem value="kuwait">Kuwait</SelectItem>
+                            <SelectItem value="latvia">Latvia</SelectItem>
+                            <SelectItem value="lebanon">Lebanon</SelectItem>
+                            <SelectItem value="lithuania">Lithuania</SelectItem>
+                            <SelectItem value="luxembourg">Luxembourg</SelectItem>
+                            <SelectItem value="malaysia">Malaysia</SelectItem>
+                            <SelectItem value="mexico">Mexico</SelectItem>
+                            <SelectItem value="morocco">Morocco</SelectItem>
+                            <SelectItem value="netherlands">Netherlands</SelectItem>
+                            <SelectItem value="new-zealand">New Zealand</SelectItem>
+                            <SelectItem value="nigeria">Nigeria</SelectItem>
+                            <SelectItem value="norway">Norway</SelectItem>
+                            <SelectItem value="oman">Oman</SelectItem>
+                            <SelectItem value="pakistan">Pakistan</SelectItem>
+                            <SelectItem value="peru">Peru</SelectItem>
+                            <SelectItem value="philippines">Philippines</SelectItem>
+                            <SelectItem value="poland">Poland</SelectItem>
+                            <SelectItem value="portugal">Portugal</SelectItem>
+                            <SelectItem value="qatar">Qatar</SelectItem>
+                            <SelectItem value="romania">Romania</SelectItem>
+                            <SelectItem value="russia">Russia</SelectItem>
+                            <SelectItem value="saudi-arabia">Saudi Arabia</SelectItem>
+                            <SelectItem value="serbia">Serbia</SelectItem>
+                            <SelectItem value="singapore">Singapore</SelectItem>
+                            <SelectItem value="slovakia">Slovakia</SelectItem>
+                            <SelectItem value="slovenia">Slovenia</SelectItem>
+                            <SelectItem value="south-africa">South Africa</SelectItem>
+                            <SelectItem value="south-korea">South Korea</SelectItem>
+                            <SelectItem value="spain">Spain</SelectItem>
+                            <SelectItem value="sri-lanka">Sri Lanka</SelectItem>
+                            <SelectItem value="sweden">Sweden</SelectItem>
+                            <SelectItem value="switzerland">Switzerland</SelectItem>
+                            <SelectItem value="taiwan">Taiwan</SelectItem>
+                            <SelectItem value="thailand">Thailand</SelectItem>
+                            <SelectItem value="turkey">Turkey</SelectItem>
+                            <SelectItem value="ukraine">Ukraine</SelectItem>
+                            <SelectItem value="uae">United Arab Emirates</SelectItem>
+                            <SelectItem value="uk">United Kingdom</SelectItem>
+                            <SelectItem value="usa">United States</SelectItem>
+                            <SelectItem value="uruguay">Uruguay</SelectItem>
+                            <SelectItem value="venezuela">Venezuela</SelectItem>
+                            <SelectItem value="vietnam">Vietnam</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div>
                         <Label>Reporting Currency</Label>
@@ -1460,12 +1551,16 @@ export default function DataEntry() {
                     <div className="space-y-4">
                       <div>
                         <Label>Business Case / Investment Thesis</Label>
-                        <Textarea 
-                          placeholder="Describe the business case or investment thesis..."
-                          className="min-h-32"
-                          value={formData.businessCase}
-                          onChange={(e) => handleInputChange("businessCase", e.target.value)}
-                        />
+                        <Select value={formData.businessCase} onValueChange={(value) => handleInputChange("businessCase", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select business case type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="new-project-financing">New Project Financing</SelectItem>
+                            <SelectItem value="existing-debt-refinancing">Existing Debt Refinancing</SelectItem>
+                            <SelectItem value="debt-business-restructuring">Debt and Business Restructuring</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div>
                         <Label>Additional Notes</Label>
