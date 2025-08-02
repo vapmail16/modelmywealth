@@ -1744,204 +1744,233 @@ export default function DataEntry() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="january">January (%)</Label>
-                      <Input
-                        id="january"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        value={formData.january}
-                        onChange={(e) => handleInputChange("january", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="february">February (%)</Label>
-                      <Input
-                        id="february"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        value={formData.february}
-                        onChange={(e) => handleInputChange("february", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="march">March (%)</Label>
-                      <Input
-                        id="march"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        value={formData.march}
-                        onChange={(e) => handleInputChange("march", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="april">April (%)</Label>
-                      <Input
-                        id="april"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        value={formData.april}
-                        onChange={(e) => handleInputChange("april", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="may">May (%)</Label>
-                      <Input
-                        id="may"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        value={formData.may}
-                        onChange={(e) => handleInputChange("may", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="june">June (%)</Label>
-                      <Input
-                        id="june"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        value={formData.june}
-                        onChange={(e) => handleInputChange("june", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="july">July (%)</Label>
-                      <Input
-                        id="july"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        value={formData.july}
-                        onChange={(e) => handleInputChange("july", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="august">August (%)</Label>
-                      <Input
-                        id="august"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        value={formData.august}
-                        onChange={(e) => handleInputChange("august", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="september">September (%)</Label>
-                      <Input
-                        id="september"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        value={formData.september}
-                        onChange={(e) => handleInputChange("september", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="october">October (%)</Label>
-                      <Input
-                        id="october"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        value={formData.october}
-                        onChange={(e) => handleInputChange("october", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="november">November (%)</Label>
-                      <Input
-                        id="november"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        value={formData.november}
-                        onChange={(e) => handleInputChange("november", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="december">December (%)</Label>
-                      <Input
-                        id="december"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        placeholder="0"
-                        value={formData.december}
-                        onChange={(e) => handleInputChange("december", e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Total Calculation */}
-                  <div className="mt-6 p-4 bg-muted rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium">Total Percentage:</span>
-                      <span className={`font-bold text-lg ${
-                        Math.abs((
-                          (parseFloat(formData.january) || 0) +
-                          (parseFloat(formData.february) || 0) +
-                          (parseFloat(formData.march) || 0) +
-                          (parseFloat(formData.april) || 0) +
-                          (parseFloat(formData.may) || 0) +
-                          (parseFloat(formData.june) || 0) +
-                          (parseFloat(formData.july) || 0) +
-                          (parseFloat(formData.august) || 0) +
-                          (parseFloat(formData.september) || 0) +
-                          (parseFloat(formData.october) || 0) +
-                          (parseFloat(formData.november) || 0) +
-                          (parseFloat(formData.december) || 0)
-                        ) - 100) < 0.01 ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {(
-                          (parseFloat(formData.january) || 0) +
-                          (parseFloat(formData.february) || 0) +
-                          (parseFloat(formData.march) || 0) +
-                          (parseFloat(formData.april) || 0) +
-                          (parseFloat(formData.may) || 0) +
-                          (parseFloat(formData.june) || 0) +
-                          (parseFloat(formData.july) || 0) +
-                          (parseFloat(formData.august) || 0) +
-                          (parseFloat(formData.september) || 0) +
-                          (parseFloat(formData.october) || 0) +
-                          (parseFloat(formData.november) || 0) +
-                          (parseFloat(formData.december) || 0)
-                        ).toFixed(1)}%
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      The total should equal 100% for accurate seasonality modeling
-                    </p>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="font-semibold">Month</TableHead>
+                          <TableHead className="text-right font-semibold">Percentage (%)</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell className="font-medium">January</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              value={formData.january}
+                              onChange={(e) => handleInputChange("january", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">February</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              value={formData.february}
+                              onChange={(e) => handleInputChange("february", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">March</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              value={formData.march}
+                              onChange={(e) => handleInputChange("march", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">April</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              value={formData.april}
+                              onChange={(e) => handleInputChange("april", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">May</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              value={formData.may}
+                              onChange={(e) => handleInputChange("may", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">June</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              value={formData.june}
+                              onChange={(e) => handleInputChange("june", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">July</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              value={formData.july}
+                              onChange={(e) => handleInputChange("july", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">August</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              value={formData.august}
+                              onChange={(e) => handleInputChange("august", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">September</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              value={formData.september}
+                              onChange={(e) => handleInputChange("september", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">October</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              value={formData.october}
+                              onChange={(e) => handleInputChange("october", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">November</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              value={formData.november}
+                              onChange={(e) => handleInputChange("november", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">December</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              value={formData.december}
+                              onChange={(e) => handleInputChange("december", e.target.value)}
+                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow className="border-t-2">
+                          <TableCell className="font-semibold">Total</TableCell>
+                          <TableCell className="text-right">
+                            <div className={`w-24 ml-auto text-right font-bold pr-3 ${
+                              Math.abs((
+                                (parseFloat(formData.january) || 0) +
+                                (parseFloat(formData.february) || 0) +
+                                (parseFloat(formData.march) || 0) +
+                                (parseFloat(formData.april) || 0) +
+                                (parseFloat(formData.may) || 0) +
+                                (parseFloat(formData.june) || 0) +
+                                (parseFloat(formData.july) || 0) +
+                                (parseFloat(formData.august) || 0) +
+                                (parseFloat(formData.september) || 0) +
+                                (parseFloat(formData.october) || 0) +
+                                (parseFloat(formData.november) || 0) +
+                                (parseFloat(formData.december) || 0)
+                              ) - 100) < 0.01 ? 'text-green-600' : 'text-red-600'
+                            }`}>
+                              {(
+                                (parseFloat(formData.january) || 0) +
+                                (parseFloat(formData.february) || 0) +
+                                (parseFloat(formData.march) || 0) +
+                                (parseFloat(formData.april) || 0) +
+                                (parseFloat(formData.may) || 0) +
+                                (parseFloat(formData.june) || 0) +
+                                (parseFloat(formData.july) || 0) +
+                                (parseFloat(formData.august) || 0) +
+                                (parseFloat(formData.september) || 0) +
+                                (parseFloat(formData.october) || 0) +
+                                (parseFloat(formData.november) || 0) +
+                                (parseFloat(formData.december) || 0)
+                              ).toFixed(1)}%
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
                   </div>
                 </CardContent>
               </Card>
