@@ -1338,6 +1338,17 @@ export default function DataEntry() {
                   </CardTitle>
                 </CardHeader>
                  <CardContent className="space-y-6">
+                   {/* Guidance Note */}
+                   <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
+                     <h3 className="text-lg font-semibold text-amber-900 dark:text-amber-100 mb-2 flex items-center gap-2">
+                       <AlertCircle className="h-5 w-5" />
+                       Guidance
+                     </h3>
+                     <div className="text-sm text-amber-800 dark:text-amber-200 space-y-2">
+                       <p>Provide growth rates for Revenue, COGS/COS, Operating Expenses (Opex), and Capital Expenditure (Capex) for each projection year.</p>
+                       <p><strong>For New Project Financing:</strong> Give growth rates that will compound the "1" mentioned in the P&L Statement.</p>
+                     </div>
+                   </div>
                    <h3 className="text-lg font-semibold text-foreground">Growth Rate (GR, in %)</h3>
                    
                    <div className="overflow-x-auto">
