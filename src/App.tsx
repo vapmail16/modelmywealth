@@ -48,6 +48,10 @@ const App = () => (
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
             <Route path="help" element={<Help />} />
+            <Route path="collaboration" element={<TeamCollaboration />} />
+            <Route path="collaboration/invite" element={<InviteMembers />} />
+            <Route path="benchmarking" element={<PeerBenchmarking />} />
+            <Route path="benchmarking/industry" element={<IndustryAnalysis />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
