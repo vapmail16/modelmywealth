@@ -888,66 +888,44 @@ export default function DataEntry() {
                       
                       <div>
                         <Label>Maturity Period - Debt 1</Label>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="h-10 w-10"
-                            onClick={() => handleDecrement("maturityYSeniorSecured", 0.1)}
-                          >
-                            <Minus className="h-4 w-4" />
-                          </Button>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="0.00" 
-                            value={formData.maturityYSeniorSecured}
-                            onChange={(e) => handleInputChange("maturityYSeniorSecured", e.target.value)}
-                            className="text-center flex-1" 
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="h-10 w-10"
-                            onClick={() => handleIncrement("maturityYSeniorSecured", 0.1)}
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        <Select value={formData.maturityYSeniorSecured} onValueChange={(value) => handleInputChange("maturityYSeniorSecured", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select years" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">1 Year</SelectItem>
+                            <SelectItem value="2">2 Years</SelectItem>
+                            <SelectItem value="3">3 Years</SelectItem>
+                            <SelectItem value="4">4 Years</SelectItem>
+                            <SelectItem value="5">5 Years</SelectItem>
+                            <SelectItem value="6">6 Years</SelectItem>
+                            <SelectItem value="7">7 Years</SelectItem>
+                            <SelectItem value="8">8 Years</SelectItem>
+                            <SelectItem value="9">9 Years</SelectItem>
+                            <SelectItem value="10">10 Years</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       
                       <div>
                         <Label>Grace Period</Label>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="h-10 w-10"
-                            onClick={() => handleDecrement("amortizationYSeniorSecured", 0.1)}
-                          >
-                            <Minus className="h-4 w-4" />
-                          </Button>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="0.00" 
-                            value={formData.amortizationYSeniorSecured}
-                            onChange={(e) => handleInputChange("amortizationYSeniorSecured", e.target.value)}
-                            className="text-center flex-1" 
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="h-10 w-10"
-                            onClick={() => handleIncrement("amortizationYSeniorSecured", 0.1)}
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        <Select value={formData.amortizationYSeniorSecured} onValueChange={(value) => handleInputChange("amortizationYSeniorSecured", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select years" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">1 Year</SelectItem>
+                            <SelectItem value="2">2 Years</SelectItem>
+                            <SelectItem value="3">3 Years</SelectItem>
+                            <SelectItem value="4">4 Years</SelectItem>
+                            <SelectItem value="5">5 Years</SelectItem>
+                            <SelectItem value="6">6 Years</SelectItem>
+                            <SelectItem value="7">7 Years</SelectItem>
+                            <SelectItem value="8">8 Years</SelectItem>
+                            <SelectItem value="9">9 Years</SelectItem>
+                            <SelectItem value="10">10 Years</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
 
@@ -1097,66 +1075,44 @@ export default function DataEntry() {
                       
                       <div>
                         <Label>Maturity Period - Debt 2</Label>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="h-10 w-10"
-                            onClick={() => handleDecrement("maturityYShortTerm", 0.1)}
-                          >
-                            <Minus className="h-4 w-4" />
-                          </Button>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="0.00" 
-                            value={formData.maturityYShortTerm}
-                            onChange={(e) => handleInputChange("maturityYShortTerm", e.target.value)}
-                            className="text-center flex-1" 
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="h-10 w-10"
-                            onClick={() => handleIncrement("maturityYShortTerm", 0.1)}
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        <Select value={formData.maturityYShortTerm} onValueChange={(value) => handleInputChange("maturityYShortTerm", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select years" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">1 Year</SelectItem>
+                            <SelectItem value="2">2 Years</SelectItem>
+                            <SelectItem value="3">3 Years</SelectItem>
+                            <SelectItem value="4">4 Years</SelectItem>
+                            <SelectItem value="5">5 Years</SelectItem>
+                            <SelectItem value="6">6 Years</SelectItem>
+                            <SelectItem value="7">7 Years</SelectItem>
+                            <SelectItem value="8">8 Years</SelectItem>
+                            <SelectItem value="9">9 Years</SelectItem>
+                            <SelectItem value="10">10 Years</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       
                       <div>
                         <Label>Grace Period</Label>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="h-10 w-10"
-                            onClick={() => handleDecrement("amortizationYShortTerm", 0.1)}
-                          >
-                            <Minus className="h-4 w-4" />
-                          </Button>
-                          <Input 
-                            type="number" 
-                            step="0.1"
-                            placeholder="0.00" 
-                            value={formData.amortizationYShortTerm}
-                            onChange={(e) => handleInputChange("amortizationYShortTerm", e.target.value)}
-                            className="text-center flex-1" 
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="h-10 w-10"
-                            onClick={() => handleIncrement("amortizationYShortTerm", 0.1)}
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        <Select value={formData.amortizationYShortTerm} onValueChange={(value) => handleInputChange("amortizationYShortTerm", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select years" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">1 Year</SelectItem>
+                            <SelectItem value="2">2 Years</SelectItem>
+                            <SelectItem value="3">3 Years</SelectItem>
+                            <SelectItem value="4">4 Years</SelectItem>
+                            <SelectItem value="5">5 Years</SelectItem>
+                            <SelectItem value="6">6 Years</SelectItem>
+                            <SelectItem value="7">7 Years</SelectItem>
+                            <SelectItem value="8">8 Years</SelectItem>
+                            <SelectItem value="9">9 Years</SelectItem>
+                            <SelectItem value="10">10 Years</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
                   </div>
