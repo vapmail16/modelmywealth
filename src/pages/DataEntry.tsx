@@ -1509,7 +1509,7 @@ export default function DataEntry() {
                         <div>
                           <h4 className="font-medium text-foreground mb-2">Grace Period</h4>
                           <p className="text-sm text-muted-foreground">
-                            A temporary period during loan restructuring where borrowers are allowed to defer payments or receive reduced payment obligations to help manage financial difficulties.
+                            A temporary period during which no principal repayment or interest payment needs to be made, providing borrowers relief during financial difficulties.
                           </p>
                         </div>
                       </div>
