@@ -1357,7 +1357,7 @@ export default function DataEntry() {
                          <TableRow>
                            <TableHead className="text-center font-semibold">Years</TableHead>
                            <TableHead className="text-center font-semibold">Revenue</TableHead>
-                           <TableHead className="text-center font-semibold">COGS/COR</TableHead>
+                           <TableHead className="text-center font-semibold">COGS/COS</TableHead>
                            <TableHead className="text-center font-semibold">Opex</TableHead>
                            <TableHead className="text-center font-semibold">Capex</TableHead>
                          </TableRow>
