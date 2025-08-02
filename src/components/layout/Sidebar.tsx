@@ -11,6 +11,7 @@ import {
   Settings,
   HelpCircle,
   User,
+  CheckSquare,
 } from "lucide-react";
 import {
   Sidebar as SidebarPrimitive,
@@ -36,6 +37,7 @@ const financialTools = [
   { title: "Debt Analysis", url: "/debt-analysis", icon: DollarSign },
   { title: "Cash Flow", url: "/cash-flow", icon: TrendingUp },
   { title: "KPI Dashboard", url: "/kpi", icon: PieChart },
+  { title: "Covenant Testing", url: "/covenant-testing", icon: CheckSquare },
   { title: "Governance", url: "/governance", icon: Shield },
 ];
 
