@@ -1627,9 +1627,9 @@ export default function DataEntry() {
                         </Select>
                       </div>
                       
-                      {/* Business Case Section */}
+                      {/* Business Use Case Section */}
                       <div className="col-span-2 mt-6">
-                        <h3 className="text-lg font-semibold text-foreground mb-4">Business Case</h3>
+                        <h3 className="text-lg font-semibold text-foreground mb-4">Business Use Case</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
                             <Label>New Project Financing</Label>
