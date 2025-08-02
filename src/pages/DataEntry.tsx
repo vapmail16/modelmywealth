@@ -1730,6 +1730,222 @@ export default function DataEntry() {
                 </CardContent>
               </Card>
             </TabsContent>
+
+            {/* Seasonality Section */}
+            <TabsContent value="seasonality">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5 text-primary" />
+                    Seasonality Analysis
+                  </CardTitle>
+                  <CardDescription>
+                    Enter monthly revenue distribution percentages (should total 100%)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="january">January (%)</Label>
+                      <Input
+                        id="january"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={formData.january}
+                        onChange={(e) => handleInputChange("january", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="february">February (%)</Label>
+                      <Input
+                        id="february"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={formData.february}
+                        onChange={(e) => handleInputChange("february", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="march">March (%)</Label>
+                      <Input
+                        id="march"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={formData.march}
+                        onChange={(e) => handleInputChange("march", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="april">April (%)</Label>
+                      <Input
+                        id="april"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={formData.april}
+                        onChange={(e) => handleInputChange("april", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="may">May (%)</Label>
+                      <Input
+                        id="may"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={formData.may}
+                        onChange={(e) => handleInputChange("may", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="june">June (%)</Label>
+                      <Input
+                        id="june"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={formData.june}
+                        onChange={(e) => handleInputChange("june", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="july">July (%)</Label>
+                      <Input
+                        id="july"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={formData.july}
+                        onChange={(e) => handleInputChange("july", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="august">August (%)</Label>
+                      <Input
+                        id="august"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={formData.august}
+                        onChange={(e) => handleInputChange("august", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="september">September (%)</Label>
+                      <Input
+                        id="september"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={formData.september}
+                        onChange={(e) => handleInputChange("september", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="october">October (%)</Label>
+                      <Input
+                        id="october"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={formData.october}
+                        onChange={(e) => handleInputChange("october", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="november">November (%)</Label>
+                      <Input
+                        id="november"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={formData.november}
+                        onChange={(e) => handleInputChange("november", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="december">December (%)</Label>
+                      <Input
+                        id="december"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={formData.december}
+                        onChange={(e) => handleInputChange("december", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Total Calculation */}
+                  <div className="mt-6 p-4 bg-muted rounded-lg">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium">Total Percentage:</span>
+                      <span className={`font-bold text-lg ${
+                        Math.abs((
+                          (parseFloat(formData.january) || 0) +
+                          (parseFloat(formData.february) || 0) +
+                          (parseFloat(formData.march) || 0) +
+                          (parseFloat(formData.april) || 0) +
+                          (parseFloat(formData.may) || 0) +
+                          (parseFloat(formData.june) || 0) +
+                          (parseFloat(formData.july) || 0) +
+                          (parseFloat(formData.august) || 0) +
+                          (parseFloat(formData.september) || 0) +
+                          (parseFloat(formData.october) || 0) +
+                          (parseFloat(formData.november) || 0) +
+                          (parseFloat(formData.december) || 0)
+                        ) - 100) < 0.01 ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {(
+                          (parseFloat(formData.january) || 0) +
+                          (parseFloat(formData.february) || 0) +
+                          (parseFloat(formData.march) || 0) +
+                          (parseFloat(formData.april) || 0) +
+                          (parseFloat(formData.may) || 0) +
+                          (parseFloat(formData.june) || 0) +
+                          (parseFloat(formData.july) || 0) +
+                          (parseFloat(formData.august) || 0) +
+                          (parseFloat(formData.september) || 0) +
+                          (parseFloat(formData.october) || 0) +
+                          (parseFloat(formData.november) || 0) +
+                          (parseFloat(formData.december) || 0)
+                        ).toFixed(1)}%
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      The total should equal 100% for accurate seasonality modeling
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
           </Tabs>
 
           {/* Navigation */}
