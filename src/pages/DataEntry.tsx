@@ -1233,7 +1233,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Interest Free Period</Label>
+                        <Label>Grace Period</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
@@ -1442,7 +1442,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Interest Free Period</Label>
+                        <Label>Grace Period</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
@@ -1507,9 +1507,9 @@ export default function DataEntry() {
                           </p>
                         </div>
                         <div>
-                          <h4 className="font-medium text-foreground mb-2">Interest Free Period</h4>
+                          <h4 className="font-medium text-foreground mb-2">Grace Period</h4>
                           <p className="text-sm text-muted-foreground">
-                            A grace period during which no interest is charged on the loan, often provided during restructuring to help borrowers manage cash flow difficulties.
+                            A temporary period during loan restructuring where borrowers are allowed to defer payments or receive reduced payment obligations to help manage financial difficulties.
                           </p>
                         </div>
                       </div>
