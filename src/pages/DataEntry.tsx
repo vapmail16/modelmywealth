@@ -1823,6 +1823,16 @@ export default function DataEntry() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  {/* Guidance Note */}
+                  <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
+                    <h3 className="text-lg font-semibold text-amber-900 dark:text-amber-100 mb-2 flex items-center gap-2">
+                      <AlertCircle className="h-5 w-5" />
+                      Guidance
+                    </h3>
+                    <p className="text-sm text-amber-800 dark:text-amber-200">
+                      <strong>Important:</strong> Ensure the sum of the percentages across all 12 months must equal 100%. This represents the distribution of annual revenue throughout the year.
+                    </p>
+                  </div>
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
