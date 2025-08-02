@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertTriangle, CheckCircle, XCircle, TrendingUp, Calendar, Calculator } from "lucide-react";
 
 interface CovenantRatio {
@@ -18,40 +19,83 @@ interface CovenantRatio {
 }
 
 interface ActualData {
+  // P&L Statement
   revenue: number;
+  cogs: number;
+  operatingExpenses: number;
   ebitda: number;
-  netIncome: number;
-  totalDebt: number;
-  currentAssets: number;
-  currentLiabilities: number;
+  depreciation: number;
   interestExpense: number;
-  totalAssets: number;
-  totalEquity: number;
+  taxes: number;
+  netIncome: number;
+  
+  // Balance Sheet - Assets
+  cash: number;
+  accountsReceivable: number;
+  inventory: number;
+  otherCurrentAssets: number;
+  ppe: number;
+  otherAssets: number;
+  
+  // Balance Sheet - Liabilities & Equity
+  shortTermDebt: number;
+  accountsPayableProvisions: number;
+  debtTranche1: number;
+  otherLongTermDebt: number;
+  equity: number;
+  retainedEarnings: number;
 }
 
 export default function CovenantTesting() {
   const [selectedPeriod, setSelectedPeriod] = useState<string>("");
   const [testingDate, setTestingDate] = useState<string>("");
   const [actualData, setActualData] = useState<ActualData>({
+    // P&L Statement
     revenue: 0,
+    cogs: 0,
+    operatingExpenses: 0,
     ebitda: 0,
-    netIncome: 0,
-    totalDebt: 0,
-    currentAssets: 0,
-    currentLiabilities: 0,
+    depreciation: 0,
     interestExpense: 0,
-    totalAssets: 0,
-    totalEquity: 0,
+    taxes: 0,
+    netIncome: 0,
+    
+    // Balance Sheet - Assets
+    cash: 0,
+    accountsReceivable: 0,
+    inventory: 0,
+    otherCurrentAssets: 0,
+    ppe: 0,
+    otherAssets: 0,
+    
+    // Balance Sheet - Liabilities & Equity
+    shortTermDebt: 0,
+    accountsPayableProvisions: 0,
+    debtTranche1: 0,
+    otherLongTermDebt: 0,
+    equity: 0,
+    retainedEarnings: 0,
   });
   
   const [hasCalculated, setHasCalculated] = useState(false);
 
   // Sample covenant ratios - these would typically come from the debt structure data
   const calculateCovenantRatios = (): CovenantRatio[] => {
-    const debtToEbitda = actualData.ebitda > 0 ? actualData.totalDebt / actualData.ebitda : 0;
-    const interestCoverage = actualData.interestExpense > 0 ? actualData.ebitda / actualData.interestExpense : 0;
-    const currentRatio = actualData.currentLiabilities > 0 ? actualData.currentAssets / actualData.currentLiabilities : 0;
-    const debtToEquity = actualData.totalEquity > 0 ? actualData.totalDebt / actualData.totalEquity : 0;
+    const totalDebt = actualData.shortTermDebt + actualData.debtTranche1 + actualData.otherLongTermDebt;
+    const totalAssets = actualData.cash + actualData.accountsReceivable + actualData.inventory + 
+                       actualData.otherCurrentAssets + actualData.ppe + actualData.otherAssets;
+    const totalLiabilitiesAndEquity = actualData.shortTermDebt + actualData.accountsPayableProvisions + 
+                                     actualData.debtTranche1 + actualData.otherLongTermDebt + 
+                                     actualData.equity + actualData.retainedEarnings;
+    const currentAssets = actualData.cash + actualData.accountsReceivable + actualData.inventory + actualData.otherCurrentAssets;
+    const currentLiabilities = actualData.shortTermDebt + actualData.accountsPayableProvisions;
+    // Auto-calculate EBITDA if not provided
+    const calculatedEbitda = actualData.ebitda || (actualData.revenue - actualData.cogs - actualData.operatingExpenses);
+    
+    const debtToEbitda = calculatedEbitda > 0 ? totalDebt / calculatedEbitda : 0;
+    const interestCoverage = actualData.interestExpense > 0 ? calculatedEbitda / actualData.interestExpense : 0;
+    const currentRatio = currentLiabilities > 0 ? currentAssets / currentLiabilities : 0;
+    const debtToEquity = (actualData.equity + actualData.retainedEarnings) > 0 ? totalDebt / (actualData.equity + actualData.retainedEarnings) : 0;
 
     return [
       {
@@ -165,14 +209,22 @@ export default function CovenantTesting() {
               <div className="space-y-2">
                 <Label htmlFor="period">Testing Period</Label>
                 <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select testing period" />
+                  <SelectTrigger className="bg-background">
+                    <SelectValue placeholder="Select testing month" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="q1">Q1 (3 months)</SelectItem>
-                    <SelectItem value="q2">Q2 (6 months)</SelectItem>
-                    <SelectItem value="q3">Q3 (9 months)</SelectItem>
-                    <SelectItem value="annual">Annual (12 months)</SelectItem>
+                  <SelectContent className="bg-background border z-50">
+                    <SelectItem value="january">January</SelectItem>
+                    <SelectItem value="february">February</SelectItem>
+                    <SelectItem value="march">March</SelectItem>
+                    <SelectItem value="april">April</SelectItem>
+                    <SelectItem value="may">May</SelectItem>
+                    <SelectItem value="june">June</SelectItem>
+                    <SelectItem value="july">July</SelectItem>
+                    <SelectItem value="august">August</SelectItem>
+                    <SelectItem value="september">September</SelectItem>
+                    <SelectItem value="october">October</SelectItem>
+                    <SelectItem value="november">November</SelectItem>
+                    <SelectItem value="december">December</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -196,97 +248,343 @@ export default function CovenantTesting() {
                 Enter actual P&L and Balance Sheet figures for covenant testing
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="revenue">Revenue ($)</Label>
-                  <Input
-                    id="revenue"
-                    type="number"
-                    placeholder="0"
-                    value={actualData.revenue || ""}
-                    onChange={(e) => handleInputChange('revenue', e.target.value)}
-                  />
+            <CardContent className="space-y-6">
+              {/* P&L Statement Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-foreground">Profit & Loss Statement (Monthly, $)</h3>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="font-semibold">Particulars</TableHead>
+                        <TableHead className="text-right font-semibold">Amount</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell className="font-medium">Revenue *</TableCell>
+                        <TableCell className="text-right">
+                          <Input
+                            type="number"
+                            step="1"
+                            placeholder="0"
+                            value={actualData.revenue || ""}
+                            onChange={(e) => handleInputChange('revenue', e.target.value)}
+                            className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                          />
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">Cost of Goods Sold or Services *</TableCell>
+                        <TableCell className="text-right">
+                          <Input
+                            type="number"
+                            step="1"
+                            placeholder="0"
+                            value={actualData.cogs || ""}
+                            onChange={(e) => handleInputChange('cogs', e.target.value)}
+                            className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                          />
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">Gross Profit</TableCell>
+                        <TableCell className="text-right">
+                          <div className="w-32 ml-auto text-right font-semibold pr-3">
+                            {(actualData.revenue - actualData.cogs).toLocaleString()}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">Operating Expenses *</TableCell>
+                        <TableCell className="text-right">
+                          <Input
+                            type="number"
+                            step="1"
+                            placeholder="0"
+                            value={actualData.operatingExpenses || ""}
+                            onChange={(e) => handleInputChange('operatingExpenses', e.target.value)}
+                            className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                          />
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">EBITDA</TableCell>
+                        <TableCell className="text-right">
+                          <div className="w-32 ml-auto text-right font-semibold pr-3">
+                            {(actualData.revenue - actualData.cogs - actualData.operatingExpenses).toLocaleString()}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">Depreciation & Amortization *</TableCell>
+                        <TableCell className="text-right">
+                          <Input
+                            type="number"
+                            step="1"
+                            placeholder="0"
+                            value={actualData.depreciation || ""}
+                            onChange={(e) => handleInputChange('depreciation', e.target.value)}
+                            className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                          />
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">Interest Expense *</TableCell>
+                        <TableCell className="text-right">
+                          <Input
+                            type="number"
+                            step="1"
+                            placeholder="0"
+                            value={actualData.interestExpense || ""}
+                            onChange={(e) => handleInputChange('interestExpense', e.target.value)}
+                            className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                          />
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">Net Income Before Tax</TableCell>
+                        <TableCell className="text-right">
+                          <div className="w-32 ml-auto text-right font-semibold pr-3">
+                            {(actualData.revenue - actualData.cogs - actualData.operatingExpenses - actualData.depreciation - actualData.interestExpense).toLocaleString()}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">Tax Expenses *</TableCell>
+                        <TableCell className="text-right">
+                          <Input
+                            type="number"
+                            step="1"
+                            placeholder="0"
+                            value={actualData.taxes || ""}
+                            onChange={(e) => handleInputChange('taxes', e.target.value)}
+                            className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                          />
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">Net Income</TableCell>
+                        <TableCell className="text-right">
+                          <div className="w-32 ml-auto text-right font-semibold pr-3">
+                            {(actualData.revenue - actualData.cogs - actualData.operatingExpenses - actualData.depreciation - actualData.interestExpense - actualData.taxes).toLocaleString()}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="ebitda">EBITDA ($)</Label>
-                  <Input
-                    id="ebitda"
-                    type="number"
-                    placeholder="0"
-                    value={actualData.ebitda || ""}
-                    onChange={(e) => handleInputChange('ebitda', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="netIncome">Net Income ($)</Label>
-                  <Input
-                    id="netIncome"
-                    type="number"
-                    placeholder="0"
-                    value={actualData.netIncome || ""}
-                    onChange={(e) => handleInputChange('netIncome', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="totalDebt">Total Debt ($)</Label>
-                  <Input
-                    id="totalDebt"
-                    type="number"
-                    placeholder="0"
-                    value={actualData.totalDebt || ""}
-                    onChange={(e) => handleInputChange('totalDebt', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="currentAssets">Current Assets ($)</Label>
-                  <Input
-                    id="currentAssets"
-                    type="number"
-                    placeholder="0"
-                    value={actualData.currentAssets || ""}
-                    onChange={(e) => handleInputChange('currentAssets', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="currentLiabilities">Current Liabilities ($)</Label>
-                  <Input
-                    id="currentLiabilities"
-                    type="number"
-                    placeholder="0"
-                    value={actualData.currentLiabilities || ""}
-                    onChange={(e) => handleInputChange('currentLiabilities', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="interestExpense">Interest Expense ($)</Label>
-                  <Input
-                    id="interestExpense"
-                    type="number"
-                    placeholder="0"
-                    value={actualData.interestExpense || ""}
-                    onChange={(e) => handleInputChange('interestExpense', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="totalAssets">Total Assets ($)</Label>
-                  <Input
-                    id="totalAssets"
-                    type="number"
-                    placeholder="0"
-                    value={actualData.totalAssets || ""}
-                    onChange={(e) => handleInputChange('totalAssets', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="totalEquity">Total Equity ($)</Label>
-                  <Input
-                    id="totalEquity"
-                    type="number"
-                    placeholder="0"
-                    value={actualData.totalEquity || ""}
-                    onChange={(e) => handleInputChange('totalEquity', e.target.value)}
-                  />
+              </div>
+
+              <Separator />
+
+              {/* Balance Sheet Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-foreground">Balance Sheet (Monthly, $)</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Assets Column */}
+                  <div>
+                    <h4 className="text-md font-semibold mb-4 text-foreground">Assets</h4>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="font-semibold">Item</TableHead>
+                          <TableHead className="text-right font-semibold">Amount</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell className="font-medium">Cash</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={actualData.cash || ""}
+                              onChange={(e) => handleInputChange('cash', e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">Accounts Receivable</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={actualData.accountsReceivable || ""}
+                              onChange={(e) => handleInputChange('accountsReceivable', e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">Inventory</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={actualData.inventory || ""}
+                              onChange={(e) => handleInputChange('inventory', e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">Other Current Assets</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={actualData.otherCurrentAssets || ""}
+                              onChange={(e) => handleInputChange('otherCurrentAssets', e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">Property, Plant & Equipment (Net)</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={actualData.ppe || ""}
+                              onChange={(e) => handleInputChange('ppe', e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">Other Assets/DTA</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={actualData.otherAssets || ""}
+                              onChange={(e) => handleInputChange('otherAssets', e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow className="border-t-2">
+                          <TableCell className="font-semibold">Total Assets</TableCell>
+                          <TableCell className="text-right">
+                            <div className="w-32 ml-auto text-right font-bold text-primary pr-3">
+                              {(actualData.cash + actualData.accountsReceivable + actualData.inventory + 
+                                actualData.otherCurrentAssets + actualData.ppe + actualData.otherAssets).toLocaleString()}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  {/* Liabilities and Equity Column */}
+                  <div>
+                    <h4 className="text-md font-semibold mb-4 text-foreground">Liabilities and Equity</h4>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="font-semibold">Item</TableHead>
+                          <TableHead className="text-right font-semibold">Amount</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell className="font-medium">Short Term Debt</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={actualData.shortTermDebt || ""}
+                              onChange={(e) => handleInputChange('shortTermDebt', e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">Accounts payable/Provisions</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={actualData.accountsPayableProvisions || ""}
+                              onChange={(e) => handleInputChange('accountsPayableProvisions', e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">Debt 1</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={actualData.debtTranche1 || ""}
+                              onChange={(e) => handleInputChange('debtTranche1', e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">Other Long Term Debt 2</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={actualData.otherLongTermDebt || ""}
+                              onChange={(e) => handleInputChange('otherLongTermDebt', e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">Equity</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={actualData.equity || ""}
+                              onChange={(e) => handleInputChange('equity', e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">Retained Earning</TableCell>
+                          <TableCell className="text-right">
+                            <Input
+                              type="number"
+                              step="1"
+                              placeholder="0"
+                              value={actualData.retainedEarnings || ""}
+                              onChange={(e) => handleInputChange('retainedEarnings', e.target.value)}
+                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow className="border-t-2">
+                          <TableCell className="font-semibold">Total Liabilities and Equity</TableCell>
+                          <TableCell className="text-right">
+                            <div className="w-32 ml-auto text-right font-bold text-primary pr-3">
+                              {(actualData.shortTermDebt + actualData.accountsPayableProvisions + actualData.debtTranche1 + 
+                                actualData.otherLongTermDebt + actualData.equity + actualData.retainedEarnings).toLocaleString()}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </div>
                 </div>
               </div>
               
@@ -295,7 +593,7 @@ export default function CovenantTesting() {
               <div className="flex justify-end">
                 <Button 
                   onClick={runCovenantTest}
-                  disabled={!selectedPeriod || actualData.ebitda === 0}
+                  disabled={!selectedPeriod || actualData.revenue === 0}
                   className="flex items-center gap-2"
                 >
                   <Calculator className="h-4 w-4" />
