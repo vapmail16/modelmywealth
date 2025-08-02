@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { 
   Shield, 
@@ -25,7 +26,10 @@ import {
   Building,
   Edit,
   Trash2,
-  Filter
+  Filter,
+  TrendingUp,
+  BarChart3,
+  Activity
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -41,12 +45,71 @@ interface GovernanceTask {
   completedDate?: Date;
 }
 
+interface CovenantData {
+  id: string;
+  name: string;
+  threshold: string;
+  current: string;
+  buffer: number;
+  nextTest: string;
+  status: 'compliant' | 'at-risk' | 'breach';
+}
+
+// Mock covenant data for the dashboard
+const COVENANT_DATA: CovenantData[] = [
+  {
+    id: '1',
+    name: 'Debt-to-EBITDA',
+    threshold: '≤ 3.5x',
+    current: '2.8x',
+    buffer: 20.0,
+    nextTest: 'Dec 31, 2024',
+    status: 'compliant'
+  },
+  {
+    id: '2',
+    name: 'Interest Coverage',
+    threshold: '≥ 4.0x',
+    current: '5.2x',
+    buffer: 30.0,
+    nextTest: 'Dec 31, 2024',
+    status: 'compliant'
+  },
+  {
+    id: '3',
+    name: 'Current Ratio',
+    threshold: '≥ 1.25x',
+    current: '1.45x',
+    buffer: 16.0,
+    nextTest: 'Dec 31, 2024',
+    status: 'compliant'
+  },
+  {
+    id: '4',
+    name: 'Debt-to-Equity',
+    threshold: '≤ 2.0x',
+    current: '1.6x',
+    buffer: 20.0,
+    nextTest: 'Dec 31, 2024',
+    status: 'compliant'
+  },
+  {
+    id: '5',
+    name: 'EBITDA Margin',
+    threshold: '≥ 15%',
+    current: '18.5%',
+    buffer: 23.3,
+    nextTest: 'Dec 31, 2024',
+    status: 'compliant'
+  }
+];
+
 const INITIAL_TASKS: GovernanceTask[] = [
   {
     id: '1',
     title: 'Quarterly Board Meeting',
     description: 'Prepare quarterly financial reports and board presentation',
-    dueDate: new Date(2024, 11, 15), // December 15, 2024
+    dueDate: new Date(2024, 11, 15),
     completed: false,
     category: 'board',
     priority: 'high',
@@ -56,7 +119,7 @@ const INITIAL_TASKS: GovernanceTask[] = [
     id: '2',
     title: 'Board Resolution - New Credit Facility',
     description: 'Board approval for new credit facility terms',
-    dueDate: new Date(2024, 10, 30), // November 30, 2024
+    dueDate: new Date(2024, 10, 30),
     completed: true,
     category: 'board',
     priority: 'high',
@@ -67,7 +130,7 @@ const INITIAL_TASKS: GovernanceTask[] = [
     id: '3',
     title: 'Monthly Lender Reporting Package',
     description: 'Submit compliance certificate and financial statements',
-    dueDate: new Date(2024, 11, 20), // December 20, 2024
+    dueDate: new Date(2024, 11, 20),
     completed: false,
     category: 'lender',
     priority: 'high',
@@ -77,7 +140,7 @@ const INITIAL_TASKS: GovernanceTask[] = [
     id: '4',
     title: 'Covenant Testing Results',
     description: 'Calculate and report quarterly covenant ratios',
-    dueDate: new Date(2024, 11, 15), // December 15, 2024
+    dueDate: new Date(2024, 11, 15),
     completed: false,
     category: 'lender',
     priority: 'high',
@@ -87,7 +150,7 @@ const INITIAL_TASKS: GovernanceTask[] = [
     id: '5',
     title: 'Annual SEC 10-K Filing',
     description: 'Complete and file annual report with SEC',
-    dueDate: new Date(2025, 2, 31), // March 31, 2025
+    dueDate: new Date(2025, 2, 31),
     completed: false,
     category: 'regulatory',
     priority: 'high',
@@ -97,7 +160,7 @@ const INITIAL_TASKS: GovernanceTask[] = [
     id: '6',
     title: 'Tax Returns Filing',
     description: 'File corporate tax returns',
-    dueDate: new Date(2025, 2, 15), // March 15, 2025
+    dueDate: new Date(2025, 2, 15),
     completed: false,
     category: 'regulatory',
     priority: 'medium',
@@ -107,7 +170,7 @@ const INITIAL_TASKS: GovernanceTask[] = [
     id: '7',
     title: 'Audit Committee Meeting',
     description: 'Review internal audit findings and external audit progress',
-    dueDate: new Date(2024, 11, 10), // December 10, 2024
+    dueDate: new Date(2024, 11, 10),
     completed: false,
     category: 'board',
     priority: 'medium',
@@ -117,7 +180,7 @@ const INITIAL_TASKS: GovernanceTask[] = [
     id: '8',
     title: 'Environmental Compliance Report',
     description: 'Submit quarterly environmental compliance documentation',
-    dueDate: new Date(2024, 11, 31), // December 31, 2024
+    dueDate: new Date(2024, 11, 31),
     completed: false,
     category: 'regulatory',
     priority: 'medium',
@@ -212,6 +275,24 @@ export default function Governance() {
     });
   };
 
+  const getCovenantStatusIcon = (status: string) => {
+    switch (status) {
+      case 'compliant': return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case 'at-risk': return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
+      case 'breach': return <AlertTriangle className="h-4 w-4 text-red-500" />;
+      default: return <Clock className="h-4 w-4 text-gray-500" />;
+    }
+  };
+
+  const getCovenantStatusColor = (status: string) => {
+    switch (status) {
+      case 'compliant': return 'bg-green-100 text-green-800 border-green-300';
+      case 'at-risk': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+      case 'breach': return 'bg-red-100 text-red-800 border-red-300';
+      default: return 'bg-gray-100 text-gray-800 border-gray-300';
+    }
+  };
+
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'board': return <Users className="h-4 w-4" />;
@@ -267,17 +348,194 @@ export default function Governance() {
     dueSoon: tasks.filter(t => !t.completed && isDueSoon(t.dueDate)).length
   };
 
+  // Calculate governance metrics
+  const governanceMetrics = {
+    covenantCompliance: (COVENANT_DATA.filter(c => c.status === 'compliant').length / COVENANT_DATA.length) * 100,
+    averageBuffer: COVENANT_DATA.reduce((acc, c) => acc + c.buffer, 0) / COVENANT_DATA.length,
+    atRiskCovenants: COVENANT_DATA.filter(c => c.status === 'at-risk').length,
+    breachedCovenants: COVENANT_DATA.filter(c => c.status === 'breach').length
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Governance Calendar</h1>
+          <h1 className="text-3xl font-bold text-foreground">Governance & Compliance</h1>
           <p className="text-muted-foreground mt-1">
-            Track board governance, lender reporting, and regulatory compliance deadlines
+            Covenant monitoring, governance requirements, and compliance tracking
           </p>
         </div>
         <div className="flex gap-3">
+          <Button variant="outline" className="gap-2">
+            <FileText className="h-4 w-4" />
+            Generate Report
+          </Button>
+          <Button variant="outline" className="gap-2">
+            <CalendarIcon className="h-4 w-4" />
+            Schedule Review
+          </Button>
+        </div>
+      </div>
+
+      {/* Governance Dashboard */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Key Metrics Cards */}
+        <Card className="shadow-card">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Covenant Compliance</p>
+                <p className="text-2xl font-bold text-green-600">{governanceMetrics.covenantCompliance.toFixed(1)}%</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {COVENANT_DATA.filter(c => c.status === 'compliant').length}/{COVENANT_DATA.length} compliant
+                </p>
+              </div>
+              <Shield className="h-8 w-8 text-green-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-card">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Average Buffer</p>
+                <p className="text-2xl font-bold text-blue-600">{governanceMetrics.averageBuffer.toFixed(1)}%</p>
+                <p className="text-xs text-muted-foreground mt-1">Safety margin</p>
+              </div>
+              <BarChart3 className="h-8 w-8 text-blue-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-card">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Risk Level</p>
+                <p className="text-2xl font-bold text-green-600">LOW</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {governanceMetrics.atRiskCovenants} at risk, {governanceMetrics.breachedCovenants} breached
+                </p>
+              </div>
+              <Activity className="h-8 w-8 text-green-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-card">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Next Testing</p>
+                <p className="text-2xl font-bold text-purple-600">Dec 31</p>
+                <p className="text-xs text-muted-foreground mt-1">Quarterly review</p>
+              </div>
+              <CalendarIcon className="h-8 w-8 text-purple-600" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Covenant Compliance Overview */}
+      <Card className="shadow-card border-green-200">
+        <CardHeader>
+          <CardTitle className="text-xl flex items-center gap-2">
+            <Shield className="h-6 w-6 text-green-600" />
+            Covenant Compliance Status
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium">Overall Compliance</span>
+              <span className="text-sm text-green-600">
+                {COVENANT_DATA.filter(c => c.status === 'compliant').length}/{COVENANT_DATA.length} Compliant
+              </span>
+            </div>
+            <Progress value={governanceMetrics.covenantCompliance} className="h-3" />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {COVENANT_DATA.map((covenant) => (
+              <Card 
+                key={covenant.id} 
+                className="cursor-pointer transition-all hover:shadow-md"
+              >
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-sm font-medium">{covenant.name}</CardTitle>
+                    {getCovenantStatusIcon(covenant.status)}
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Threshold:</span>
+                      <span className="font-medium">{covenant.threshold}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Current:</span>
+                      <span className="font-bold text-green-600">{covenant.current}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Buffer:</span>
+                      <span className="font-medium">{covenant.buffer.toFixed(1)}%</span>
+                    </div>
+                    <Badge 
+                      className={cn("w-full justify-center text-xs", getCovenantStatusColor(covenant.status))}
+                    >
+                      Next Test: {covenant.nextTest}
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Risk Monitoring */}
+      <Card className="shadow-card">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
+            Risk Monitoring & Key Ratios
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center p-4 border rounded-lg bg-green-50">
+              <div className="text-lg font-bold text-green-600">Low Risk</div>
+              <div className="text-sm text-muted-foreground mt-1">All covenants compliant</div>
+              <div className="text-xs mt-2">Minimum buffer: {Math.min(...COVENANT_DATA.map(c => c.buffer)).toFixed(1)}%</div>
+            </div>
+            <div className="text-center p-4 border rounded-lg bg-blue-50">
+              <div className="text-lg font-bold text-blue-600">Early Warning</div>
+              <div className="text-sm text-muted-foreground mt-1">Buffer threshold: 25%</div>
+              <div className="text-xs mt-2">
+                {COVENANT_DATA.filter(c => c.buffer < 25).length} covenant{COVENANT_DATA.filter(c => c.buffer < 25).length !== 1 ? 's' : ''} below threshold
+              </div>
+            </div>
+            <div className="text-center p-4 border rounded-lg bg-purple-50">
+              <div className="text-lg font-bold text-purple-600">Monitoring</div>
+              <div className="text-sm text-muted-foreground mt-1">Quarterly review cycle</div>
+              <div className="text-xs mt-2">Next review: Q1 2025</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Calendar Section Header */}
+      <div className="pt-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Governance Calendar</h2>
+            <p className="text-muted-foreground">
+              Track board governance, lender reporting, and regulatory compliance deadlines
+            </p>
+          </div>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
               <Button className="gap-2">
@@ -401,7 +659,7 @@ export default function Governance() {
         </div>
       </div>
 
-      {/* Statistics Cards */}
+      {/* Task Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-6">
