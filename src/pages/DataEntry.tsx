@@ -1013,9 +1013,9 @@ export default function DataEntry() {
                   
                   <Separator />
                   
-                  {/* Data Tips Section */}
+                  {/* Guidance Section */}
                   <div className="space-y-4">
-                    <h4 className="font-semibold text-primary">Data Tips</h4>
+                    <h4 className="font-semibold text-primary">Guidance</h4>
                     <div className="bg-secondary/30 p-4 rounded-lg space-y-3">
                       <div>
                         <h5 className="font-medium text-sm mb-1">Capital Expenditure Additions</h5>
