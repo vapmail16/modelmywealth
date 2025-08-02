@@ -1768,37 +1768,26 @@ export default function DataEntry() {
                           onChange={(e) => handleInputChange("founded", e.target.value)}
                         />
                       </div>
-                      <div>
-                        <Label>Projections Year</Label>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="h-10 w-10"
-                            onClick={() => handleDecrement("projectionsYear", 1)}
-                          >
-                            <Minus className="h-4 w-4" />
-                          </Button>
-                          <Input 
-                            type="number" 
-                            step="1"
-                            placeholder="12.00" 
-                            value={formData.projectionsYear}
-                            onChange={(e) => handleInputChange("projectionsYear", e.target.value)}
-                            className="text-center flex-1" 
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="h-10 w-10"
-                            onClick={() => handleIncrement("projectionsYear", 1)}
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
+                        <div>
+                          <Label>Projections Year</Label>
+                          <Select value={formData.projectionsYear} onValueChange={(value) => handleInputChange("projectionsYear", value)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select projection years" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">1 Year</SelectItem>
+                              <SelectItem value="2">2 Years</SelectItem>
+                              <SelectItem value="3">3 Years</SelectItem>
+                              <SelectItem value="4">4 Years</SelectItem>
+                              <SelectItem value="5">5 Years</SelectItem>
+                              <SelectItem value="6">6 Years</SelectItem>
+                              <SelectItem value="7">7 Years</SelectItem>
+                              <SelectItem value="8">8 Years</SelectItem>
+                              <SelectItem value="9">9 Years</SelectItem>
+                              <SelectItem value="10">10 Years</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
-                      </div>
                     </div>
                   </div>
 
