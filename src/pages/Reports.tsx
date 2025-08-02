@@ -251,58 +251,53 @@ export default function Reports() {
                     </div>
                   </div>
 
-                  {/* Analysis Focus */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Analysis Period</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select time period" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="current-year">Current Year</SelectItem>
-                          <SelectItem value="trailing-12-months">Trailing 12 Months</SelectItem>
-                          <SelectItem value="3-year-trend">3-Year Trend</SelectItem>
-                          <SelectItem value="5-year-trend">5-Year Trend</SelectItem>
-                          <SelectItem value="custom">Custom Period</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Report Audience</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select primary audience" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="board-directors">Board of Directors</SelectItem>
-                          <SelectItem value="senior-management">Senior Management</SelectItem>
-                          <SelectItem value="lenders-banks">Lenders / Banks</SelectItem>
-                          <SelectItem value="investors">Investors</SelectItem>
-                          <SelectItem value="advisors">Financial Advisors</SelectItem>
-                          <SelectItem value="regulatory">Regulatory Bodies</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  {/* Report Audience */}
+                  <div className="space-y-2">
+                    <Label>Report Audience</Label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select primary audience" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="board-directors">Board of Directors</SelectItem>
+                        <SelectItem value="senior-management">Senior Management</SelectItem>
+                        <SelectItem value="lenders-banks">Lenders / Banks</SelectItem>
+                        <SelectItem value="investors">Investors</SelectItem>
+                        <SelectItem value="advisors">Financial Advisors</SelectItem>
+                        <SelectItem value="regulatory">Regulatory Bodies</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   {/* Key Metrics Focus */}
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Label>Key Metrics to Emphasize</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select primary focus area" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="debt-coverage">Debt Coverage Ratios</SelectItem>
-                        <SelectItem value="liquidity">Liquidity Analysis</SelectItem>
-                        <SelectItem value="profitability">Profitability Trends</SelectItem>
-                        <SelectItem value="cash-flow">Cash Flow Analysis</SelectItem>
-                        <SelectItem value="covenant-compliance">Covenant Compliance</SelectItem>
-                        <SelectItem value="valuation">Valuation Metrics</SelectItem>
-                        <SelectItem value="working-capital">Working Capital Management</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox id="debt-coverage" />
+                        <Label htmlFor="debt-coverage">Debt Coverage Ratios</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox id="liquidity" />
+                        <Label htmlFor="liquidity">Liquidity Analysis</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox id="profitability" />
+                        <Label htmlFor="profitability">Profitability Trends</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox id="cash-flow" />
+                        <Label htmlFor="cash-flow">Cash Flow Analysis</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox id="covenant-compliance" />
+                        <Label htmlFor="covenant-compliance">Covenant Compliance</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox id="working-capital" />
+                        <Label htmlFor="working-capital">Working Capital Management</Label>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Custom Instructions */}
