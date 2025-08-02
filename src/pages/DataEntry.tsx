@@ -810,7 +810,7 @@ export default function DataEntry() {
                           </div>
                         </div>
                         <div>
-                          <Label>Senior Secured Debt 1</Label>
+                          <Label>Debt 1</Label>
                           <div className="flex items-center gap-2">
                             <Button
                               type="button"
@@ -1073,7 +1073,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Additional Loan on restructuring (Senior Secured)</Label>
+                        <Label>Additional Loan on restructuring</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
@@ -1105,7 +1105,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Bank Base Rate (Senior Secured, in %)</Label>
+                        <Label>Bank Base Rate (in %)</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
@@ -1137,7 +1137,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Liquidity Premiums (Senior Secured, in %)</Label>
+                        <Label>Liquidity Premiums (in %)</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
@@ -1169,7 +1169,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Credit Risk Premiums (Senior Secured, in %)</Label>
+                        <Label>Credit Risk Premiums (in %)</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
@@ -1282,7 +1282,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Additional Loan on restructuring (Short Term)</Label>
+                        <Label>Additional Loan on restructuring</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
@@ -1314,7 +1314,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Bank Base Rate (Short Term, in %)</Label>
+                        <Label>Bank Base Rate (in %)</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
@@ -1346,7 +1346,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Liquidity Premiums (Short Term, in %)</Label>
+                        <Label>Liquidity Premiums (in %)</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
@@ -1378,7 +1378,7 @@ export default function DataEntry() {
                       </div>
                       
                       <div>
-                        <Label>Credit Risk Premiums (Short Term, in %)</Label>
+                        <Label>Credit Risk Premiums (in %)</Label>
                         <div className="flex items-center gap-2">
                           <Button
                             type="button"
@@ -1470,6 +1470,47 @@ export default function DataEntry() {
                           >
                             <Plus className="h-4 w-4" />
                           </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Guidance Section */}
+                  <div className="mt-8 p-6 bg-muted/50 rounded-lg border">
+                    <h3 className="text-lg font-semibold text-foreground mb-4">Terms Guidance for Loan Refinancing/Restructuring</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Base Rate</h4>
+                          <p className="text-sm text-muted-foreground">
+                            The benchmark interest rate set by the central bank or financial institution, serving as the foundation for calculating loan interest rates.
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Liquidity Premiums</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Additional interest charged to compensate lenders for the reduced liquidity of longer-term loans or loans that are harder to sell in secondary markets.
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Credit Risk Premiums</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Extra interest charged to compensate for the risk of borrower default, based on the borrower's creditworthiness and financial stability.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Maturity Period</h4>
+                          <p className="text-sm text-muted-foreground">
+                            The length of time until the loan must be fully repaid, affecting both risk assessment and interest rate calculations in restructuring scenarios.
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Interest Free Period</h4>
+                          <p className="text-sm text-muted-foreground">
+                            A grace period during which no interest is charged on the loan, often provided during restructuring to help borrowers manage cash flow difficulties.
+                          </p>
                         </div>
                       </div>
                     </div>
