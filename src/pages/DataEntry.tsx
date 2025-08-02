@@ -280,6 +280,39 @@ export default function DataEntry() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  {/* Guidance Section */}
+                  <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+                    <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-3 flex items-center gap-2">
+                      <AlertCircle className="h-5 w-5" />
+                      Guidance
+                    </h3>
+                    <div className="space-y-3 text-sm text-blue-800 dark:text-blue-200">
+                      <div>
+                        <p className="font-medium mb-2">Data Required from Latest Financial Statements:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-4">
+                          <li>Revenue</li>
+                          <li>COGS or COS (Cost of Goods/Services)</li>
+                          <li>Operating Expenses</li>
+                          <li>Interest Expense</li>
+                          <li>Interest Tax Expense</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="font-medium mb-2">Definitions:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-4">
+                          <li><strong>COGS/COS:</strong> Direct expenses related to production or service delivery</li>
+                          <li><strong>Operating Expenses:</strong> All indirect expenses not directly tied to production</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="font-medium mb-2">Scenarios:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-4">
+                          <li><strong>Debt Restructuring or Refinancing:</strong> Use actual data from latest financial statements</li>
+                          <li><strong>New Project Financing:</strong> Start by entering "1" for Revenue, COGS, and Operating Expense</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
