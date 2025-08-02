@@ -133,6 +133,10 @@ export default function DataEntry() {
     // Monthly Revenue Seasonality
     january: "", february: "", march: "", april: "", may: "", june: "",
     july: "", august: "", september: "", october: "", november: "", december: "",
+    
+    // Projection Start Date
+    projectionStartMonth: "",
+    projectionStartYear: "",
   });
 
   const steps = [
@@ -1650,8 +1654,58 @@ export default function DataEntry() {
                               <SelectItem value="8">8 Years</SelectItem>
                               <SelectItem value="9">9 Years</SelectItem>
                               <SelectItem value="10">10 Years</SelectItem>
+                              <SelectItem value="11">11 Years</SelectItem>
+                              <SelectItem value="12">12 Years</SelectItem>
                             </SelectContent>
                           </Select>
+                        </div>
+
+                        {/* Projection Start Date */}
+                        <div className="md:col-span-2">
+                          <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                            <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3 flex items-center gap-2">
+                              <Calendar className="h-4 w-4" />
+                              Projection Start Date
+                            </h4>
+                            <p className="text-xs text-blue-800 dark:text-blue-200 mb-4">
+                              Specify the month and year when your financial projections will begin
+                            </p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <Label>Start Month</Label>
+                                <Select value={formData.projectionStartMonth} onValueChange={(value) => handleInputChange("projectionStartMonth", value)}>
+                                  <SelectTrigger className="bg-background">
+                                    <SelectValue placeholder="Select month" />
+                                  </SelectTrigger>
+                                  <SelectContent className="bg-background border z-50">
+                                    <SelectItem value="1">January</SelectItem>
+                                    <SelectItem value="2">February</SelectItem>
+                                    <SelectItem value="3">March</SelectItem>
+                                    <SelectItem value="4">April</SelectItem>
+                                    <SelectItem value="5">May</SelectItem>
+                                    <SelectItem value="6">June</SelectItem>
+                                    <SelectItem value="7">July</SelectItem>
+                                    <SelectItem value="8">August</SelectItem>
+                                    <SelectItem value="9">September</SelectItem>
+                                    <SelectItem value="10">October</SelectItem>
+                                    <SelectItem value="11">November</SelectItem>
+                                    <SelectItem value="12">December</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div>
+                                <Label>Start Year</Label>
+                                <Input 
+                                  type="number" 
+                                  placeholder="e.g., 2024" 
+                                  min="2020"
+                                  max="2050"
+                                  value={formData.projectionStartYear}
+                                  onChange={(e) => handleInputChange("projectionStartYear", e.target.value)}
+                                />
+                              </div>
+                            </div>
+                          </div>
                         </div>
                     </div>
 
