@@ -19,6 +19,10 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
+import TeamCollaboration from "./pages/TeamCollaboration";
+import InviteMembers from "./pages/InviteMembers";
+import PeerBenchmarking from "./pages/PeerBenchmarking";
+import IndustryAnalysis from "./pages/IndustryAnalysis";
 
 const queryClient = new QueryClient();
 

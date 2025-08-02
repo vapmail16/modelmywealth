@@ -12,6 +12,10 @@ import {
   HelpCircle,
   User,
   CheckSquare,
+  Users,
+  LineChart,
+  UserPlus,
+  Target,
 } from "lucide-react";
 import {
   Sidebar as SidebarPrimitive,
@@ -39,6 +43,16 @@ const financialTools = [
   { title: "KPI Dashboard", url: "/kpi", icon: PieChart },
   { title: "Covenant Testing", url: "/covenant-testing", icon: CheckSquare },
   { title: "Governance", url: "/governance", icon: Shield },
+];
+
+const collaborationTools = [
+  { title: "Team Collaboration", url: "/collaboration", icon: Users },
+  { title: "Invite Members", url: "/collaboration/invite", icon: UserPlus },
+];
+
+const benchmarkingTools = [
+  { title: "Peer Benchmarking", url: "/benchmarking", icon: Target },
+  { title: "Industry Analysis", url: "/benchmarking/industry", icon: LineChart },
 ];
 
 const utilityNav = [
@@ -93,6 +107,48 @@ export function Sidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {financialTools.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <NavLink to={item.url} className={getNavClasses(item.url)}>
+                      <item.icon className="h-4 w-4" />
+                      {state !== "collapsed" && <span>{item.title}</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Collaboration Tools */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-muted-foreground font-medium mb-2">
+            Collaboration
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {collaborationTools.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <NavLink to={item.url} className={getNavClasses(item.url)}>
+                      <item.icon className="h-4 w-4" />
+                      {state !== "collapsed" && <span>{item.title}</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Benchmarking Tools */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-muted-foreground font-medium mb-2">
+            Benchmarking
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {benchmarkingTools.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <NavLink to={item.url} className={getNavClasses(item.url)}>
