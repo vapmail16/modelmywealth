@@ -548,6 +548,18 @@ export default function DataEntry() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  {/* Guidance Note */}
+                  <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
+                    <h3 className="text-lg font-semibold text-amber-900 dark:text-amber-100 mb-2 flex items-center gap-2">
+                      <AlertCircle className="h-5 w-5" />
+                      Guidance
+                    </h3>
+                    <div className="text-sm text-amber-800 dark:text-amber-200 space-y-2">
+                      <p><strong>For Debt Refinancing and/or Debt Restructuring:</strong> Input the Balance Sheet figures and ensure the total of Assets must match total of Liabilities and Equity.</p>
+                      <p><strong>For New Project Financing:</strong> Only input the amount of Equity and the Cash Balance.</p>
+                      <p className="text-xs">Note: Additional Debt can be inputted in the Debt Schedule section.</p>
+                    </div>
+                  </div>
                   <div className="overflow-x-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       {/* Assets Column */}
