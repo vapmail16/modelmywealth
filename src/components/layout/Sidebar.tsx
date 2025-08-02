@@ -89,22 +89,7 @@ export function Sidebar() {
             Financial Tools
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            {/* Performance Section */}
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-sm text-muted-foreground/80 font-medium mb-1 ml-2">
-                Performance
-              </SidebarGroupLabel>
-            </SidebarGroup>
-
-            {/* Financial Position Section */}
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-sm text-muted-foreground/80 font-medium mb-1 ml-2">
-                Financial Position
-              </SidebarGroupLabel>
-            </SidebarGroup>
-
-            {/* Main Financial Tools */}
-            <SidebarMenu className="mt-2">
+            <SidebarMenu>
               {financialTools.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
