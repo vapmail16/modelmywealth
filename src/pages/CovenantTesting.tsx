@@ -630,126 +630,337 @@ export default function CovenantTesting() {
         </TabsContent>
 
         <TabsContent value="results" className="space-y-6">
-          {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="border-green-200 bg-green-50">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-green-800">Compliant</p>
-                    <p className="text-2xl font-bold text-green-900">{compliantCount}</p>
-                  </div>
-                  <CheckCircle className="h-8 w-8 text-green-600" />
+          {/* Overall Compliance Status */}
+          <Card className="border-2">
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl">Overall Compliance Status</CardTitle>
+                  <CardDescription>
+                    Year {selectedYear}, Month {selectedMonth} - Covenant Testing Results
+                  </CardDescription>
                 </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-yellow-200 bg-yellow-50">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-yellow-800">At Risk</p>
-                    <p className="text-2xl font-bold text-yellow-900">{atRiskCount}</p>
+                <div className="text-right">
+                  <div className="text-2xl font-bold">
+                    {breachCount === 0 ? (
+                      <span className="text-green-600">✓ COMPLIANT</span>
+                    ) : (
+                      <span className="text-red-600">⚠ NON-COMPLIANT</span>
+                    )}
                   </div>
-                  <AlertTriangle className="h-8 w-8 text-yellow-600" />
+                  <p className="text-sm text-muted-foreground">
+                    {covenantRatios.length} covenants tested
+                  </p>
                 </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-red-200 bg-red-50">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-red-800">Breaches</p>
-                    <p className="text-2xl font-bold text-red-900">{breachCount}</p>
-                  </div>
-                  <XCircle className="h-8 w-8 text-red-600" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="border-green-200 bg-green-50 dark:bg-green-950/20">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-green-800 dark:text-green-200">Compliant</p>
+                        <p className="text-3xl font-bold text-green-900 dark:text-green-100">{compliantCount}</p>
+                        <p className="text-xs text-green-700 dark:text-green-300">
+                          {compliantCount > 0 ? `${((compliantCount / covenantRatios.length) * 100).toFixed(1)}%` : '0%'} of total
+                        </p>
+                      </div>
+                      <CheckCircle className="h-10 w-10 text-green-600" />
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950/20">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">At Risk</p>
+                        <p className="text-3xl font-bold text-yellow-900 dark:text-yellow-100">{atRiskCount}</p>
+                        <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                          {atRiskCount > 0 ? `${((atRiskCount / covenantRatios.length) * 100).toFixed(1)}%` : '0%'} of total
+                        </p>
+                      </div>
+                      <AlertTriangle className="h-10 w-10 text-yellow-600" />
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="border-red-200 bg-red-50 dark:bg-red-950/20">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-red-800 dark:text-red-200">Breaches</p>
+                        <p className="text-3xl font-bold text-red-900 dark:text-red-100">{breachCount}</p>
+                        <p className="text-xs text-red-700 dark:text-red-300">
+                          {breachCount > 0 ? `${((breachCount / covenantRatios.length) * 100).toFixed(1)}%` : '0%'} of total
+                        </p>
+                      </div>
+                      <XCircle className="h-10 w-10 text-red-600" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
 
-          {/* Detailed Results */}
+          {/* Detailed Covenant Results */}
           <Card>
             <CardHeader>
-              <CardTitle>Covenant Test Results</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Calculator className="h-5 w-5" />
+                Detailed Covenant Test Results
+              </CardTitle>
               <CardDescription>
-                Detailed covenant compliance analysis for Year {selectedYear}, Month {selectedMonth}
+                Individual covenant performance analysis with thresholds and actual values
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {covenantRatios.map((ratio, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      {getStatusIcon(ratio.status)}
-                      <div>
-                        <h3 className="font-medium">{ratio.name}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          Required: {ratio.operator} {ratio.threshold.toFixed(2)}x
-                        </p>
+                  <Card key={index} className={`border-l-4 ${
+                    ratio.status === 'met' ? 'border-l-green-500 bg-green-50/50 dark:bg-green-950/10' :
+                    ratio.status === 'at-risk' ? 'border-l-yellow-500 bg-yellow-50/50 dark:bg-yellow-950/10' :
+                    'border-l-red-500 bg-red-50/50 dark:bg-red-950/10'
+                  }`}>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          {getStatusIcon(ratio.status)}
+                          <div>
+                            <h3 className="font-semibold text-lg">{ratio.name}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              Threshold: {ratio.operator} {ratio.threshold.toFixed(2)}x
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="flex items-center gap-3">
+                            <div>
+                              <p className="text-2xl font-bold font-mono">
+                                {ratio.actual.toFixed(2)}x
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {ratio.status === 'met' ? 
+                                  `${Math.abs(ratio.actual - ratio.threshold).toFixed(2)}x buffer` :
+                                  `${Math.abs(ratio.actual - ratio.threshold).toFixed(2)}x ${ratio.status === 'breach' ? 'breach' : 'to threshold'}`
+                                }
+                              </p>
+                            </div>
+                            {getStatusBadge(ratio.status)}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-lg">
-                          {ratio.actual.toFixed(2)}x
-                        </span>
-                        {getStatusBadge(ratio.status)}
-                      </div>
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Financial Summary */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Financial Summary</CardTitle>
+              <CardDescription>Key financial metrics used in covenant calculations</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center p-4 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground">EBITDA</p>
+                  <p className="text-xl font-bold">
+                    ${(actualData.revenue - actualData.cogs - actualData.operatingExpenses).toLocaleString()}
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground">Total Debt</p>
+                  <p className="text-xl font-bold">
+                    ${(actualData.shortTermDebt + actualData.debtTranche1 + actualData.otherLongTermDebt).toLocaleString()}
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground">Current Assets</p>
+                  <p className="text-xl font-bold">
+                    ${(actualData.cash + actualData.accountsReceivable + actualData.inventory + actualData.otherCurrentAssets).toLocaleString()}
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground">Total Equity</p>
+                  <p className="text-xl font-bold">
+                    ${(actualData.equity + actualData.retainedEarnings).toLocaleString()}
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="analysis" className="space-y-6">
+          {/* Risk Assessment */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5" />
-                Compliance Analysis & Recommendations
+                Risk Assessment & Impact Analysis
               </CardTitle>
+              <CardDescription>
+                Comprehensive analysis of covenant compliance and risk factors
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
+              {/* Alert Sections */}
               {breachCount > 0 && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                  <h3 className="font-medium text-red-900 mb-2">Covenant Breaches Detected</h3>
-                  <p className="text-sm text-red-700">
-                    {breachCount} covenant{breachCount > 1 ? 's' : ''} in breach. Immediate action required to address compliance issues.
-                  </p>
+                <div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <XCircle className="h-6 w-6 text-red-600 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-red-900 dark:text-red-100 text-lg mb-2">
+                        CRITICAL: Covenant Breaches Detected
+                      </h3>
+                      <p className="text-sm text-red-700 dark:text-red-300 mb-4">
+                        {breachCount} covenant{breachCount > 1 ? 's are' : ' is'} currently in breach. 
+                        This may trigger acceleration clauses, additional fees, or require immediate remedial action.
+                      </p>
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-red-900 dark:text-red-100">Immediate Actions Required:</h4>
+                        <ul className="list-disc pl-5 space-y-1 text-sm text-red-700 dark:text-red-300">
+                          <li>Notify lenders immediately as per loan agreement requirements</li>
+                          <li>Prepare breach explanation and remedial action plan</li>
+                          <li>Consider requesting covenant waivers or amendments</li>
+                          <li>Review acceleration clauses and potential consequences</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
               
-              {atRiskCount > 0 && (
-                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <h3 className="font-medium text-yellow-900 mb-2">At-Risk Covenants</h3>
-                  <p className="text-sm text-yellow-700">
-                    {atRiskCount} covenant{atRiskCount > 1 ? 's' : ''} approaching threshold limits. Monitor closely and consider corrective actions.
-                  </p>
+              {atRiskCount > 0 && breachCount === 0 && (
+                <div className="p-6 bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="h-6 w-6 text-yellow-600 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-yellow-900 dark:text-yellow-100 text-lg mb-2">
+                        WARNING: Covenants Approaching Thresholds
+                      </h3>
+                      <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-4">
+                        {atRiskCount} covenant{atRiskCount > 1 ? 's are' : ' is'} approaching breach thresholds. 
+                        Proactive management is recommended to avoid future violations.
+                      </p>
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-yellow-900 dark:text-yellow-100">Recommended Actions:</h4>
+                        <ul className="list-disc pl-5 space-y-1 text-sm text-yellow-700 dark:text-yellow-300">
+                          <li>Monitor these covenants more frequently</li>
+                          <li>Develop contingency plans for potential breaches</li>
+                          <li>Consider operational improvements to strengthen ratios</li>
+                          <li>Prepare lender communications explaining trends</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
               
-              {compliantCount === covenantRatios.length && (
-                <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <h3 className="font-medium text-green-900 mb-2">Full Compliance</h3>
-                  <p className="text-sm text-green-700">
-                    All covenants are compliant. Continue monitoring to maintain strong financial position.
-                  </p>
+              {compliantCount === covenantRatios.length && covenantRatios.length > 0 && (
+                <div className="p-6 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="h-6 w-6 text-green-600 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-green-900 dark:text-green-100 text-lg mb-2">
+                        EXCELLENT: Full Covenant Compliance
+                      </h3>
+                      <p className="text-sm text-green-700 dark:text-green-300 mb-4">
+                        All covenants are currently compliant with comfortable buffers. 
+                        Maintain current financial discipline and monitoring practices.
+                      </p>
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-green-900 dark:text-green-100">Maintain Excellence:</h4>
+                        <ul className="list-disc pl-5 space-y-1 text-sm text-green-700 dark:text-green-300">
+                          <li>Continue regular covenant monitoring</li>
+                          <li>Maintain buffer analysis for future planning</li>
+                          <li>Document compliance processes for consistency</li>
+                          <li>Consider growth opportunities within covenant constraints</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 
-              <div className="space-y-3">
-                <h3 className="font-medium">Recommendations:</h3>
-                <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
-                  <li>Schedule regular covenant testing aligned with reporting periods</li>
-                  <li>Implement early warning systems for covenant thresholds</li>
-                  <li>Consider covenant amendments if persistent compliance issues arise</li>
-                  <li>Maintain detailed documentation of all covenant calculations</li>
-                  <li>Establish action plans for potential covenant breaches</li>
-                </ul>
+              <Separator />
+
+              {/* Strategic Recommendations */}
+              <div>
+                <h3 className="font-semibold text-lg mb-4">Strategic Recommendations</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base">Operational Focus</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                        <li>Implement monthly covenant testing alongside regular reporting</li>
+                        <li>Establish early warning systems for trend monitoring</li>
+                        <li>Optimize working capital management to improve liquidity ratios</li>
+                        <li>Focus on EBITDA improvement through operational efficiency</li>
+                        <li>Monitor debt service capabilities and refinancing opportunities</li>
+                      </ul>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base">Financial Management</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                        <li>Maintain detailed documentation of all covenant calculations</li>
+                        <li>Develop scenario analysis for different business conditions</li>
+                        <li>Build relationships with lenders through proactive communication</li>
+                        <li>Consider covenant-lite alternatives during refinancing</li>
+                        <li>Establish clear escalation procedures for potential issues</li>
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Next Steps */}
+              <div>
+                <h3 className="font-semibold text-lg mb-4">Next Steps & Timeline</h3>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">1</div>
+                    <div>
+                      <h4 className="font-medium">Immediate (Within 24 hours)</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {breachCount > 0 ? 'Notify lenders of breaches and prepare remedial plans' : 
+                         atRiskCount > 0 ? 'Document at-risk covenant trends and develop monitoring plans' :
+                         'Document compliant status and maintain monitoring schedule'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">2</div>
+                    <div>
+                      <h4 className="font-medium">Short-term (Within 1 week)</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Schedule follow-up covenant testing for next month and establish regular monitoring cadence
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">3</div>
+                    <div>
+                      <h4 className="font-medium">Medium-term (Within 1 month)</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Review and update financial projections, assess covenant trends, and prepare quarterly reports
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
