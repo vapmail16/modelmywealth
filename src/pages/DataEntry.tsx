@@ -70,6 +70,8 @@ export default function DataEntry() {
     otherLongTermDebt: "",
     capitalExpenditureAdditions: "",
     assetDepreciatedOverYears: "",
+    additionalCapexPlannedNextYear: "",
+    assetDepreciatedOverYearsNew: "",
     
     // Debt Structure
     seniorSecuredLoanType: "",
@@ -719,6 +721,36 @@ export default function DataEntry() {
                             </TableRow>
                           </TableBody>
                         </Table>
+                      </div>
+                    </div>
+
+                    {/* Additional Balance Sheet Information */}
+                    <Separator className="my-6" />
+                    <div className="space-y-6">
+                      <h3 className="text-lg font-semibold text-foreground">Additional Balance Sheet Information</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="additionalCapexPlannedNextYear">Additional Capex Planned for Next Year</Label>
+                          <Input
+                            id="additionalCapexPlannedNextYear"
+                            type="number"
+                            step="1"
+                            placeholder="0"
+                            value={formData.additionalCapexPlannedNextYear}
+                            onChange={(e) => handleInputChange("additionalCapexPlannedNextYear", e.target.value)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="assetDepreciatedOverYearsNew">Asset Depreciated over Years</Label>
+                          <Input
+                            id="assetDepreciatedOverYearsNew"
+                            type="number"
+                            step="1"
+                            placeholder="0"
+                            value={formData.assetDepreciatedOverYearsNew}
+                            onChange={(e) => handleInputChange("assetDepreciatedOverYearsNew", e.target.value)}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
