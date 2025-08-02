@@ -197,6 +197,32 @@ export default function CovenantTesting() {
         </TabsList>
 
         <TabsContent value="setup" className="space-y-6">
+          {/* Requirements Notice */}
+          {!hasCalculated && (
+            <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950/20">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-3">
+                  <div className="h-6 w-6 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-blue-600 dark:text-blue-400 text-sm font-semibold">!</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+                      Complete Setup to Access Test Results & Analysis
+                    </h3>
+                    <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">
+                      To enable the "Test Results & Analysis" tab with comprehensive charts and analytics, please:
+                    </p>
+                    <ol className="list-decimal pl-5 space-y-1 text-sm text-blue-700 dark:text-blue-300">
+                      <li>Select projection year and month</li>
+                      <li>Enter financial data (Revenue is required)</li>
+                      <li>Click "Run Covenant Test" button</li>
+                    </ol>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Period Selection */}
           <Card>
             <CardHeader>
@@ -616,14 +642,21 @@ export default function CovenantTesting() {
               <Separator className="my-6" />
               
               <div className="flex justify-end">
-                <Button 
-                  onClick={runCovenantTest}
-                  disabled={!selectedYear || !selectedMonth || actualData.revenue === 0}
-                  className="flex items-center gap-2"
-                >
-                  <Calculator className="h-4 w-4" />
-                  Run Covenant Test
-                </Button>
+                <div className="flex flex-col items-end gap-2">
+                  <Button 
+                    onClick={runCovenantTest}
+                    disabled={!selectedYear || !selectedMonth || actualData.revenue === 0}
+                    className="flex items-center gap-2"
+                  >
+                    <Calculator className="h-4 w-4" />
+                    Run Covenant Test
+                  </Button>
+                  {(!selectedYear || !selectedMonth || actualData.revenue === 0) && (
+                    <p className="text-xs text-muted-foreground text-right">
+                      {!selectedYear || !selectedMonth ? "Select year and month" : "Enter revenue to enable test"}
+                    </p>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
