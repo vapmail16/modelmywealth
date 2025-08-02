@@ -587,7 +587,7 @@ export default function DataEntry() {
                     <div className="space-y-4">
                       <div className="space-y-4">
                         <div>
-                          <Label>Cash</Label>
+                          <Label>Cash and Marketable Securities</Label>
                           <div className="flex items-center gap-2">
                             <Button
                               type="button"
@@ -810,7 +810,7 @@ export default function DataEntry() {
                           </div>
                         </div>
                         <div>
-                          <Label>Senior Secured</Label>
+                          <Label>Senior Secured Debt 1</Label>
                           <div className="flex items-center gap-2">
                             <Button
                               type="button"
@@ -841,7 +841,7 @@ export default function DataEntry() {
                           </div>
                         </div>
                         <div>
-                          <Label>Debt 1 - Tranche 1</Label>
+                          <Label>Other Long Term Debt 2</Label>
                           <div className="flex items-center gap-2">
                             <Button
                               type="button"
