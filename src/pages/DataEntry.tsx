@@ -1058,6 +1058,7 @@ export default function DataEntry() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Senior Secured Column */}
                     <div className="space-y-4">
+                      <h4 className="text-base font-medium text-foreground">Debt 1</h4>
                       <div>
                         <Label>Please select an option:</Label>
                         <Select value={formData.seniorSecuredLoanType} onValueChange={(value) => handleInputChange("seniorSecuredLoanType", value)}>
@@ -1266,6 +1267,7 @@ export default function DataEntry() {
 
                     {/* Short Term Column */}
                     <div className="space-y-4">
+                      <h4 className="text-base font-medium text-foreground">Debt 2</h4>
                       <div>
                         <Label>Please select an option:</Label>
                         <Select value={formData.shortTermLoanType} onValueChange={(value) => handleInputChange("shortTermLoanType", value)}>
