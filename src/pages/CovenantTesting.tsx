@@ -47,7 +47,8 @@ interface ActualData {
 }
 
 export default function CovenantTesting() {
-  const [selectedPeriod, setSelectedPeriod] = useState<string>("");
+  const [selectedYear, setSelectedYear] = useState<string>("");
+  const [selectedMonth, setSelectedMonth] = useState<string>("");
   const [testingDate, setTestingDate] = useState<string>("");
   const [actualData, setActualData] = useState<ActualData>({
     // P&L Statement
@@ -182,7 +183,9 @@ export default function CovenantTesting() {
         </div>
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">Testing Period: {selectedPeriod || "Select Period"}</span>
+          <span className="text-sm text-muted-foreground">
+            Testing Period: {selectedYear && selectedMonth ? `Year ${selectedYear}, Month ${selectedMonth}` : "Select Year & Month"}
+          </span>
         </div>
       </div>
 
@@ -202,29 +205,51 @@ export default function CovenantTesting() {
                 Testing Configuration
               </CardTitle>
               <CardDescription>
-                Select the testing period and specify when covenant compliance is being tested
+                Select the projection year (1-12) and specific month for covenant compliance testing
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="period">Testing Period</Label>
-                <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                <Label htmlFor="year">Projection Year</Label>
+                <Select value={selectedYear} onValueChange={setSelectedYear}>
                   <SelectTrigger className="bg-background">
-                    <SelectValue placeholder="Select testing month" />
+                    <SelectValue placeholder="Select year" />
                   </SelectTrigger>
                   <SelectContent className="bg-background border z-50">
-                    <SelectItem value="january">January</SelectItem>
-                    <SelectItem value="february">February</SelectItem>
-                    <SelectItem value="march">March</SelectItem>
-                    <SelectItem value="april">April</SelectItem>
-                    <SelectItem value="may">May</SelectItem>
-                    <SelectItem value="june">June</SelectItem>
-                    <SelectItem value="july">July</SelectItem>
-                    <SelectItem value="august">August</SelectItem>
-                    <SelectItem value="september">September</SelectItem>
-                    <SelectItem value="october">October</SelectItem>
-                    <SelectItem value="november">November</SelectItem>
-                    <SelectItem value="december">December</SelectItem>
+                    <SelectItem value="1">Year 1</SelectItem>
+                    <SelectItem value="2">Year 2</SelectItem>
+                    <SelectItem value="3">Year 3</SelectItem>
+                    <SelectItem value="4">Year 4</SelectItem>
+                    <SelectItem value="5">Year 5</SelectItem>
+                    <SelectItem value="6">Year 6</SelectItem>
+                    <SelectItem value="7">Year 7</SelectItem>
+                    <SelectItem value="8">Year 8</SelectItem>
+                    <SelectItem value="9">Year 9</SelectItem>
+                    <SelectItem value="10">Year 10</SelectItem>
+                    <SelectItem value="11">Year 11</SelectItem>
+                    <SelectItem value="12">Year 12</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="month">Month</Label>
+                <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                  <SelectTrigger className="bg-background">
+                    <SelectValue placeholder="Select month" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background border z-50">
+                    <SelectItem value="1">Month 1</SelectItem>
+                    <SelectItem value="2">Month 2</SelectItem>
+                    <SelectItem value="3">Month 3</SelectItem>
+                    <SelectItem value="4">Month 4</SelectItem>
+                    <SelectItem value="5">Month 5</SelectItem>
+                    <SelectItem value="6">Month 6</SelectItem>
+                    <SelectItem value="7">Month 7</SelectItem>
+                    <SelectItem value="8">Month 8</SelectItem>
+                    <SelectItem value="9">Month 9</SelectItem>
+                    <SelectItem value="10">Month 10</SelectItem>
+                    <SelectItem value="11">Month 11</SelectItem>
+                    <SelectItem value="12">Month 12</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -593,7 +618,7 @@ export default function CovenantTesting() {
               <div className="flex justify-end">
                 <Button 
                   onClick={runCovenantTest}
-                  disabled={!selectedPeriod || actualData.revenue === 0}
+                  disabled={!selectedYear || !selectedMonth || actualData.revenue === 0}
                   className="flex items-center gap-2"
                 >
                   <Calculator className="h-4 w-4" />
@@ -649,7 +674,7 @@ export default function CovenantTesting() {
             <CardHeader>
               <CardTitle>Covenant Test Results</CardTitle>
               <CardDescription>
-                Detailed covenant compliance analysis for {selectedPeriod} period
+                Detailed covenant compliance analysis for Year {selectedYear}, Month {selectedMonth}
               </CardDescription>
             </CardHeader>
             <CardContent>
