@@ -105,6 +105,9 @@ export default function DataEntry() {
     // Company Information
     industry: "",
     region: "",
+    businessCaseNewProject: "",
+    businessCaseRefinancing: "",
+    businessCaseRestructuring: "",
     employeeCount: "",
     founded: "",
     projectionsYear: "",
@@ -1622,6 +1625,49 @@ export default function DataEntry() {
                             <SelectItem value="global">Global</SelectItem>
                           </SelectContent>
                         </Select>
+                      </div>
+                      
+                      {/* Business Case Section */}
+                      <div className="col-span-2 mt-6">
+                        <h3 className="text-lg font-semibold text-foreground mb-4">Business Case</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <Label>New Project Financing</Label>
+                            <Select value={formData.businessCaseNewProject} onValueChange={(value) => handleInputChange("businessCaseNewProject", value)}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select option" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="yes">Yes</SelectItem>
+                                <SelectItem value="no">No</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label>Refinancing Existing Debt</Label>
+                            <Select value={formData.businessCaseRefinancing} onValueChange={(value) => handleInputChange("businessCaseRefinancing", value)}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select option" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="yes">Yes</SelectItem>
+                                <SelectItem value="no">No</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label>Restructuring Debt and Operations</Label>
+                            <Select value={formData.businessCaseRestructuring} onValueChange={(value) => handleInputChange("businessCaseRestructuring", value)}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select option" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="yes">Yes</SelectItem>
+                                <SelectItem value="no">No</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
