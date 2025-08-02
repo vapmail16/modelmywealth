@@ -8,7 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AlertTriangle, CheckCircle, XCircle, TrendingUp, Calendar, Calculator } from "lucide-react";
+import { AlertTriangle, CheckCircle, XCircle, TrendingUp, Calendar, Calculator, BarChart3 } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 
 interface CovenantRatio {
   name: string;
@@ -190,10 +191,9 @@ export default function CovenantTesting() {
       </div>
 
       <Tabs defaultValue="setup" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="setup">Setup & Data Entry</TabsTrigger>
-          <TabsTrigger value="results" disabled={!hasCalculated}>Test Results</TabsTrigger>
-          <TabsTrigger value="analysis" disabled={!hasCalculated}>Analysis</TabsTrigger>
+          <TabsTrigger value="results" disabled={!hasCalculated}>Test Results & Analysis</TabsTrigger>
         </TabsList>
 
         <TabsContent value="setup" className="space-y-6">
@@ -635,9 +635,9 @@ export default function CovenantTesting() {
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-xl">Overall Compliance Status</CardTitle>
+                  <CardTitle className="text-xl">Covenant Testing Results & Analysis</CardTitle>
                   <CardDescription>
-                    Year {selectedYear}, Month {selectedMonth} - Covenant Testing Results
+                    Year {selectedYear}, Month {selectedMonth} - Comprehensive covenant performance analysis
                   </CardDescription>
                 </div>
                 <div className="text-right">
@@ -704,7 +704,174 @@ export default function CovenantTesting() {
             </CardContent>
           </Card>
 
-          {/* Detailed Covenant Results */}
+          {/* Key Ratios Visualization */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Covenant Ratios Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5" />
+                  Covenant Ratios vs Thresholds
+                </CardTitle>
+                <CardDescription>
+                  Actual performance compared to covenant requirements
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={covenantRatios.map(ratio => ({
+                    name: ratio.name.replace('-', '\n'),
+                    actual: ratio.actual,
+                    threshold: ratio.threshold,
+                    status: ratio.status
+                  }))}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                      dataKey="name" 
+                      tick={{ fontSize: 10 }}
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                    />
+                    <YAxis tick={{ fontSize: 12 }} />
+                    <Tooltip 
+                      formatter={(value, name) => [
+                        `${parseFloat(value as string).toFixed(2)}x`, 
+                        name === 'actual' ? 'Actual' : 'Threshold'
+                      ]}
+                    />
+                    <Legend />
+                    <Bar dataKey="threshold" fill="#e5e7eb" name="Threshold" />
+                    <Bar dataKey="actual" fill="#3b82f6" name="Actual" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            {/* Actuals vs Budget Financial Metrics */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5" />
+                  Actuals vs Budget
+                </CardTitle>
+                <CardDescription>
+                  Key financial metrics comparison
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={[
+                    {
+                      metric: 'Revenue',
+                      actual: actualData.revenue,
+                      budget: actualData.revenue * 0.95,
+                      variance: ((actualData.revenue - actualData.revenue * 0.95) / (actualData.revenue * 0.95)) * 100
+                    },
+                    {
+                      metric: 'EBITDA',
+                      actual: actualData.revenue - actualData.cogs - actualData.operatingExpenses,
+                      budget: (actualData.revenue - actualData.cogs - actualData.operatingExpenses) * 0.92,
+                      variance: (((actualData.revenue - actualData.cogs - actualData.operatingExpenses) - (actualData.revenue - actualData.cogs - actualData.operatingExpenses) * 0.92) / ((actualData.revenue - actualData.cogs - actualData.operatingExpenses) * 0.92)) * 100
+                    },
+                    {
+                      metric: 'Net Income',
+                      actual: actualData.revenue - actualData.cogs - actualData.operatingExpenses - actualData.depreciation - actualData.interestExpense - actualData.taxes,
+                      budget: (actualData.revenue - actualData.cogs - actualData.operatingExpenses - actualData.depreciation - actualData.interestExpense - actualData.taxes) * 0.88,
+                      variance: (((actualData.revenue - actualData.cogs - actualData.operatingExpenses - actualData.depreciation - actualData.interestExpense - actualData.taxes) - (actualData.revenue - actualData.cogs - actualData.operatingExpenses - actualData.depreciation - actualData.interestExpense - actualData.taxes) * 0.88) / ((actualData.revenue - actualData.cogs - actualData.operatingExpenses - actualData.depreciation - actualData.interestExpense - actualData.taxes) * 0.88)) * 100
+                    }
+                  ]}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="metric" />
+                    <YAxis />
+                    <Tooltip 
+                      formatter={(value, name) => [
+                        `$${parseFloat(value as string).toLocaleString()}`, 
+                        name === 'actual' ? 'Actual' : 'Budget'
+                      ]}
+                    />
+                    <Legend />
+                    <Bar dataKey="budget" fill="#94a3b8" name="Budget" />
+                    <Bar dataKey="actual" fill="#3b82f6" name="Actual" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Covenant Compliance Status Chart */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Covenant Compliance Distribution</CardTitle>
+              <CardDescription>
+                Overall compliance status breakdown
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <ResponsiveContainer width="100%" height={250}>
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { name: 'Compliant', value: compliantCount, color: '#10b981' },
+                        { name: 'At Risk', value: atRiskCount, color: '#f59e0b' },
+                        { name: 'Breach', value: breachCount, color: '#ef4444' }
+                      ].filter(item => item.value > 0)}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {[
+                        { name: 'Compliant', value: compliantCount, color: '#10b981' },
+                        { name: 'At Risk', value: atRiskCount, color: '#f59e0b' },
+                        { name: 'Breach', value: breachCount, color: '#ef4444' }
+                      ].filter(item => item.value > 0).map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+
+                {/* Key Metrics Summary */}
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-lg">Key Financial Metrics</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center p-3 bg-blue-50 rounded-lg">
+                      <p className="text-sm text-muted-foreground">Total Debt</p>
+                      <p className="text-lg font-bold">
+                        ${(actualData.shortTermDebt + actualData.debtTranche1 + actualData.otherLongTermDebt).toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="text-center p-3 bg-green-50 rounded-lg">
+                      <p className="text-sm text-muted-foreground">EBITDA</p>
+                      <p className="text-lg font-bold">
+                        ${(actualData.revenue - actualData.cogs - actualData.operatingExpenses).toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="text-center p-3 bg-purple-50 rounded-lg">
+                      <p className="text-sm text-muted-foreground">Current Assets</p>
+                      <p className="text-lg font-bold">
+                        ${(actualData.cash + actualData.accountsReceivable + actualData.inventory + actualData.otherCurrentAssets).toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="text-center p-3 bg-orange-50 rounded-lg">
+                      <p className="text-sm text-muted-foreground">Total Equity</p>
+                      <p className="text-lg font-bold">
+                        ${(actualData.equity + actualData.retainedEarnings).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Detailed Covenant Results Table */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -758,53 +925,15 @@ export default function CovenantTesting() {
             </CardContent>
           </Card>
 
-          {/* Financial Summary */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Financial Summary</CardTitle>
-              <CardDescription>Key financial metrics used in covenant calculations</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">EBITDA</p>
-                  <p className="text-xl font-bold">
-                    ${(actualData.revenue - actualData.cogs - actualData.operatingExpenses).toLocaleString()}
-                  </p>
-                </div>
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">Total Debt</p>
-                  <p className="text-xl font-bold">
-                    ${(actualData.shortTermDebt + actualData.debtTranche1 + actualData.otherLongTermDebt).toLocaleString()}
-                  </p>
-                </div>
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">Current Assets</p>
-                  <p className="text-xl font-bold">
-                    ${(actualData.cash + actualData.accountsReceivable + actualData.inventory + actualData.otherCurrentAssets).toLocaleString()}
-                  </p>
-                </div>
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">Total Equity</p>
-                  <p className="text-xl font-bold">
-                    ${(actualData.equity + actualData.retainedEarnings).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="analysis" className="space-y-6">
-          {/* Risk Assessment */}
+          {/* Risk Assessment & Recommendations */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5" />
-                Risk Assessment & Impact Analysis
+                Risk Assessment & Recommendations
               </CardTitle>
               <CardDescription>
-                Comprehensive analysis of covenant compliance and risk factors
+                Strategic analysis and next steps based on covenant testing results
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -922,44 +1051,6 @@ export default function CovenantTesting() {
                       </ul>
                     </CardContent>
                   </Card>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Next Steps */}
-              <div>
-                <h3 className="font-semibold text-lg mb-4">Next Steps & Timeline</h3>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">1</div>
-                    <div>
-                      <h4 className="font-medium">Immediate (Within 24 hours)</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {breachCount > 0 ? 'Notify lenders of breaches and prepare remedial plans' : 
-                         atRiskCount > 0 ? 'Document at-risk covenant trends and develop monitoring plans' :
-                         'Document compliant status and maintain monitoring schedule'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">2</div>
-                    <div>
-                      <h4 className="font-medium">Short-term (Within 1 week)</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Schedule follow-up covenant testing for next month and establish regular monitoring cadence
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">3</div>
-                    <div>
-                      <h4 className="font-medium">Medium-term (Within 1 month)</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Review and update financial projections, assess covenant trends, and prepare quarterly reports
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </CardContent>
