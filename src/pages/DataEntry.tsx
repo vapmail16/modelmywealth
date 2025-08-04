@@ -151,6 +151,52 @@ export default function DataEntry() {
     { id: "seasonality", title: "Seasonality", icon: Calendar },
   ];
 
+  // Financial calculations
+  const calculateGrossProfit = () => {
+    const revenue = parseFloat(formData.revenue) || 0;
+    const cogs = parseFloat(formData.cogs) || 0;
+    return revenue - cogs;
+  };
+
+  const calculateEBITDA = () => {
+    const grossProfit = calculateGrossProfit();
+    const opex = parseFloat(formData.operatingExpenses) || 0;
+    return grossProfit - opex;
+  };
+
+  const calculateNetIncomeBeforeTax = () => {
+    const ebitda = calculateEBITDA();
+    const depreciation = parseFloat(formData.depreciation) || 0;
+    const interest = parseFloat(formData.interestExpense) || 0;
+    return ebitda - depreciation - interest;
+  };
+
+  const calculateNetIncome = () => {
+    const netIncomeBeforeTax = calculateNetIncomeBeforeTax();
+    const taxes = parseFloat(formData.taxes) || 0;
+    return netIncomeBeforeTax - taxes;
+  };
+
+  const calculateTotalAssets = () => {
+    const cash = parseFloat(formData.cash) || 0;
+    const ar = parseFloat(formData.accountsReceivable) || 0;
+    const inventory = parseFloat(formData.inventory) || 0;
+    const otherCurrentAssets = parseFloat(formData.otherCurrentAssets) || 0;
+    const ppe = parseFloat(formData.ppe) || 0;
+    const otherAssets = parseFloat(formData.otherAssets) || 0;
+    return cash + ar + inventory + otherCurrentAssets + ppe + otherAssets;
+  };
+
+  const calculateTotalLiabilitiesAndEquity = () => {
+    const shortTermDebt = parseFloat(formData.shortTermDebt) || 0;
+    const ap = parseFloat(formData.accountsPayableProvisions) || 0;
+    const debt1 = parseFloat(formData.debtTranche1) || 0;
+    const otherDebt = parseFloat(formData.otherLongTermDebt) || 0;
+    const equity = parseFloat(formData.equity) || 0;
+    const retainedEarnings = parseFloat(formData.retainedEarnings) || 0;
+    return shortTermDebt + ap + debt1 + otherDebt + equity + retainedEarnings;
+  };
+
   const handleInputChange = (field: string, value: string) => {
     // Apply validation rules based on field type
     let validatedValue = value;
@@ -227,30 +273,6 @@ export default function DataEntry() {
     handleInputChange(field, newValue);
   };
 
-  const calculateGrossProfit = () => {
-    const revenue = parseFloat(formData.revenue) || 0;
-    const cogs = parseFloat(formData.cogs) || 0;
-    return revenue - cogs;
-  };
-
-  const calculateEBITDA = () => {
-    const grossProfit = calculateGrossProfit();
-    const opex = parseFloat(formData.operatingExpenses) || 0;
-    return grossProfit - opex;
-  };
-
-  const calculateNetIncomeBeforeTax = () => {
-    const ebitda = calculateEBITDA();
-    const depreciation = parseFloat(formData.depreciation) || 0;
-    const interest = parseFloat(formData.interestExpense) || 0;
-    return ebitda - depreciation - interest;
-  };
-
-  const calculateNetIncome = () => {
-    const netIncomeBeforeTax = calculateNetIncomeBeforeTax();
-    const taxes = parseFloat(formData.taxes) || 0;
-    return netIncomeBeforeTax - taxes;
-  };
 
   const handleSave = () => {
     toast({
@@ -706,21 +728,14 @@ export default function DataEntry() {
                                 />
                               </TableCell>
                             </TableRow>
-                            <TableRow className="border-t-2">
-                              <TableCell className="font-semibold">Total Assets</TableCell>
-                              <TableCell className="text-right">
-                                <div className="w-32 ml-auto text-right font-bold text-primary pr-3">
-                                  {(
-                                    (parseFloat(formData.cash) || 0) +
-                                    (parseFloat(formData.accountsReceivable) || 0) +
-                                    (parseFloat(formData.inventory) || 0) +
-                                    (parseFloat(formData.otherCurrentAssets) || 0) +
-                                    (parseFloat(formData.ppe) || 0) +
-                                    (parseFloat(formData.otherAssets) || 0)
-                                  ).toLocaleString()}
-                                </div>
-                              </TableCell>
-                            </TableRow>
+                             <TableRow className="border-t-2">
+                               <TableCell className="font-semibold">Total Assets</TableCell>
+                               <TableCell className="text-right">
+                                 <div className="w-32 ml-auto text-right font-bold text-primary pr-3">
+                                   {calculateTotalAssets().toLocaleString()}
+                                 </div>
+                               </TableCell>
+                             </TableRow>
                           </TableBody>
                         </Table>
                       </div>
@@ -814,21 +829,14 @@ export default function DataEntry() {
                                 />
                               </TableCell>
                             </TableRow>
-                            <TableRow className="border-t-2">
-                              <TableCell className="font-semibold">Total Liabilities and Equity</TableCell>
-                              <TableCell className="text-right">
-                                <div className="w-32 ml-auto text-right font-bold text-primary pr-3">
-                                  {(
-                                    (parseFloat(formData.shortTermDebt || "0") || 0) +
-                                    (parseFloat(formData.accountsPayableProvisions) || 0) +
-                                    (parseFloat(formData.debtTranche1) || 0) +
-                                    (parseFloat(formData.otherLongTermDebt || "0") || 0) +
-                                    (parseFloat(formData.equity) || 0) +
-                                    (parseFloat(formData.retainedEarnings) || 0)
-                                  ).toLocaleString()}
-                                </div>
-                              </TableCell>
-                            </TableRow>
+                             <TableRow className="border-t-2">
+                               <TableCell className="font-semibold">Total Liabilities and Equity</TableCell>
+                               <TableCell className="text-right">
+                                 <div className="w-32 ml-auto text-right font-bold text-primary pr-3">
+                                   {calculateTotalLiabilitiesAndEquity().toLocaleString()}
+                                 </div>
+                               </TableCell>
+                             </TableRow>
                           </TableBody>
                         </Table>
                       </div>
