@@ -35,6 +35,20 @@ export default function CashFlow() {
   
   const filteredData = getFilteredData();
   const currentData = filteredData[filteredData.length - 1]; // Latest period data
+  
+  // Calculate aggregated metrics from filtered data
+  const aggregatedMetrics = {
+    totalOperatingCashFlow: filteredData.reduce((sum, period) => sum + period.operatingCashFlow, 0),
+    totalFreeCashFlow: filteredData.reduce((sum, period) => sum + period.freeCashFlow, 0),
+    averageCash: filteredData.reduce((sum, period) => sum + period.cash, 0) / filteredData.length,
+    averageCurrentRatio: filteredData.reduce((sum, period) => sum + (period.currentRatio || 0), 0) / filteredData.length,
+    totalRevenue: filteredData.reduce((sum, period) => sum + period.revenue, 0),
+    totalEbitda: filteredData.reduce((sum, period) => sum + period.ebitda, 0),
+    totalInterestPaid: filteredData.reduce((sum, period) => sum + period.interestPaid, 0),
+    averagePpe: filteredData.reduce((sum, period) => sum + period.ppe, 0) / filteredData.length,
+    averageTotalEquity: filteredData.reduce((sum, period) => sum + period.totalEquity, 0) / filteredData.length,
+    averageCashConversionCycle: filteredData.reduce((sum, period) => sum + (period.cashConversionCycle || 0), 0) / filteredData.length
+  };
 
   // Handle refresh
   const handleRefresh = async () => {
@@ -64,34 +78,34 @@ export default function CashFlow() {
     }
   };
 
-  // Cash Flow KPI Cards
+  // Cash Flow KPI Cards - now using aggregated metrics
   const cashFlowKPIs = [
     {
       title: "Operating Cash Flow",
-      value: `$${(currentData.operatingCashFlow / 1000000).toFixed(1)}M`,
-      trend: currentData.operatingCashFlow > 0 ? "good" : "poor",
-      description: "Cash generated from operations",
+      value: `$${(aggregatedMetrics.totalOperatingCashFlow / 1000000).toFixed(1)}M`,
+      trend: aggregatedMetrics.totalOperatingCashFlow > 0 ? "good" : "poor",
+      description: `Cash generated from operations (${timeFilter} months)`,
       change: "+5.2%"
     },
     {
       title: "Free Cash Flow",
-      value: `$${(currentData.freeCashFlow / 1000000).toFixed(1)}M`,
-      trend: currentData.freeCashFlow > 0 ? "good" : "poor",
-      description: "Cash after capital expenditures",
+      value: `$${(aggregatedMetrics.totalFreeCashFlow / 1000000).toFixed(1)}M`,
+      trend: aggregatedMetrics.totalFreeCashFlow > 0 ? "good" : "poor",
+      description: `Cash after capital expenditures (${timeFilter} months)`,
       change: "+3.8%"
     },
     {
       title: "Cash Position",
-      value: `$${(currentData.cash / 1000000).toFixed(1)}M`,
+      value: `$${(aggregatedMetrics.averageCash / 1000000).toFixed(1)}M`,
       trend: "good",
-      description: "Total cash and equivalents",
+      description: `Average cash and equivalents (${timeFilter} months)`,
       change: "+12.1%"
     },
     {
       title: "Current Ratio",
-      value: currentData.currentRatio?.toFixed(2) || "N/A",
-      trend: currentData.currentRatio > 1.5 ? "good" : currentData.currentRatio > 1.2 ? "warning" : "poor",
-      description: "Short-term liquidity position",
+      value: aggregatedMetrics.averageCurrentRatio?.toFixed(2) || "N/A",
+      trend: aggregatedMetrics.averageCurrentRatio > 1.5 ? "good" : aggregatedMetrics.averageCurrentRatio > 1.2 ? "warning" : "poor",
+      description: `Average liquidity position (${timeFilter} months)`,
       change: "+0.15"
     }
   ];
@@ -118,8 +132,8 @@ export default function CashFlow() {
     },
     {
       title: "Cash Cycle",
-      value: `${currentData.cashConversionCycle?.toFixed(0) || "N/A"} days`,
-      description: "Working capital efficiency",
+      value: `${aggregatedMetrics.averageCashConversionCycle?.toFixed(0) || "N/A"} days`,
+      description: `Average working capital efficiency (${timeFilter} months)`,
       target: "< 75 days"
     }
   ];
@@ -225,29 +239,29 @@ export default function CashFlow() {
         {/* Position Statement Integration */}
         <Card className="shadow-card">
           <CardHeader>
-            <CardTitle className="text-lg">Position Statement (PS) Impact</CardTitle>
+            <CardTitle className="text-lg">Position Statement (PS) Impact ({timeFilter} months avg)</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex justify-between">
               <span className="text-sm">Total Assets</span>
-              <span className="font-medium">${(currentData.revenue * 1.2 / 1000000).toFixed(1)}M</span>
+              <span className="font-medium">${(aggregatedMetrics.totalRevenue * 1.2 / filteredData.length / 1000000).toFixed(1)}M</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm">Current Assets</span>
-              <span className="font-medium">${(currentData.revenue * 0.25 / 1000000).toFixed(1)}M</span>
+              <span className="font-medium">${(aggregatedMetrics.totalRevenue * 0.25 / filteredData.length / 1000000).toFixed(1)}M</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm">PPE Assets</span>
-              <span className="font-medium">${(currentData.ppe / 1000000).toFixed(1)}M</span>
+              <span className="font-medium">${(aggregatedMetrics.averagePpe / 1000000).toFixed(1)}M</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm">Total Equity</span>
-              <span className="font-medium">${(currentData.totalEquity / 1000000).toFixed(1)}M</span>
+              <span className="font-medium">${(aggregatedMetrics.averageTotalEquity / 1000000).toFixed(1)}M</span>
             </div>
             <div className="flex justify-between border-t pt-2">
               <span className="font-medium">Asset-Cash Flow Ratio</span>
               <span className="font-bold text-blue-600">
-                {((currentData.operatingCashFlow / (currentData.revenue * 1.2)) * 100).toFixed(1)}%
+                {((aggregatedMetrics.totalOperatingCashFlow / (aggregatedMetrics.totalRevenue * 1.2)) * 100).toFixed(1)}%
               </span>
             </div>
           </CardContent>
@@ -256,29 +270,29 @@ export default function CashFlow() {
         {/* Profit & Loss Integration */}
         <Card className="shadow-card">
           <CardHeader>
-            <CardTitle className="text-lg">Profit & Loss (PL) to Cash Flow</CardTitle>
+            <CardTitle className="text-lg">Profit & Loss (PL) to Cash Flow ({timeFilter} months total)</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex justify-between">
               <span className="text-sm">Revenue</span>
-              <span className="font-medium">${(currentData.revenue / 1000000).toFixed(1)}M</span>
+              <span className="font-medium">${(aggregatedMetrics.totalRevenue / 1000000).toFixed(1)}M</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm">EBITDA</span>
-              <span className="font-medium">${(currentData.ebitda / 1000000).toFixed(1)}M</span>
+              <span className="font-medium">${(aggregatedMetrics.totalEbitda / 1000000).toFixed(1)}M</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm">Interest Expense</span>
-              <span className="font-medium text-red-600">-${(currentData.interestPaid / 1000000).toFixed(1)}M</span>
+              <span className="font-medium text-red-600">-${(aggregatedMetrics.totalInterestPaid / 1000000).toFixed(1)}M</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm">Working Capital Impact</span>
-              <span className="font-medium">-$2.1M</span>
+              <span className="font-medium">-${(filteredData.length * 2.1).toFixed(1)}M</span>
             </div>
             <div className="flex justify-between border-t pt-2">
               <span className="font-medium">Cash Conversion %</span>
               <span className="font-bold text-green-600">
-                {((currentData.operatingCashFlow / currentData.ebitda) * 100).toFixed(1)}%
+                {((aggregatedMetrics.totalOperatingCashFlow / aggregatedMetrics.totalEbitda) * 100).toFixed(1)}%
               </span>
             </div>
           </CardContent>
