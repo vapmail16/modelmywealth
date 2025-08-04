@@ -174,10 +174,10 @@ class AuthService {
     }
 
     try {
-      // Try to get existing profile via API
+      // Try to get existing profile
       return await this.getUserWithProfile(targetUserId);
     } catch (error) {
-      // Profile doesn't exist, create it
+      // Profile doesn't exist, create it directly in Supabase
       const email = authUser?.email || (await supabase.auth.getUser()).data.user?.email;
       const userMetadata = authUser?.user_metadata || (await supabase.auth.getUser()).data.user?.user_metadata;
       
@@ -185,7 +185,7 @@ class AuthService {
         throw new Error('Unable to get user email');
       }
 
-      // Create profile via API
+      // Create profile directly in Supabase
       const profileData = {
         user_id: targetUserId,
         email,
@@ -194,19 +194,33 @@ class AuthService {
       };
 
       try {
-        await httpClient.post('/user-management/users', profileData);
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert(profileData);
 
-        // Create default role via API
-        await httpClient.post('/user-management/assign-role', {
-          user_id: targetUserId,
-          role: userMetadata?.user_type === 'tech' ? 'user' : 'analyst',
-          user_type: userMetadata?.user_type || 'business',
-        });
+        if (profileError) {
+          console.error('Error creating profile:', profileError);
+          throw new Error('Failed to create user profile');
+        }
+
+        // Create default role directly in Supabase
+        const { error: roleError } = await supabase
+          .from('user_roles')
+          .insert({
+            user_id: targetUserId,
+            role: userMetadata?.user_type === 'tech' ? 'user' : 'analyst',
+            user_type: userMetadata?.user_type || 'business',
+          });
+
+        if (roleError) {
+          console.error('Error creating role:', roleError);
+          // Don't fail the registration if role creation fails
+        }
 
         // Return the created user with profile
         return await this.getUserWithProfile(targetUserId);
       } catch (createError) {
-        console.error('Error creating user profile via API:', createError);
+        console.error('Error creating user profile:', createError);
         throw new Error('Failed to create user profile');
       }
     }
