@@ -1,4 +1,5 @@
-import { supabase } from '@/integrations/supabase/client';
+import { httpClient } from '../http/client';
+import { ApiResponse } from '@/types/api';
 import type { 
   Project, 
   CreateProjectData, 
@@ -9,20 +10,19 @@ import type {
 } from '@/types/company';
 
 export class ProjectService {
+  private baseUrl = '/projects';
+
   async getProjectsByCompany(companyId: string): Promise<ProjectsListResponse> {
     try {
-      const { data: projects, error } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('company_id', companyId)
-        .order('created_at', { ascending: false });
+      const response: ApiResponse<Project[]> = await httpClient.get(`${this.baseUrl}?company_id=${companyId}`);
 
-      if (error) {
-        console.error('Failed to fetch projects:', error);
-        return { success: false, error: error.message };
+      if (!response.success || response.error) {
+        const errorMessage = response.error?.message || 'Failed to fetch projects';
+        console.error('Failed to fetch projects:', response.error);
+        return { success: false, error: errorMessage };
       }
 
-      return { success: true, data: projects as Project[] || [] };
+      return { success: true, data: response.data || [] };
     } catch (error) {
       console.error('Service error fetching projects:', error);
       return { success: false, error: 'Failed to fetch projects' };
@@ -31,46 +31,40 @@ export class ProjectService {
 
   async getProjectById(id: string): Promise<ProjectResponse> {
     try {
-      const { data: project, error } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('id', id)
-        .single();
+      const response: ApiResponse<ProjectWithCompany> = await httpClient.get(`${this.baseUrl}/${id}`);
 
-      if (error) {
-        console.error('Failed to fetch project:', error);
-        return { success: false, error: error.message };
+      if (!response.success || response.error) {
+        const errorMessage = response.error?.message || 'Failed to fetch project';
+        console.error('Failed to fetch project:', response.error);
+        return { success: false, error: errorMessage };
       }
 
-      return { success: true, data: project as Project };
+      if (!response.data) {
+        return { success: false, error: 'Project not found' };
+      }
+
+      return { success: true, data: response.data };
     } catch (error) {
       console.error('Service error fetching project:', error);
       return { success: false, error: 'Failed to fetch project' };
     }
   }
 
-  async getProjectWithCompany(id: string): Promise<{ success: boolean; data?: ProjectWithCompany; error?: string }> {
+  async getProjectWithCompany(id: string): Promise<ProjectResponse> {
     try {
-      const { data: project, error } = await supabase
-        .from('projects')
-        .select(`
-          *,
-          companies (*)
-        `)
-        .eq('id', id)
-        .single();
+      const response: ApiResponse<ProjectWithCompany> = await httpClient.get(`${this.baseUrl}/${id}`);
 
-      if (error) {
-        console.error('Failed to fetch project with company:', error);
-        return { success: false, error: error.message };
+      if (!response.success || response.error) {
+        const errorMessage = response.error?.message || 'Failed to fetch project with company';
+        console.error('Failed to fetch project with company:', response.error);
+        return { success: false, error: errorMessage };
       }
 
-      const projectWithCompany: ProjectWithCompany = {
-        ...(project as Project),
-        company: project.companies as any
-      };
+      if (!response.data) {
+        return { success: false, error: 'Project not found' };
+      }
 
-      return { success: true, data: projectWithCompany };
+      return { success: true, data: response.data };
     } catch (error) {
       console.error('Service error fetching project with company:', error);
       return { success: false, error: 'Failed to fetch project with company' };
@@ -79,26 +73,19 @@ export class ProjectService {
 
   async createProject(projectData: CreateProjectData): Promise<ProjectResponse> {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) {
-        return { success: false, error: 'User not authenticated' };
+      const response: ApiResponse<Project> = await httpClient.post(this.baseUrl, projectData);
+
+      if (!response.success || response.error) {
+        const errorMessage = response.error?.message || 'Failed to create project';
+        console.error('Failed to create project:', response.error);
+        return { success: false, error: errorMessage };
       }
 
-      const { data: project, error } = await supabase
-        .from('projects')
-        .insert({
-          ...projectData,
-          user_id: user.user.id
-        })
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Failed to create project:', error);
-        return { success: false, error: error.message };
+      if (!response.data) {
+        return { success: false, error: 'Failed to create project' };
       }
 
-      return { success: true, data: project as Project };
+      return { success: true, data: response.data };
     } catch (error) {
       console.error('Service error creating project:', error);
       return { success: false, error: 'Failed to create project' };
@@ -107,19 +94,19 @@ export class ProjectService {
 
   async updateProject(id: string, projectData: UpdateProjectData): Promise<ProjectResponse> {
     try {
-      const { data: project, error } = await supabase
-        .from('projects')
-        .update(projectData)
-        .eq('id', id)
-        .select()
-        .single();
+      const response: ApiResponse<Project> = await httpClient.put(`${this.baseUrl}/${id}`, projectData);
 
-      if (error) {
-        console.error('Failed to update project:', error);
-        return { success: false, error: error.message };
+      if (!response.success || response.error) {
+        const errorMessage = response.error?.message || 'Failed to update project';
+        console.error('Failed to update project:', response.error);
+        return { success: false, error: errorMessage };
       }
 
-      return { success: true, data: project as Project };
+      if (!response.data) {
+        return { success: false, error: 'Failed to update project' };
+      }
+
+      return { success: true, data: response.data };
     } catch (error) {
       console.error('Service error updating project:', error);
       return { success: false, error: 'Failed to update project' };
@@ -128,14 +115,12 @@ export class ProjectService {
 
   async deleteProject(id: string): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase
-        .from('projects')
-        .delete()
-        .eq('id', id);
+      const response: ApiResponse<void> = await httpClient.delete(`${this.baseUrl}/${id}`);
 
-      if (error) {
-        console.error('Failed to delete project:', error);
-        return { success: false, error: error.message };
+      if (!response.success || response.error) {
+        const errorMessage = response.error?.message || 'Failed to delete project';
+        console.error('Failed to delete project:', response.error);
+        return { success: false, error: errorMessage };
       }
 
       return { success: true };
@@ -147,20 +132,15 @@ export class ProjectService {
 
   async getUserProjects(): Promise<ProjectsListResponse> {
     try {
-      const { data: projects, error } = await supabase
-        .from('projects')
-        .select(`
-          *,
-          companies (*)
-        `)
-        .order('created_at', { ascending: false });
+      const response: ApiResponse<ProjectWithCompany[]> = await httpClient.get(this.baseUrl);
 
-      if (error) {
-        console.error('Failed to fetch user projects:', error);
-        return { success: false, error: error.message };
+      if (!response.success || response.error) {
+        const errorMessage = response.error?.message || 'Failed to fetch user projects';
+        console.error('Failed to fetch user projects:', response.error);
+        return { success: false, error: errorMessage };
       }
 
-      return { success: true, data: projects as Project[] || [] };
+      return { success: true, data: response.data || [] };
     } catch (error) {
       console.error('Service error fetching user projects:', error);
       return { success: false, error: 'Failed to fetch user projects' };

@@ -92,11 +92,34 @@ class HttpClient {
   }
 
   private getAuthToken(): string | null {
-    // Get token from localStorage or auth store
-    const authData = localStorage.getItem('auth');
-    if (authData) {
-      const { accessToken } = JSON.parse(authData);
-      return accessToken;
+    // Get token from Supabase session
+    try {
+      // Check for session in localStorage
+      const authKey = `sb-vmrvugezqpydlfjcoldl-auth-token`;
+      const sessionKey = `sb-vmrvugezqpydlfjcoldl-auth-session`;
+      
+      let sessionData = localStorage.getItem(sessionKey);
+      if (!sessionData) {
+        sessionData = sessionStorage.getItem(sessionKey);
+      }
+      
+      if (sessionData) {
+        const session = JSON.parse(sessionData);
+        return session.access_token;
+      }
+      
+      // Fallback to auth token storage
+      let authData = localStorage.getItem(authKey);
+      if (!authData) {
+        authData = sessionStorage.getItem(authKey);
+      }
+      
+      if (authData) {
+        const parsed = JSON.parse(authData);
+        return parsed.access_token;
+      }
+    } catch (error) {
+      console.error('Error parsing auth token:', error);
     }
     return null;
   }
@@ -321,8 +344,8 @@ class HttpClient {
 // Default configuration
 const defaultConfig: ApiClientConfig = {
   baseURL: process.env.NODE_ENV === 'development' 
-    ? 'http://localhost:3001/api' 
-    : '/api',
+    ? 'https://vmrvugezqpydlfjcoldl.supabase.co/functions/v1' 
+    : 'https://vmrvugezqpydlfjcoldl.supabase.co/functions/v1',
   timeout: 30000,
   retryAttempts: 3,
   retryDelay: 1000,
