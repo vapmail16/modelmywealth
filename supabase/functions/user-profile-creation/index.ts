@@ -52,14 +52,16 @@ Deno.serve(async (req) => {
 
     logStep('Creating user profile');
 
-    // Create profile using service role to bypass RLS
+    // Create profile using service role to bypass RLS (use UPSERT to handle duplicates)
     const { error: profileError } = await supabaseServiceRole
       .from('profiles')
-      .insert({
+      .upsert({
         user_id,
         email,
         full_name,
         user_type,
+      }, {
+        onConflict: 'user_id'
       });
 
     if (profileError) {
@@ -77,10 +79,12 @@ Deno.serve(async (req) => {
 
     const { error: roleError } = await supabaseServiceRole
       .from('user_roles')
-      .insert({
+      .upsert({
         user_id,
         role: defaultRole,
         user_type,
+      }, {
+        onConflict: 'user_id,role'
       });
 
     if (roleError) {
