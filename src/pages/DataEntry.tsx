@@ -685,7 +685,7 @@ export default function DataEntry() {
                                   placeholder="0"
                                   value={formData.shortTermDebt || ""}
                                   onChange={(e) => handleInputChange("shortTermDebt", e.target.value)}
-                                  className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                                  className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                                 />
                               </TableCell>
                             </TableRow>
@@ -698,7 +698,7 @@ export default function DataEntry() {
                                   placeholder="0"
                                   value={formData.accountsPayableProvisions}
                                   onChange={(e) => handleInputChange("accountsPayableProvisions", e.target.value)}
-                                  className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                                  className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                                 />
                               </TableCell>
                             </TableRow>
@@ -711,7 +711,7 @@ export default function DataEntry() {
                                   placeholder="0"
                                   value={formData.debtTranche1}
                                   onChange={(e) => handleInputChange("debtTranche1", e.target.value)}
-                                  className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                                  className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                                 />
                               </TableCell>
                             </TableRow>
@@ -724,7 +724,7 @@ export default function DataEntry() {
                                   placeholder="0"
                                   value={formData.otherLongTermDebt || ""}
                                   onChange={(e) => handleInputChange("otherLongTermDebt", e.target.value)}
-                                  className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                                  className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                                 />
                               </TableCell>
                             </TableRow>
@@ -737,7 +737,7 @@ export default function DataEntry() {
                                   placeholder="0"
                                   value={formData.equity}
                                   onChange={(e) => handleInputChange("equity", e.target.value)}
-                                  className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                                  className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                                 />
                               </TableCell>
                             </TableRow>
@@ -750,7 +750,7 @@ export default function DataEntry() {
                                   placeholder="0"
                                   value={formData.retainedEarnings}
                                   onChange={(e) => handleInputChange("retainedEarnings", e.target.value)}
-                                  className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                                  className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                                 />
                               </TableCell>
                             </TableRow>
@@ -1790,7 +1790,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.accountReceivablePercent}
                               onChange={(e) => handleInputChange("accountReceivablePercent", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
