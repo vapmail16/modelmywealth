@@ -55,7 +55,8 @@ class AuthService {
       throw new Error('Registration failed');
     }
 
-    const user = await this.getUserWithProfile(data.user.id);
+    // Pass the user data directly instead of fetching
+    const user = await this.getUserWithProfileFromAuthUser(data.user);
     
     return {
       user,
@@ -94,58 +95,7 @@ class AuthService {
 
     // If no profile exists, create one from auth user data
     if (!profile) {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error('User not found');
-      }
-
-      // Create profile manually if trigger failed
-      const { data: newProfile, error: createError } = await supabase
-        .from('profiles')
-        .insert({
-          user_id: userId,
-          email: user.email!,
-          full_name: user.user_metadata?.full_name || user.email!,
-          user_type: user.user_metadata?.user_type || 'business',
-        })
-        .select()
-        .single();
-
-      if (createError) {
-        throw new Error(`Failed to create profile: ${createError.message}`);
-      }
-
-      // Also create default role
-      await supabase
-        .from('user_roles')
-        .insert({
-          user_id: userId,
-          role: user.user_metadata?.user_type === 'tech' ? 'user' : 'analyst',
-          user_type: user.user_metadata?.user_type || 'business',
-        });
-
-      const finalProfile = newProfile;
-      
-      // Get user roles
-      const { data: roles, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('*')
-        .eq('user_id', userId);
-
-      if (rolesError) {
-        throw new Error(`Failed to fetch roles: ${rolesError.message}`);
-      }
-
-      // Get capabilities for user's roles
-      const capabilities = await this.getUserCapabilities(userId);
-
-      return {
-        id: userId,
-        email: finalProfile.email,
-        profile: finalProfile,
-        roles: roles || [],
-        capabilities,
-      };
+      return this.getUserWithProfileFromAuthUser(null, userId);
     }
 
     // Get user roles
@@ -165,6 +115,80 @@ class AuthService {
       id: userId,
       email: profile.email,
       profile,
+      roles: roles || [],
+      capabilities,
+    };
+  }
+
+  async getUserWithProfileFromAuthUser(authUser: any, userId?: string): Promise<AuthUser> {
+    const targetUserId = userId || authUser?.id;
+    
+    if (!targetUserId) {
+      throw new Error('User ID not provided');
+    }
+
+    // Check if profile exists
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('user_id', targetUserId)
+      .maybeSingle();
+
+    if (existingProfile) {
+      // Profile exists, use regular flow
+      return this.getUserWithProfile(targetUserId);
+    }
+
+    // Profile doesn't exist, create it
+    const email = authUser?.email || (await supabase.auth.getUser()).data.user?.email;
+    const userMetadata = authUser?.user_metadata || (await supabase.auth.getUser()).data.user?.user_metadata;
+    
+    if (!email) {
+      throw new Error('Unable to get user email');
+    }
+
+    // Create profile manually
+    const { data: newProfile, error: createError } = await supabase
+      .from('profiles')
+      .insert({
+        user_id: targetUserId,
+        email: email,
+        full_name: userMetadata?.full_name || email,
+        user_type: userMetadata?.user_type || 'business',
+      })
+      .select()
+      .single();
+
+    if (createError) {
+      throw new Error(`Failed to create profile: ${createError.message}`);
+    }
+
+    // Create default role
+    await supabase
+      .from('user_roles')
+      .insert({
+        user_id: targetUserId,
+        role: userMetadata?.user_type === 'tech' ? 'user' : 'analyst',
+        user_type: userMetadata?.user_type || 'business',
+      });
+
+    // Get user roles
+    const { data: roles, error: rolesError } = await supabase
+      .from('user_roles')
+      .select('*')
+      .eq('user_id', targetUserId);
+
+    if (rolesError) {
+      throw new Error(`Failed to fetch roles: ${rolesError.message}`);
+    }
+
+    // Get capabilities for user's roles
+    const capabilities = await this.getUserCapabilities(targetUserId);
+
+    return {
+      id: targetUserId,
+      email: newProfile.email,
+      profile: newProfile,
       roles: roles || [],
       capabilities,
     };
