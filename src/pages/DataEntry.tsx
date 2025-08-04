@@ -107,6 +107,7 @@ export default function DataEntry() {
     grCapex7: "", grCapex8: "", grCapex9: "", grCapex10: "", grCapex11: "", grCapex12: "",
     
     // Company Information
+    companyName: "",
     industry: "",
     region: "",
     businessCase: "",
@@ -1492,6 +1493,14 @@ export default function DataEntry() {
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
+                      <div>
+                        <Label>Company Name</Label>
+                        <Input
+                          value={formData.companyName}
+                          onChange={(e) => handleInputChange("companyName", e.target.value)}
+                          placeholder="Enter company name"
+                        />
+                      </div>
                       <div>
                         <Label>Industry</Label>
                         <Select value={formData.industry} onValueChange={(value) => handleInputChange("industry", value)}>

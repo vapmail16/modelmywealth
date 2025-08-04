@@ -32,6 +32,13 @@ export default function Reports() {
   const [progress, setProgress] = useState(0);
   const [selectedTemplate, setSelectedTemplate] = useState("");
 
+  // Mock company data from DataEntry - in a real app, this would come from a store/context
+  const companyData = {
+    companyName: "Your Company Inc.", // This would be populated from DataEntry
+    businessCase: "existing-debt-refinancing", // This would be populated from DataEntry  
+    industry: "technology" // This would be populated from DataEntry
+  };
+
   const reportTemplates = [
     {
       id: "executive-summary",
@@ -211,8 +218,14 @@ export default function Reports() {
                       <Label htmlFor="company-name">Company Name</Label>
                       <Input
                         id="company-name"
+                        value={companyData.companyName}
                         placeholder="Your Company Inc."
+                        readOnly
+                        className="bg-muted text-muted-foreground"
                       />
+                      <p className="text-xs text-muted-foreground">
+                        Set in Data Entry → Company Info
+                      </p>
                     </div>
                   </div>
 
@@ -220,34 +233,28 @@ export default function Reports() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Business Case / Investment Thesis</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select business case type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="new-project-financing">New Project Financing</SelectItem>
-                          <SelectItem value="existing-debt-refinancing">Existing Debt Refinancing</SelectItem>
-                          <SelectItem value="debt-business-restructuring">Debt and Business Restructuring</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Input
+                        value={companyData.businessCase === "new-project-financing" ? "New Project Financing" :
+                               companyData.businessCase === "existing-debt-refinancing" ? "Existing Debt Refinancing" :
+                               companyData.businessCase === "debt-business-restructuring" ? "Debt and Business Restructuring" :
+                               "Not Set"}
+                        readOnly
+                        className="bg-muted text-muted-foreground"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Set in Data Entry → Company Info
+                      </p>
                     </div>
                     <div className="space-y-2">
                       <Label>Industry Sector</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select industry" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="technology">Technology</SelectItem>
-                          <SelectItem value="healthcare">Healthcare</SelectItem>
-                          <SelectItem value="manufacturing">Manufacturing</SelectItem>
-                          <SelectItem value="retail">Retail</SelectItem>
-                          <SelectItem value="financial-services">Financial Services</SelectItem>
-                          <SelectItem value="energy">Energy</SelectItem>
-                          <SelectItem value="real-estate">Real Estate</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Input
+                        value={companyData.industry.charAt(0).toUpperCase() + companyData.industry.slice(1) || "Not Set"}
+                        readOnly
+                        className="bg-muted text-muted-foreground"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Set in Data Entry → Company Info
+                      </p>
                     </div>
                   </div>
 
