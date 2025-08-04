@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { subscriptionService } from "@/services";
 import { useNavigate } from "react-router-dom";
 import {
   Check,
@@ -42,14 +42,14 @@ export default function Pricing() {
   }, [user]);
 
   const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
+    // Auth checking will be handled by the auth store
+    // For now, just trigger subscription check if needed
+    setUser({ id: 'temp' }); // Temporary user object
   };
 
   const checkSubscriptionStatus = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('check-subscription');
-      if (error) throw error;
+      const data = await subscriptionService.checkSubscription();
       setSubscriptionStatus(data);
     } catch (error) {
       console.error('Error checking subscription:', error);
@@ -64,14 +64,10 @@ export default function Pricing() {
 
     setLoading(tier);
     try {
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { tier }
-      });
-
-      if (error) throw error;
+      const { url } = await subscriptionService.createCheckout(tier);
 
       // Open Stripe checkout in a new tab
-      window.open(data.url, '_blank');
+      window.open(url, '_blank');
     } catch (error) {
       console.error('Error creating checkout:', error);
       toast({
@@ -92,14 +88,10 @@ export default function Pricing() {
 
     setLoading(productType);
     try {
-      const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: { productType }
-      });
-
-      if (error) throw error;
+      const { url } = await subscriptionService.createPayment(productType);
 
       // Open Stripe checkout in a new tab
-      window.open(data.url, '_blank');
+      window.open(url, '_blank');
     } catch (error) {
       console.error('Error creating payment:', error);
       toast({
@@ -114,9 +106,8 @@ export default function Pricing() {
 
   const handleManageSubscription = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('customer-portal');
-      if (error) throw error;
-      window.open(data.url, '_blank');
+      const { url } = await subscriptionService.openCustomerPortal();
+      window.open(url, '_blank');
     } catch (error) {
       console.error('Error opening customer portal:', error);
       toast({

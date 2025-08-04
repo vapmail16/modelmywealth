@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { subscriptionService } from "@/services";
 import {
   CheckCircle,
   Calendar,
@@ -35,8 +35,7 @@ export default function PaymentSuccess() {
 
   const checkSubscriptionStatus = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('check-subscription');
-      if (error) throw error;
+      const data = await subscriptionService.checkSubscription();
       
       setSubscriptionStatus(data);
       
@@ -64,9 +63,8 @@ export default function PaymentSuccess() {
 
   const handleManageSubscription = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('customer-portal');
-      if (error) throw error;
-      window.open(data.url, '_blank');
+      const { url } = await subscriptionService.openCustomerPortal();
+      window.open(url, '_blank');
     } catch (error) {
       console.error('Error opening customer portal:', error);
       toast({

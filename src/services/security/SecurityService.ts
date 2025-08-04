@@ -321,6 +321,37 @@ class SecurityService {
     return { ...this.config };
   }
 
+  // Additional methods for SecurityDashboard
+  async getActiveSessions(): Promise<any[]> {
+    try {
+      const response = await httpClient.get('/security-management/sessions/active');
+      return response.data?.sessions || [];
+    } catch (error) {
+      console.error('Error getting active sessions:', error);
+      return [];
+    }
+  }
+
+  async getBlockedAttempts(): Promise<number> {
+    try {
+      const response = await httpClient.get('/security-management/rate-limits/blocked');
+      return response.data?.count || 0;
+    } catch (error) {
+      console.error('Error getting blocked attempts:', error);
+      return 0;
+    }
+  }
+
+  async cleanupExpiredSessions(): Promise<boolean> {
+    try {
+      const response = await httpClient.post('/security-management/cleanup');
+      return response.data?.success || false;
+    } catch (error) {
+      console.error('Error cleaning up sessions:', error);
+      return false;
+    }
+  }
+
   // Security notification integration
   private async sendSecurityNotification(
     userId: string, 
@@ -328,17 +359,13 @@ class SecurityService {
     alertData: Record<string, any>
   ): Promise<void> {
     try {
-      // Get user email from profile
-      const { supabase } = await import('@/integrations/supabase/client');
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('email')
-        .eq('user_id', userId)
-        .single();
+      // Get user email from profile via API
+      const response = await httpClient.get(`/user-management/users/${userId}`);
+      const userProfile = response.data?.user;
 
-      if (profile?.email) {
+      if (userProfile?.email) {
         await notificationService.sendSecurityAlert(
-          profile.email,
+          userProfile.email,
           alertType as 'login_alert' | 'password_change' | 'security_alert',
           alertData
         );

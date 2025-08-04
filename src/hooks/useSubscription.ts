@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { subscriptionService } from '@/services';
 import { useToast } from '@/hooks/use-toast';
 
 interface SubscriptionStatus {
@@ -18,23 +18,8 @@ export const useSubscription = () => {
 
   const checkSubscription = async () => {
     try {
-      setStatus(prev => ({ ...prev, loading: true }));
-      
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        setStatus({ subscribed: false, loading: false });
-        return;
-      }
-
-      const { data, error } = await supabase.functions.invoke('check-subscription');
-      if (error) throw error;
-
-      setStatus({
-        subscribed: data.subscribed || false,
-        subscription_tier: data.subscription_tier,
-        subscription_end: data.subscription_end,
-        loading: false
-      });
+      const status = await subscriptionService.checkSubscription();
+      setStatus(status);
     } catch (error) {
       console.error('Error checking subscription:', error);
       setStatus(prev => ({ ...prev, loading: false }));
@@ -43,9 +28,8 @@ export const useSubscription = () => {
 
   const openCustomerPortal = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('customer-portal');
-      if (error) throw error;
-      window.open(data.url, '_blank');
+      const { url } = await subscriptionService.openCustomerPortal();
+      window.open(url, '_blank');
     } catch (error) {
       console.error('Error opening customer portal:', error);
       toast({
@@ -60,15 +44,16 @@ export const useSubscription = () => {
     checkSubscription();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        setTimeout(checkSubscription, 1000); // Small delay to allow for session to be fully established
-      } else if (event === 'SIGNED_OUT') {
-        setStatus({ subscribed: false, loading: false });
-      }
-    });
+    const handleAuthChange = () => {
+      setTimeout(checkSubscription, 1000);
+    };
 
-    return () => subscription.unsubscribe();
+    // Set up auth state listener
+    window.addEventListener('auth-state-change', handleAuthChange);
+
+    return () => {
+      window.removeEventListener('auth-state-change', handleAuthChange);
+    };
   }, []);
 
   return {

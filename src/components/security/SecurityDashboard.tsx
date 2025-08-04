@@ -69,19 +69,15 @@ export function SecurityDashboard() {
       const totalEvents = eventsData?.length || 0;
       const criticalEvents = eventsData?.filter(e => e.severity === 'critical').length || 0;
 
-      // Load active sessions via API
+      // Load metrics via SecurityService
       try {
-        const response = await httpClient.get('/security-management/session-management?action=count_active');
-        const activeSessions = response.data?.count || 0;
-
-        // Load blocked attempts from rate limits via API
-        const rateLimitResponse = await httpClient.get('/security-management/rate-limit?action=count_blocked');
-        const blockedAttempts = rateLimitResponse.data?.count || 0;
+        const activeSessions = await securityService.getActiveSessions();
+        const blockedAttempts = await securityService.getBlockedAttempts();
 
         setMetrics({
           totalEvents,
           criticalEvents,
-          activeSessions,
+          activeSessions: activeSessions.length,
           blockedAttempts,
         });
       } catch (error) {
@@ -120,14 +116,14 @@ export function SecurityDashboard() {
 
   const handleCleanupExpiredSessions = async () => {
     try {
-      // Call the security management API for cleanup
-      const response = await httpClient.post('/security-management/cleanup');
+      // Call SecurityService for cleanup
+      const success = await securityService.cleanupExpiredSessions();
 
-      if (response.success) {
-        console.log('Cleanup completed:', response.data);
+      if (success) {
+        console.log('Cleanup completed successfully');
         await loadSecurityData(); // Refresh data
       } else {
-        console.error('Error cleaning up sessions:', response.error);
+        console.error('Error cleaning up sessions');
       }
     } catch (error) {
       console.error('Error during cleanup:', error);

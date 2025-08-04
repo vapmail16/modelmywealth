@@ -17,6 +17,9 @@ export { httpClient, HttpClient } from './http/client';
 // Notification Service
 export { notificationService, NotificationService } from './api/NotificationService';
 
+// Subscription Service
+export { subscriptionService, SubscriptionService } from './api/SubscriptionService';
+
 // Import httpClient for internal use
 import { httpClient } from './http/client';
 
