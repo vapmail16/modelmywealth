@@ -1122,6 +1122,8 @@ export type Database = {
         | "export_data"
         | "system_settings"
         | "view_security_events"
+        | "manage_security"
+        | "view_sensitive_financial_data"
       user_type: "tech" | "business"
     }
     CompositeTypes: {
@@ -1263,6 +1265,8 @@ export const Constants = {
         "export_data",
         "system_settings",
         "view_security_events",
+        "manage_security",
+        "view_sensitive_financial_data",
       ],
       user_type: ["tech", "business"],
     },
