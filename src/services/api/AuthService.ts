@@ -102,7 +102,7 @@ class AuthService {
   async getUserProfile(userId: string): Promise<UserProfile | null> {
     try {
       const response = await httpClient.get(`/user-management/users/${userId}`);
-      return response.data?.user || null;
+      return response.data?.data || null;
     } catch (error) {
       console.error('Error fetching user profile:', error);
       return null;
@@ -111,46 +111,29 @@ class AuthService {
 
   private async getUserWithProfile(userId: string): Promise<AuthUser> {
     try {
-      // Get user profile directly from Supabase
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', userId)
-        .single();
-
-      if (profileError) {
-        console.error('Error fetching profile:', profileError);
+      // Get user profile via API
+      const profileResponse = await httpClient.get(`/user-management/users/${userId}`);
+      const profile = profileResponse.data?.data;
+      
+      if (!profile) {
         throw new Error('User profile not found');
       }
 
-      // Get user roles directly from Supabase
-      const { data: roles, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('*')
-        .eq('user_id', userId);
+      // Get user roles via API
+      const rolesResponse = await httpClient.get(`/user-management/roles?user_id=${userId}`);
+      const roles = rolesResponse.data?.data || [];
 
-      if (rolesError) {
-        console.error('Error fetching roles:', rolesError);
-        // Don't throw error for roles, just use empty array
-      }
-
-      // Get role capabilities directly from Supabase
-      const { data: allCapabilities, error: capabilitiesError } = await supabase
-        .from('role_capabilities')
-        .select('*');
-
-      if (capabilitiesError) {
-        console.error('Error fetching capabilities:', capabilitiesError);
-        // Don't throw error for capabilities, just use empty array
-      }
+      // Get role capabilities via API
+      const capabilitiesResponse = await httpClient.get(`/user-management/role-capabilities`);
+      const allCapabilities = capabilitiesResponse.data?.data || [];
       
-      const userCapabilities = this.extractUserCapabilities(roles || [], allCapabilities || []);
+      const userCapabilities = this.extractUserCapabilities(roles, allCapabilities);
 
       return {
         id: userId,
         email: profile.email,
         profile,
-        roles: roles || [],
+        roles,
         capabilities: userCapabilities,
       };
     } catch (error) {
@@ -221,10 +204,10 @@ class AuthService {
   async getUserCapabilities(userId: string): Promise<Capability[]> {
     try {
       const rolesResponse = await httpClient.get(`/user-management/roles?user_id=${userId}`);
-      const roles = rolesResponse.data?.roles || [];
+      const roles = rolesResponse.data?.data || [];
 
       const capabilitiesResponse = await httpClient.get(`/user-management/role-capabilities`);
-      const allCapabilities = capabilitiesResponse.data?.capabilities || [];
+      const allCapabilities = capabilitiesResponse.data?.data || [];
       
       return this.extractUserCapabilities(roles, allCapabilities);
     } catch (error) {
@@ -235,8 +218,8 @@ class AuthService {
 
   async hasCapability(capability: Capability): Promise<boolean> {
     try {
-      const response = await httpClient.get(`/user-management/capabilities/${capability}`);
-      return response.data?.hasCapability || false;
+      const response = await httpClient.get(`/user-management/capabilities?capability=${capability}`);
+      return response.data?.data || false;
     } catch (error) {
       console.error('Error checking capability:', error);
       return false;
