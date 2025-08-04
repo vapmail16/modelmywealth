@@ -92,31 +92,12 @@ class HttpClient {
   }
 
   private getAuthToken(): string | null {
-    // Get token from Supabase session
+    // Simple token extraction from Supabase
     try {
-      // Check for session in localStorage
-      const authKey = `sb-vmrvugezqpydlfjcoldl-auth-token`;
-      const sessionKey = `sb-vmrvugezqpydlfjcoldl-auth-session`;
-      
-      let sessionData = localStorage.getItem(sessionKey);
-      if (!sessionData) {
-        sessionData = sessionStorage.getItem(sessionKey);
-      }
-      
-      if (sessionData) {
-        const session = JSON.parse(sessionData);
+      const authSession = localStorage.getItem(`sb-vmrvugezqpydlfjcoldl-auth-token`);
+      if (authSession) {
+        const session = JSON.parse(authSession);
         return session.access_token;
-      }
-      
-      // Fallback to auth token storage
-      let authData = localStorage.getItem(authKey);
-      if (!authData) {
-        authData = sessionStorage.getItem(authKey);
-      }
-      
-      if (authData) {
-        const parsed = JSON.parse(authData);
-        return parsed.access_token;
       }
     } catch (error) {
       console.error('Error parsing auth token:', error);
@@ -199,51 +180,10 @@ class HttpClient {
   }
 
   private async handleUnauthorized(): Promise<void> {
-    // Clear auth token
-    localStorage.removeItem('auth');
-    
-    // Try to refresh token
-    const refreshToken = this.getRefreshToken();
-    if (refreshToken) {
-      try {
-        await this.refreshAuthToken(refreshToken);
-      } catch (error) {
-        // Redirect to login if refresh fails
-        window.location.href = '/login';
-      }
-    } else {
-      // Redirect to login
-      window.location.href = '/login';
-    }
+    // Simple redirect to auth page
+    window.location.href = '/auth';
   }
 
-  private getRefreshToken(): string | null {
-    const authData = localStorage.getItem('auth');
-    if (authData) {
-      const { refreshToken } = JSON.parse(authData);
-      return refreshToken;
-    }
-    return null;
-  }
-
-  private async refreshAuthToken(refreshToken: string): Promise<void> {
-    try {
-      const response = await axios.post('/api/auth/refresh', {
-        refreshToken
-      });
-      
-      const { accessToken, refreshToken: newRefreshToken } = response.data.data;
-      
-      // Update stored tokens
-      localStorage.setItem('auth', JSON.stringify({
-        accessToken,
-        refreshToken: newRefreshToken,
-        expiresAt: Date.now() + (15 * 60 * 1000), // 15 minutes
-      }));
-    } catch (error) {
-      throw new Error('Token refresh failed');
-    }
-  }
 
   private transformError(error: AxiosError): ApiError {
     const apiError: ApiError = {

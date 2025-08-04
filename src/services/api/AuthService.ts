@@ -12,37 +12,25 @@ import type {
 
 class AuthService {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    console.log('Attempting login for:', credentials.email);
-    
     const { data, error } = await supabase.auth.signInWithPassword({
       email: credentials.email,
       password: credentials.password,
     });
 
     if (error) {
-      console.error('Supabase auth error:', error);
       throw new Error(error.message);
     }
 
     if (!data.user) {
-      console.error('No user returned from Supabase');
       throw new Error('Login failed');
     }
 
-    console.log('Supabase auth successful, getting user profile for:', data.user.id);
+    const user = await this.getUserWithProfile(data.user.id);
     
-    try {
-      const user = await this.getUserWithProfile(data.user.id);
-      console.log('User profile retrieved successfully:', user);
-      
-      return {
-        user,
-        session: data.session,
-      };
-    } catch (profileError) {
-      console.error('Failed to get user profile:', profileError);
-      throw new Error(`Failed to get user profile: ${profileError.message}`);
-    }
+    return {
+      user,
+      session: data.session,
+    };
   }
 
   async register(credentials: RegisterCredentials): Promise<AuthResponse> {
@@ -110,54 +98,41 @@ class AuthService {
   }
 
   private async getUserWithProfile(userId: string): Promise<AuthUser> {
-    try {
-      // Temporary fallback to direct database access for login reliability
-      // Get user profile directly from Supabase
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', userId)
-        .single();
+    // Get user profile directly from Supabase
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
 
-      if (profileError) {
-        console.error('Error fetching profile:', profileError);
-        throw new Error('User profile not found');
-      }
-
-      // Get user roles directly from Supabase
-      const { data: roles, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('*')
-        .eq('user_id', userId);
-
-      if (rolesError) {
-        console.error('Error fetching roles:', rolesError);
-        // Don't throw error for roles, just use empty array
-      }
-
-      // Get role capabilities directly from Supabase
-      const { data: allCapabilities, error: capabilitiesError } = await supabase
-        .from('role_capabilities')
-        .select('*');
-
-      if (capabilitiesError) {
-        console.error('Error fetching capabilities:', capabilitiesError);
-        // Don't throw error for capabilities, just use empty array
-      }
-      
-      const userCapabilities = this.extractUserCapabilities(roles || [], allCapabilities || []);
-
-      return {
-        id: userId,
-        email: profile.email,
-        profile,
-        roles: roles || [],
-        capabilities: userCapabilities,
-      };
-    } catch (error) {
-      console.error('Error getting user with profile:', error);
-      throw error;
+    if (profileError) {
+      throw new Error('Failed to fetch user profile');
     }
+
+    if (!profile) {
+      throw new Error('User profile not found');
+    }
+
+    // Get user roles directly from Supabase
+    const { data: roles } = await supabase
+      .from('user_roles')
+      .select('*')
+      .eq('user_id', userId);
+
+    // Get role capabilities directly from Supabase
+    const { data: allCapabilities } = await supabase
+      .from('role_capabilities')
+      .select('*');
+    
+    const userCapabilities = this.extractUserCapabilities(roles || [], allCapabilities || []);
+
+    return {
+      id: userId,
+      email: profile.email,
+      profile,
+      roles: roles || [],
+      capabilities: userCapabilities,
+    };
   }
 
   private extractUserCapabilities(roles: UserRole[], allCapabilities: any[]): Capability[] {
@@ -199,23 +174,17 @@ class AuthService {
         user_type: userMetadata?.user_type || 'business',
       };
 
-      try {
-        // Use the new edge function for profile creation
-        const { error: createError } = await supabase.functions.invoke('user-profile-creation', {
-          body: profileData,
-        });
+      // Use the edge function for profile creation
+      const { error: createError } = await supabase.functions.invoke('user-profile-creation', {
+        body: profileData,
+      });
 
-        if (createError) {
-          console.error('Error creating profile via edge function:', createError);
-          throw new Error('Failed to create user profile');
-        }
-
-        // Return the created user with profile
-        return await this.getUserWithProfile(targetUserId);
-      } catch (createError) {
-        console.error('Error creating user profile:', createError);
+      if (createError) {
         throw new Error('Failed to create user profile');
       }
+
+      // Return the created user with profile
+      return await this.getUserWithProfile(targetUserId);
     }
   }
 

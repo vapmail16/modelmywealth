@@ -1,46 +1,27 @@
 import { useEffect } from 'react';
 import { useAuthStore } from '@/stores/authStore';
 
-export function useActivityTracker() {
-  const { updateActivity, isAuthenticated } = useAuthStore();
+export const useActivityTracker = () => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    // Track user activity events
-    const activityEvents = [
-      'mousedown',
-      'mousemove', 
-      'keypress',
-      'scroll',
-      'touchstart',
-      'click'
-    ];
-
-    let activityTimeout: NodeJS.Timeout;
-
     const handleActivity = () => {
-      // Debounce activity updates to avoid excessive calls
-      clearTimeout(activityTimeout);
-      activityTimeout = setTimeout(() => {
-        updateActivity();
-      }, 1000); // Update activity every 1 second at most
+      // Simple activity tracking without complex dependencies
+      console.log('User activity detected');
     };
 
-    // Add event listeners
-    activityEvents.forEach(event => {
-      document.addEventListener(event, handleActivity, { passive: true });
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+    
+    events.forEach(event => {
+      document.addEventListener(event, handleActivity, true);
     });
 
-    // Initial activity update
-    updateActivity();
-
-    // Cleanup
     return () => {
-      clearTimeout(activityTimeout);
-      activityEvents.forEach(event => {
-        document.removeEventListener(event, handleActivity);
+      events.forEach(event => {
+        document.removeEventListener(event, handleActivity, true);
       });
     };
-  }, [isAuthenticated, updateActivity]);
-}
+  }, [isAuthenticated]);
+};
