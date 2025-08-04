@@ -25,6 +25,9 @@ class AuthService {
       throw new Error('Login failed');
     }
 
+    // Ensure profile exists for existing users
+    await this.ensureUserProfile(data.user);
+
     const user = await this.getUserWithProfile(data.user.id);
     
     return {
@@ -58,16 +61,37 @@ class AuthService {
 
     // Check if email confirmation is required
     if (!data.session) {
-      // Email confirmation is required - this is normal behavior
       throw new Error('Please check your email and click the confirmation link to complete your registration.');
     }
 
-    const user = await this.getUserWithProfileFromAuthUser(data.user);
+    // Create profile synchronously during registration
+    await this.ensureUserProfile(data.user, credentials);
+
+    const user = await this.getUserWithProfile(data.user.id);
     
     return {
       user,
       session: data.session,
     };
+  }
+
+  private async ensureUserProfile(authUser: any, credentials?: RegisterCredentials): Promise<void> {
+    const profileData = {
+      user_id: authUser.id,
+      email: authUser.email,
+      full_name: credentials?.full_name || authUser.user_metadata?.full_name || authUser.email,
+      user_type: credentials?.user_type || authUser.user_metadata?.user_type || 'business',
+    };
+
+    // Use edge function for profile creation
+    const { error } = await supabase.functions.invoke('user-profile-creation', {
+      body: profileData,
+    });
+
+    if (error) {
+      console.error('Profile creation error:', error);
+      // Don't throw error - registration should still succeed
+    }
   }
 
   async logout(): Promise<void> {
@@ -84,7 +108,12 @@ class AuthService {
       return null;
     }
 
-    return this.getUserWithProfile(user.id);
+    try {
+      return this.getUserWithProfile(user.id);
+    } catch (error) {
+      console.error('Failed to get user profile:', error);
+      return null;
+    }
   }
 
   async getUserProfile(userId: string): Promise<UserProfile | null> {
@@ -97,29 +126,82 @@ class AuthService {
     }
   }
 
-  private async getUserWithProfile(userId: string): Promise<AuthUser> {
-    // Get user profile directly from Supabase
+  private async getUserWithProfile(userId: string, retryCount = 0): Promise<AuthUser> {
+    const maxRetries = 2;
+    
+    try {
+      // Use API endpoint instead of direct database access
+      const profileResponse = await httpClient.get(`/user-management/users/${userId}`);
+      const profile = profileResponse.data?.data;
+      
+      if (!profile) {
+        throw new Error('User profile not found');
+      }
+
+      // Get user roles via API
+      const rolesResponse = await httpClient.get(`/user-management/roles?user_id=${userId}`);
+      const roles = rolesResponse.data?.data || [];
+
+      // Get role capabilities via API
+      const capabilitiesResponse = await httpClient.get(`/user-management/role-capabilities`);
+      const allCapabilities = capabilitiesResponse.data?.data || [];
+      
+      const userCapabilities = this.extractUserCapabilities(roles, allCapabilities);
+
+      return {
+        id: userId,
+        email: profile.email,
+        profile,
+        roles,
+        capabilities: userCapabilities,
+      };
+    } catch (error) {
+      // Retry logic for transient failures
+      if (retryCount < maxRetries && this.isRetryableError(error)) {
+        console.log(`Retrying getUserWithProfile (${retryCount + 1}/${maxRetries})`);
+        await this.delay(1000 * (retryCount + 1)); // Exponential backoff
+        return this.getUserWithProfile(userId, retryCount + 1);
+      }
+      
+      // Fallback to direct database access if API fails
+      return this.getUserWithProfileDirect(userId);
+    }
+  }
+
+  private isRetryableError(error: any): boolean {
+    if (!error) return false;
+    
+    // Network errors and temporary server errors
+    const retryableErrors = ['NETWORK_ERROR', 'TIMEOUT', 'ECONNRESET'];
+    const retryableStatuses = [408, 429, 500, 502, 503, 504];
+    
+    return retryableErrors.includes(error.code) || 
+           retryableStatuses.includes(error.status) ||
+           error.message?.includes('network') ||
+           error.message?.includes('timeout');
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private async getUserWithProfileDirect(userId: string): Promise<AuthUser> {
+    // Direct database access as fallback
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('*')
       .eq('user_id', userId)
       .maybeSingle();
 
-    if (profileError) {
-      throw new Error('Failed to fetch user profile');
-    }
-
-    if (!profile) {
+    if (profileError || !profile) {
       throw new Error('User profile not found');
     }
 
-    // Get user roles directly from Supabase
     const { data: roles } = await supabase
       .from('user_roles')
       .select('*')
       .eq('user_id', userId);
 
-    // Get role capabilities directly from Supabase
     const { data: allCapabilities } = await supabase
       .from('role_capabilities')
       .select('*');
@@ -148,75 +230,12 @@ class AuthService {
     return Array.from(userCapabilities);
   }
 
-  async getUserWithProfileFromAuthUser(authUser: any, userId?: string): Promise<AuthUser> {
-    const targetUserId = userId || authUser?.id;
-    
-    if (!targetUserId) {
-      throw new Error('User ID not provided');
-    }
-
-    try {
-      // Try to get existing profile
-      return await this.getUserWithProfile(targetUserId);
-    } catch (error) {
-      // Profile doesn't exist, create it using the edge function
-      const email = authUser?.email || (await supabase.auth.getUser()).data.user?.email;
-      const userMetadata = authUser?.user_metadata || (await supabase.auth.getUser()).data.user?.user_metadata;
-      
-      if (!email) {
-        throw new Error('Unable to get user email');
-      }
-
-      const profileData = {
-        user_id: targetUserId,
-        email,
-        full_name: userMetadata?.full_name || email,
-        user_type: userMetadata?.user_type || 'business',
-      };
-
-      // Use the edge function for profile creation
-      const { error: createError } = await supabase.functions.invoke('user-profile-creation', {
-        body: profileData,
-      });
-
-      if (createError) {
-        throw new Error('Failed to create user profile');
-      }
-
-      // Return the created user with profile
-      return await this.getUserWithProfile(targetUserId);
-    }
-  }
-
-  async getUserCapabilities(userId: string): Promise<Capability[]> {
-    try {
-      const rolesResponse = await httpClient.get(`/user-management/roles?user_id=${userId}`);
-      const roles = rolesResponse.data?.data || [];
-
-      const capabilitiesResponse = await httpClient.get(`/user-management/role-capabilities`);
-      const allCapabilities = capabilitiesResponse.data?.data || [];
-      
-      return this.extractUserCapabilities(roles, allCapabilities);
-    } catch (error) {
-      console.error('Error fetching user capabilities:', error);
-      return [];
-    }
-  }
-
-  async hasCapability(capability: Capability): Promise<boolean> {
-    try {
-      const response = await httpClient.get(`/user-management/capabilities?capability=${capability}`);
-      return response.data?.data || false;
-    } catch (error) {
-      console.error('Error checking capability:', error);
-      return false;
-    }
-  }
-
   onAuthStateChange(callback: (user: AuthUser | null) => void) {
     return supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         try {
+          // Ensure profile exists
+          await this.ensureUserProfile(session.user);
           const user = await this.getUserWithProfile(session.user.id);
           callback(user);
         } catch (error) {

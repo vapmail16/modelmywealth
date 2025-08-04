@@ -92,15 +92,48 @@ class HttpClient {
   }
 
   private getAuthToken(): string | null {
-    // Simple token extraction from Supabase
     try {
-      const authSession = localStorage.getItem(`sb-vmrvugezqpydlfjcoldl-auth-token`);
-      if (authSession) {
-        const session = JSON.parse(authSession);
-        return session.access_token;
+      // Try multiple token storage locations
+      const tokenSources = [
+        `sb-vmrvugezqpydlfjcoldl-auth-token`,
+        `supabase.auth.token`,
+        `auth-token`,
+      ];
+
+      for (const source of tokenSources) {
+        // Check localStorage first
+        const stored = localStorage.getItem(source);
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            if (parsed.access_token || parsed.accessToken) {
+              return parsed.access_token || parsed.accessToken;
+            }
+          } catch {
+            // If not JSON, might be direct token
+            if (stored.startsWith('eyJ')) {
+              return stored;
+            }
+          }
+        }
+
+        // Check sessionStorage as fallback
+        const sessionStored = sessionStorage.getItem(source);
+        if (sessionStored) {
+          try {
+            const parsed = JSON.parse(sessionStored);
+            if (parsed.access_token || parsed.accessToken) {
+              return parsed.access_token || parsed.accessToken;
+            }
+          } catch {
+            if (sessionStored.startsWith('eyJ')) {
+              return sessionStored;
+            }
+          }
+        }
       }
     } catch (error) {
-      console.error('Error parsing auth token:', error);
+      console.error('Error extracting auth token:', error);
     }
     return null;
   }
