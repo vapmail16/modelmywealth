@@ -49,7 +49,7 @@ interface CovenantData {
   id: string;
   name: string;
   threshold: string;
-  current: string;
+  projection: string;
   buffer: number;
   nextTest: string;
   status: 'compliant' | 'at-risk' | 'breach';
@@ -61,7 +61,7 @@ const COVENANT_DATA: CovenantData[] = [
     id: '1',
     name: 'Debt-to-EBITDA',
     threshold: '≤ 3.5x',
-    current: '2.8x',
+    projection: '2.8x',
     buffer: 20.0,
     nextTest: 'Dec 31, 2024',
     status: 'compliant'
@@ -70,7 +70,7 @@ const COVENANT_DATA: CovenantData[] = [
     id: '2',
     name: 'Interest Coverage',
     threshold: '≥ 4.0x',
-    current: '5.2x',
+    projection: '5.2x',
     buffer: 30.0,
     nextTest: 'Dec 31, 2024',
     status: 'compliant'
@@ -79,7 +79,7 @@ const COVENANT_DATA: CovenantData[] = [
     id: '3',
     name: 'Current Ratio',
     threshold: '≥ 1.25x',
-    current: '1.45x',
+    projection: '1.45x',
     buffer: 16.0,
     nextTest: 'Dec 31, 2024',
     status: 'compliant'
@@ -88,7 +88,7 @@ const COVENANT_DATA: CovenantData[] = [
     id: '4',
     name: 'Debt-to-Equity',
     threshold: '≤ 2.0x',
-    current: '1.6x',
+    projection: '1.6x',
     buffer: 20.0,
     nextTest: 'Dec 31, 2024',
     status: 'compliant'
@@ -97,7 +97,7 @@ const COVENANT_DATA: CovenantData[] = [
     id: '5',
     name: 'EBITDA Margin',
     threshold: '≥ 15%',
-    current: '18.5%',
+    projection: '18.5%',
     buffer: 23.3,
     nextTest: 'Dec 31, 2024',
     status: 'compliant'
@@ -194,6 +194,8 @@ export default function Governance() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<GovernanceTask | null>(null);
+  const [covenantData, setCovenantData] = useState<CovenantData[]>(COVENANT_DATA);
+  const [nextTestingDate, setNextTestingDate] = useState<string>("Dec 31, 2024");
   
   // New task form state
   const [newTask, setNewTask] = useState<Partial<GovernanceTask>>({
@@ -265,6 +267,14 @@ export default function Governance() {
       title: "Task Added",
       description: `${task.title} has been added to your governance calendar`,
     });
+  };
+
+  const handleCovenantThresholdChange = (covenantId: string, newThreshold: string) => {
+    setCovenantData(prev => prev.map(covenant => 
+      covenant.id === covenantId 
+        ? { ...covenant, threshold: newThreshold }
+        : covenant
+    ));
   };
 
   const handleDeleteTask = (taskId: string) => {
@@ -350,10 +360,10 @@ export default function Governance() {
 
   // Calculate governance metrics
   const governanceMetrics = {
-    covenantCompliance: (COVENANT_DATA.filter(c => c.status === 'compliant').length / COVENANT_DATA.length) * 100,
-    averageBuffer: COVENANT_DATA.reduce((acc, c) => acc + c.buffer, 0) / COVENANT_DATA.length,
-    atRiskCovenants: COVENANT_DATA.filter(c => c.status === 'at-risk').length,
-    breachedCovenants: COVENANT_DATA.filter(c => c.status === 'breach').length
+    covenantCompliance: (covenantData.filter(c => c.status === 'compliant').length / covenantData.length) * 100,
+    averageBuffer: covenantData.reduce((acc, c) => acc + c.buffer, 0) / covenantData.length,
+    atRiskCovenants: covenantData.filter(c => c.status === 'at-risk').length,
+    breachedCovenants: covenantData.filter(c => c.status === 'breach').length
   };
 
   return (
@@ -401,7 +411,7 @@ export default function Governance() {
                 <p className="text-sm font-medium text-muted-foreground">Covenant Compliance</p>
                 <p className="text-2xl font-bold text-green-600">{governanceMetrics.covenantCompliance.toFixed(1)}%</p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {COVENANT_DATA.filter(c => c.status === 'compliant').length}/{COVENANT_DATA.length} compliant
+                  {covenantData.filter(c => c.status === 'compliant').length}/{covenantData.length} compliant
                 </p>
               </div>
               <Shield className="h-8 w-8 text-green-600" />
@@ -442,7 +452,11 @@ export default function Governance() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Next Testing</p>
-                <p className="text-2xl font-bold text-purple-600">Dec 31</p>
+                <Input 
+                  value={nextTestingDate}
+                  onChange={(e) => setNextTestingDate(e.target.value)}
+                  className="text-2xl font-bold text-purple-600 border-0 bg-transparent p-0 h-auto focus-visible:ring-0"
+                />
                 <p className="text-xs text-muted-foreground mt-1">Quarterly review</p>
               </div>
               <CalendarIcon className="h-8 w-8 text-purple-600" />
@@ -464,14 +478,14 @@ export default function Governance() {
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium">Overall Compliance</span>
               <span className="text-sm text-green-600">
-                {COVENANT_DATA.filter(c => c.status === 'compliant').length}/{COVENANT_DATA.length} Compliant
+                {covenantData.filter(c => c.status === 'compliant').length}/{covenantData.length} Compliant
               </span>
             </div>
             <Progress value={governanceMetrics.covenantCompliance} className="h-3" />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {COVENANT_DATA.map((covenant) => (
+            {covenantData.map((covenant) => (
               <Card 
                 key={covenant.id} 
                 className="cursor-pointer transition-all hover:shadow-md"
@@ -486,11 +500,15 @@ export default function Governance() {
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Threshold:</span>
-                      <span className="font-medium">{covenant.threshold}</span>
+                      <Input 
+                        value={covenant.threshold}
+                        onChange={(e) => handleCovenantThresholdChange(covenant.id, e.target.value)}
+                        className="w-20 h-6 text-right text-sm font-medium border-0 bg-transparent p-0 focus-visible:ring-0"
+                      />
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span>Current:</span>
-                      <span className="font-bold text-green-600">{covenant.current}</span>
+                      <span>Projection:</span>
+                      <span className="font-bold text-green-600">{covenant.projection}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span>Buffer:</span>
