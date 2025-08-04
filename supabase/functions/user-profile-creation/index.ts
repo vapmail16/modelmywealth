@@ -70,20 +70,24 @@ Deno.serve(async (req) => {
       );
     }
 
-    logStep('Creating user role');
-
     // Create default role using service role
+    const defaultRole = user_type === 'tech' ? 'user' : 'analyst';
+    
+    logStep('Creating user role', { user_id, role: defaultRole, user_type });
+
     const { error: roleError } = await supabaseServiceRole
       .from('user_roles')
       .insert({
         user_id,
-        role: user_type === 'tech' ? 'user' : 'analyst',
+        role: defaultRole,
         user_type,
       });
 
     if (roleError) {
       logStep('Role creation error (non-fatal)', roleError);
       // Don't fail the request if role creation fails
+    } else {
+      logStep('User role created successfully');
     }
 
     logStep('Profile creation completed successfully');

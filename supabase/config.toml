@@ -39,3 +39,6 @@ verify_jwt = true
 
 [functions.subscription-management]
 verify_jwt = true
+
+[functions.user-profile-creation]
+verify_jwt = false
