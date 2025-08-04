@@ -146,12 +146,65 @@ serve(async (req) => {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
             status: 200,
           });
+        } else if (pathParts.length >= 2 && pathParts[pathParts.length - 2] === "users") {
+          // Get individual user by ID
+          const targetUserId = pathParts[pathParts.length - 1];
+          logStep("Getting individual user", { targetUserId });
+          
+          const { data: user, error } = await supabaseClient
+            .from('profiles')
+            .select('*')
+            .eq('user_id', targetUserId)
+            .single();
+
+          if (error) {
+            logStep("Error getting user", { error: error.message });
+            throw new Error(error.message);
+          }
+
+          logStep("User retrieved successfully", { user });
+          return new Response(JSON.stringify({ success: true, data: user }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            status: 200,
+          });
         }
         break;
       }
 
       case "POST": {
-        if (endpoint === "assign-role") {
+        if (endpoint === "users") {
+          // Create user profile
+          const body = await req.json();
+          const { user_id, email, full_name, user_type } = body;
+          
+          if (!user_id || !email || !full_name || !user_type) {
+            throw new Error("user_id, email, full_name, and user_type are required");
+          }
+
+          logStep("Creating user profile", { user_id, email, full_name, user_type });
+
+          const { data: profile, error } = await supabaseClient
+            .from('profiles')
+            .insert({
+              user_id,
+              email,
+              full_name,
+              user_type
+            })
+            .select()
+            .single();
+
+          if (error) {
+            logStep("Error creating user profile", { error: error.message });
+            throw new Error(error.message);
+          }
+
+          logStep("User profile created successfully", { profile });
+          return new Response(JSON.stringify({ success: true, data: profile }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            status: 201,
+          });
+        } else if (endpoint === "assign-role") {
           // Assign role to user
           const body = await req.json();
           const { user_id, role, user_type } = body;
