@@ -48,9 +48,6 @@ interface ActualData {
 }
 
 export default function CovenantTesting() {
-  const [selectedYear, setSelectedYear] = useState<string>("");
-  const [selectedMonth, setSelectedMonth] = useState<string>("");
-  const [testingDate, setTestingDate] = useState<string>("");
   const [actualData, setActualData] = useState<ActualData>({
     // P&L Statement
     revenue: 0,
@@ -185,7 +182,7 @@ export default function CovenantTesting() {
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm text-muted-foreground">
-            Testing Period: {selectedYear && selectedMonth ? `Year ${selectedYear}, Month ${selectedMonth}` : "Select Year & Month"}
+            Testing Date: {new Date().toLocaleDateString()}
           </span>
         </div>
       </div>
@@ -213,7 +210,6 @@ export default function CovenantTesting() {
                       To enable the "Test Results & Analysis" tab with comprehensive charts and analytics, please:
                     </p>
                     <ol className="list-decimal pl-5 space-y-1 text-sm text-blue-700 dark:text-blue-300">
-                      <li>Select projection year and month</li>
                       <li>Enter financial data (Revenue is required)</li>
                       <li>Click "Run Covenant Test" button</li>
                     </ol>
@@ -223,7 +219,7 @@ export default function CovenantTesting() {
             </Card>
           )}
 
-          {/* Period Selection */}
+          {/* Testing Configuration */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -231,61 +227,18 @@ export default function CovenantTesting() {
                 Testing Configuration
               </CardTitle>
               <CardDescription>
-                Select the projection year (1-12) and specific month for covenant compliance testing
+                Covenant compliance testing for current date
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="year">Projection Year</Label>
-                <Select value={selectedYear} onValueChange={setSelectedYear}>
-                  <SelectTrigger className="bg-background">
-                    <SelectValue placeholder="Select year" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-background border z-50">
-                    <SelectItem value="1">Year 1</SelectItem>
-                    <SelectItem value="2">Year 2</SelectItem>
-                    <SelectItem value="3">Year 3</SelectItem>
-                    <SelectItem value="4">Year 4</SelectItem>
-                    <SelectItem value="5">Year 5</SelectItem>
-                    <SelectItem value="6">Year 6</SelectItem>
-                    <SelectItem value="7">Year 7</SelectItem>
-                    <SelectItem value="8">Year 8</SelectItem>
-                    <SelectItem value="9">Year 9</SelectItem>
-                    <SelectItem value="10">Year 10</SelectItem>
-                    <SelectItem value="11">Year 11</SelectItem>
-                    <SelectItem value="12">Year 12</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="month">Month</Label>
-                <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                  <SelectTrigger className="bg-background">
-                    <SelectValue placeholder="Select month" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-background border z-50">
-                    <SelectItem value="1">Month 1</SelectItem>
-                    <SelectItem value="2">Month 2</SelectItem>
-                    <SelectItem value="3">Month 3</SelectItem>
-                    <SelectItem value="4">Month 4</SelectItem>
-                    <SelectItem value="5">Month 5</SelectItem>
-                    <SelectItem value="6">Month 6</SelectItem>
-                    <SelectItem value="7">Month 7</SelectItem>
-                    <SelectItem value="8">Month 8</SelectItem>
-                    <SelectItem value="9">Month 9</SelectItem>
-                    <SelectItem value="10">Month 10</SelectItem>
-                    <SelectItem value="11">Month 11</SelectItem>
-                    <SelectItem value="12">Month 12</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <CardContent>
               <div className="space-y-2">
                 <Label htmlFor="testing-date">Testing Date</Label>
                 <Input
                   id="testing-date"
-                  type="date"
-                  value={testingDate}
-                  onChange={(e) => setTestingDate(e.target.value)}
+                  type="text"
+                  value={new Date().toLocaleDateString()}
+                  readOnly
+                  className="bg-muted"
                 />
               </div>
             </CardContent>
@@ -376,7 +329,7 @@ export default function CovenantTesting() {
                             placeholder="0"
                             value={actualData.depreciation || ""}
                             onChange={(e) => handleInputChange('depreciation', e.target.value)}
-                            className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            className="text-right w-32 ml-auto border"
                           />
                         </TableCell>
                       </TableRow>
@@ -389,7 +342,7 @@ export default function CovenantTesting() {
                             placeholder="0"
                             value={actualData.interestExpense || ""}
                             onChange={(e) => handleInputChange('interestExpense', e.target.value)}
-                            className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            className="text-right w-32 ml-auto border"
                           />
                         </TableCell>
                       </TableRow>
@@ -410,7 +363,7 @@ export default function CovenantTesting() {
                             placeholder="0"
                             value={actualData.taxes || ""}
                             onChange={(e) => handleInputChange('taxes', e.target.value)}
-                            className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            className="text-right w-32 ml-auto border"
                           />
                         </TableCell>
                       </TableRow>
@@ -453,7 +406,7 @@ export default function CovenantTesting() {
                               placeholder="0"
                               value={actualData.cash || ""}
                               onChange={(e) => handleInputChange('cash', e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            className="text-right w-32 ml-auto border"
                             />
                           </TableCell>
                         </TableRow>
@@ -466,7 +419,7 @@ export default function CovenantTesting() {
                               placeholder="0"
                               value={actualData.accountsReceivable || ""}
                               onChange={(e) => handleInputChange('accountsReceivable', e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            className="text-right w-32 ml-auto border"
                             />
                           </TableCell>
                         </TableRow>
@@ -479,7 +432,7 @@ export default function CovenantTesting() {
                               placeholder="0"
                               value={actualData.inventory || ""}
                               onChange={(e) => handleInputChange('inventory', e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            className="text-right w-32 ml-auto border"
                             />
                           </TableCell>
                         </TableRow>
@@ -492,7 +445,7 @@ export default function CovenantTesting() {
                               placeholder="0"
                               value={actualData.otherCurrentAssets || ""}
                               onChange={(e) => handleInputChange('otherCurrentAssets', e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                             className="text-right w-32 ml-auto border"
                             />
                           </TableCell>
                         </TableRow>
@@ -505,7 +458,7 @@ export default function CovenantTesting() {
                               placeholder="0"
                               value={actualData.ppe || ""}
                               onChange={(e) => handleInputChange('ppe', e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                             className="text-right w-32 ml-auto border"
                             />
                           </TableCell>
                         </TableRow>
@@ -518,7 +471,7 @@ export default function CovenantTesting() {
                               placeholder="0"
                               value={actualData.otherAssets || ""}
                               onChange={(e) => handleInputChange('otherAssets', e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                             className="text-right w-32 ml-auto border"
                             />
                           </TableCell>
                         </TableRow>
@@ -555,7 +508,7 @@ export default function CovenantTesting() {
                               placeholder="0"
                               value={actualData.shortTermDebt || ""}
                               onChange={(e) => handleInputChange('shortTermDebt', e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                             className="text-right w-32 ml-auto border"
                             />
                           </TableCell>
                         </TableRow>
@@ -568,7 +521,7 @@ export default function CovenantTesting() {
                               placeholder="0"
                               value={actualData.accountsPayableProvisions || ""}
                               onChange={(e) => handleInputChange('accountsPayableProvisions', e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                             className="text-right w-32 ml-auto border"
                             />
                           </TableCell>
                         </TableRow>
@@ -581,7 +534,7 @@ export default function CovenantTesting() {
                               placeholder="0"
                               value={actualData.debtTranche1 || ""}
                               onChange={(e) => handleInputChange('debtTranche1', e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                             className="text-right w-32 ml-auto border"
                             />
                           </TableCell>
                         </TableRow>
@@ -594,7 +547,7 @@ export default function CovenantTesting() {
                               placeholder="0"
                               value={actualData.otherLongTermDebt || ""}
                               onChange={(e) => handleInputChange('otherLongTermDebt', e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                             className="text-right w-32 ml-auto border"
                             />
                           </TableCell>
                         </TableRow>
@@ -607,7 +560,7 @@ export default function CovenantTesting() {
                               placeholder="0"
                               value={actualData.equity || ""}
                               onChange={(e) => handleInputChange('equity', e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                             className="text-right w-32 ml-auto border"
                             />
                           </TableCell>
                         </TableRow>
@@ -620,7 +573,7 @@ export default function CovenantTesting() {
                               placeholder="0"
                               value={actualData.retainedEarnings || ""}
                               onChange={(e) => handleInputChange('retainedEarnings', e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                             className="text-right w-32 ml-auto border"
                             />
                           </TableCell>
                         </TableRow>
@@ -643,17 +596,17 @@ export default function CovenantTesting() {
               
               <div className="flex justify-end">
                 <div className="flex flex-col items-end gap-2">
-                  <Button 
+                  <Button
                     onClick={runCovenantTest}
-                    disabled={!selectedYear || !selectedMonth || actualData.revenue === 0}
+                    disabled={actualData.revenue === 0}
                     className="flex items-center gap-2"
                   >
                     <Calculator className="h-4 w-4" />
                     Run Covenant Test
                   </Button>
-                  {(!selectedYear || !selectedMonth || actualData.revenue === 0) && (
+                  {actualData.revenue === 0 && (
                     <p className="text-xs text-muted-foreground text-right">
-                      {!selectedYear || !selectedMonth ? "Select year and month" : "Enter revenue to enable test"}
+                      Enter revenue to enable test
                     </p>
                   )}
                 </div>
@@ -670,7 +623,7 @@ export default function CovenantTesting() {
                 <div>
                   <CardTitle className="text-xl">Covenant Testing Results & Analysis</CardTitle>
                   <CardDescription>
-                    Year {selectedYear}, Month {selectedMonth} - Comprehensive covenant performance analysis
+                    Comprehensive covenant performance analysis for {new Date().toLocaleDateString()}
                   </CardDescription>
                 </div>
                 <div className="text-right">
