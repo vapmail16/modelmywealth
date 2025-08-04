@@ -613,6 +613,51 @@ export type Database = {
           },
         ]
       }
+      notification_history: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          recipient_email: string
+          sent_at: string | null
+          status: string
+          subject: string | null
+          template_id: string | null
+          template_params: Json | null
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          recipient_email: string
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          template_id?: string | null
+          template_params?: Json | null
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          recipient_email?: string
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          template_id?: string | null
+          template_params?: Json | null
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           amount: number | null
@@ -655,6 +700,7 @@ export type Database = {
           email: string
           full_name: string
           id: string
+          notification_preferences: Json | null
           updated_at: string
           user_id: string
           user_type: Database["public"]["Enums"]["user_type"]
@@ -664,6 +710,7 @@ export type Database = {
           email: string
           full_name: string
           id?: string
+          notification_preferences?: Json | null
           updated_at?: string
           user_id: string
           user_type: Database["public"]["Enums"]["user_type"]
@@ -673,6 +720,7 @@ export type Database = {
           email?: string
           full_name?: string
           id?: string
+          notification_preferences?: Json | null
           updated_at?: string
           user_id?: string
           user_type?: Database["public"]["Enums"]["user_type"]

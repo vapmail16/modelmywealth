@@ -1,4 +1,5 @@
 import { httpClient } from '@/services/http/client';
+import { notificationService } from '@/services/api/NotificationService';
 import type { SecurityEvent, SessionInfo, SecurityEventType, SecurityConfig } from '@/types/security';
 
 class SecurityService {
@@ -64,6 +65,11 @@ class SecurityService {
   private async handleSessionTimeout(userId: string): Promise<void> {
     await this.logSecurityEvent(userId, 'session_timeout', 'medium', {
       timeoutDuration: this.config.sessionTimeout,
+    });
+
+    // Send security notification
+    await this.sendSecurityNotification(userId, 'session_timeout', {
+      timeoutDuration: this.config.sessionTimeout / 60000 // Convert to minutes
     });
 
     // Force logout - only auth operations are allowed direct Supabase access
@@ -313,6 +319,33 @@ class SecurityService {
 
   getConfig(): SecurityConfig {
     return { ...this.config };
+  }
+
+  // Security notification integration
+  private async sendSecurityNotification(
+    userId: string, 
+    alertType: string, 
+    alertData: Record<string, any>
+  ): Promise<void> {
+    try {
+      // Get user email from profile
+      const { supabase } = await import('@/integrations/supabase/client');
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('user_id', userId)
+        .single();
+
+      if (profile?.email) {
+        await notificationService.sendSecurityAlert(
+          profile.email,
+          alertType as 'login_alert' | 'password_change' | 'security_alert',
+          alertData
+        );
+      }
+    } catch (error) {
+      console.error('Failed to send security notification:', error);
+    }
   }
 }
 

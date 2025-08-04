@@ -19,6 +19,7 @@ import {
   Save
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { NotificationPreferences } from "@/components/notifications/NotificationPreferences";
 
 export default function Settings() {
   const { toast } = useToast();
@@ -137,55 +138,7 @@ export default function Settings() {
 
         {/* Notifications */}
         <TabsContent value="notifications">
-          <Card className="shadow-card">
-            <CardHeader>
-              <CardTitle>Notification Preferences</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Email Notifications</Label>
-                    <p className="text-sm text-muted-foreground">Receive updates via email</p>
-                  </div>
-                  <Switch 
-                    checked={notifications.email}
-                    onCheckedChange={(checked) => setNotifications(prev => ({ ...prev, email: checked }))}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Push Notifications</Label>
-                    <p className="text-sm text-muted-foreground">Browser push notifications</p>
-                  </div>
-                  <Switch 
-                    checked={notifications.push}
-                    onCheckedChange={(checked) => setNotifications(prev => ({ ...prev, push: checked }))}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Report Completion</Label>
-                    <p className="text-sm text-muted-foreground">Notify when reports are ready</p>
-                  </div>
-                  <Switch 
-                    checked={notifications.reports}
-                    onCheckedChange={(checked) => setNotifications(prev => ({ ...prev, reports: checked }))}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Security Alerts</Label>
-                    <p className="text-sm text-muted-foreground">Important security notifications</p>
-                  </div>
-                  <Switch 
-                    checked={notifications.security}
-                    onCheckedChange={(checked) => setNotifications(prev => ({ ...prev, security: checked }))}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <NotificationPreferences />
         </TabsContent>
 
         {/* Security */}

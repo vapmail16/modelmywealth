@@ -14,6 +14,9 @@ export { userManagementService, UserManagementService } from './api/UserManageme
 // HTTP client
 export { httpClient, HttpClient } from './http/client';
 
+// Notification Service
+export { notificationService, NotificationService } from './api/NotificationService';
+
 // Import httpClient for internal use
 import { httpClient } from './http/client';
 
