@@ -70,6 +70,7 @@ const benchmarkingTools = [
 const utilityNav = [
   { title: "Profile", url: "/dashboard/profile", icon: User },
   { title: "Settings", url: "/dashboard/settings", icon: Settings },
+  { title: "Security", url: "/dashboard/security", icon: Shield },
   { title: "Help", url: "/dashboard/help", icon: HelpCircle },
 ];
 

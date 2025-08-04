@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuthStore } from "@/stores/authStore";
+import { useActivityTracker } from "@/hooks/useActivityTracker";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import { Home } from "./pages/Home";
 import { Auth } from "./pages/Auth";
@@ -30,11 +31,15 @@ import InviteMembers from "./pages/InviteMembers";
 import PeerBenchmarking from "./pages/PeerBenchmarking";
 import IndustryAnalysis from "./pages/IndustryAnalysis";
 import CompanyProjectSelection from "./pages/CompanyProjectSelection";
+import { SecurityDashboard } from "./components/security/SecurityDashboard";
 
 const queryClient = new QueryClient();
 
 const App = () => {
   const { initialize } = useAuthStore();
+
+  // Use the activity tracker to monitor user activity
+  useActivityTracker();
 
   useEffect(() => {
     initialize();
@@ -71,6 +76,7 @@ const App = () => {
               <Route path="collaboration/invite" element={<InviteMembers />} />
               <Route path="benchmarking" element={<PeerBenchmarking />} />
               <Route path="benchmarking/industry" element={<IndustryAnalysis />} />
+              <Route path="security" element={<SecurityDashboard />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
