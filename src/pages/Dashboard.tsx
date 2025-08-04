@@ -30,9 +30,6 @@ export default function Dashboard() {
           <Button asChild className="shadow-card">
             <Link to="/data-entry">New Analysis</Link>
           </Button>
-          <Button variant="outline" asChild>
-            <Link to="/reports">Generate Report</Link>
-          </Button>
         </div>
       </div>
 
@@ -95,8 +92,9 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Quick Actions */}
-      <div className="max-w-md">
+      {/* Quick Actions and Alerts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Quick Actions */}
         <Card className="shadow-card">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -121,12 +119,6 @@ export default function Dashboard() {
               </Link>
             </Button>
             <Button variant="outline" className="w-full justify-start" asChild>
-              <Link to="/reports">
-                <FileText className="mr-2 h-4 w-4" />
-                Generate Report
-              </Link>
-            </Button>
-            <Button variant="outline" className="w-full justify-start" asChild>
               <Link to="/data-entry">
                 <Target className="mr-2 h-4 w-4" />
                 Scenario Analysis / Stress Testing
@@ -134,39 +126,39 @@ export default function Dashboard() {
             </Button>
           </CardContent>
         </Card>
-      </div>
 
-      {/* Alerts */}
-      <Card className="shadow-card border-l-4 border-l-warning">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-warning">
-            <AlertTriangle className="h-5 w-5" />
-            Attention Required
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            <div className="flex items-start gap-3 p-3 bg-warning/10 rounded-lg">
-              <AlertTriangle className="h-4 w-4 text-warning mt-0.5" />
-              <div>
-                <p className="text-sm font-medium">Covenant Risk</p>
-                <p className="text-xs text-muted-foreground">
-                  Current debt-to-EBITDA ratio is approaching covenant limits. Consider refinancing options.
-                </p>
+        {/* Alerts */}
+        <Card className="shadow-card border-l-4 border-l-warning">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-warning">
+              <AlertTriangle className="h-5 w-5" />
+              Attention Required
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3 p-3 bg-warning/10 rounded-lg">
+                <AlertTriangle className="h-4 w-4 text-warning mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium">Covenant Risk</p>
+                  <p className="text-xs text-muted-foreground">
+                    Current debt-to-EBITDA ratio is approaching covenant limits. Consider refinancing options.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-3 bg-accent/10 rounded-lg">
+                <AlertTriangle className="h-4 w-4 text-accent mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium">Data Update Needed</p>
+                  <p className="text-xs text-muted-foreground">
+                    Q3 financial data is pending. Update your model for accurate projections.
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="flex items-start gap-3 p-3 bg-accent/10 rounded-lg">
-              <AlertTriangle className="h-4 w-4 text-accent mt-0.5" />
-              <div>
-                <p className="text-sm font-medium">Data Update Needed</p>
-                <p className="text-xs text-muted-foreground">
-                  Q3 financial data is pending. Update your model for accurate projections.
-                </p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

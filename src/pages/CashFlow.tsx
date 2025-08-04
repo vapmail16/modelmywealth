@@ -171,29 +171,6 @@ export default function CashFlow() {
         ))}
       </div>
 
-      {/* Working Capital Metrics */}
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Clock className="h-5 w-5" />
-            Working Capital Cycle
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {workingCapitalMetrics.map((metric, index) => (
-              <div key={index} className="text-center p-4 border rounded-lg">
-                <div className="text-xl font-bold text-primary">{metric.value}</div>
-                <div className="text-sm font-medium mt-1">{metric.title}</div>
-                <div className="text-xs text-muted-foreground mt-1">{metric.description}</div>
-                <Badge variant="outline" className="mt-2 text-xs">
-                  Target: {metric.target}
-                </Badge>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Cash Flow Charts */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -281,77 +258,6 @@ export default function CashFlow() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="shadow-card">
-          <CardHeader>
-            <CardTitle className="text-lg">Operating Activities</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-sm">EBITDA</span>
-              <span className="font-medium">${(currentData.ebitda / 1000000).toFixed(1)}M</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm">Working Capital Changes</span>
-              <span className="font-medium">-$2.1M</span>
-            </div>
-            <div className="flex justify-between border-t pt-2">
-              <span className="font-medium">Operating Cash Flow</span>
-              <span className="font-bold text-green-600">
-                ${(currentData.operatingCashFlow / 1000000).toFixed(1)}M
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card">
-          <CardHeader>
-            <CardTitle className="text-lg">Investing Activities</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-sm">Capital Expenditures</span>
-              <span className="font-medium text-red-600">
-                -${(currentData.revenue * 0.04 / 1000000).toFixed(1)}M
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm">Asset Acquisitions</span>
-              <span className="font-medium">$0.0M</span>
-            </div>
-            <div className="flex justify-between border-t pt-2">
-              <span className="font-medium">Investing Cash Flow</span>
-              <span className="font-bold text-red-600">
-                -${(currentData.revenue * 0.04 / 1000000).toFixed(1)}M
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card">
-          <CardHeader>
-            <CardTitle className="text-lg">Financing Activities</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-sm">Debt Payments</span>
-              <span className="font-medium text-red-600">-$2.5M</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm">Interest Payments</span>
-              <span className="font-medium text-red-600">
-                -${(currentData.interestPaid / 1000000).toFixed(1)}M
-              </span>
-            </div>
-            <div className="flex justify-between border-t pt-2">
-              <span className="font-medium">Financing Cash Flow</span>
-              <span className="font-bold text-red-600">
-                -${((currentData.interestPaid + 2500000) / 1000000).toFixed(1)}M
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }

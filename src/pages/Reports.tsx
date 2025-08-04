@@ -269,46 +269,6 @@ export default function Reports() {
                     </Select>
                   </div>
 
-                  {/* Key Metrics Focus */}
-                  <div className="space-y-3">
-                    <Label>Key Metrics to Emphasize</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="debt-coverage" />
-                        <Label htmlFor="debt-coverage">Debt Coverage Ratios</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="liquidity" />
-                        <Label htmlFor="liquidity">Liquidity Analysis</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="profitability" />
-                        <Label htmlFor="profitability">Profitability Trends</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="cash-flow" />
-                        <Label htmlFor="cash-flow">Cash Flow Analysis</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="covenant-compliance" />
-                        <Label htmlFor="covenant-compliance">Covenant Compliance</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="working-capital" />
-                        <Label htmlFor="working-capital">Working Capital Management</Label>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Custom Instructions */}
-                  <div className="space-y-2">
-                    <Label htmlFor="instructions">Custom Instructions (Optional)</Label>
-                    <Textarea
-                      id="instructions"
-                      placeholder="Any specific requirements or focus areas for the report..."
-                      className="min-h-[100px]"
-                    />
-                  </div>
 
                   {/* Advanced Options */}
                   <div className="space-y-4">

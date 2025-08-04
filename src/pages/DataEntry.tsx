@@ -120,6 +120,7 @@ export default function DataEntry() {
     
     // Additional Company Information
     country: "",
+    companyWebsite: "",
     
     // Working Capital Data
     accountReceivablePercent: "",
@@ -219,16 +220,6 @@ export default function DataEntry() {
           <p className="text-muted-foreground mt-1">
             Complete comprehensive financial data for TTF refinancing analysis
           </p>
-        </div>
-        <div className="flex gap-3">
-          <Button variant="outline" className="gap-2" onClick={handleSave}>
-            <Save className="h-4 w-4" />
-            Save Draft
-          </Button>
-          <Button variant="outline" className="gap-2" onClick={handleImport}>
-            <Upload className="h-4 w-4" />
-            Import Data
-          </Button>
         </div>
       </div>
 
@@ -338,7 +329,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.revenue}
                               onChange={(e) => handleInputChange("revenue", e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-32 ml-auto border border-border focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -355,7 +346,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.cogs}
                               onChange={(e) => handleInputChange("cogs", e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-32 ml-auto border border-border focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -382,7 +373,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.operatingExpenses}
                               onChange={(e) => handleInputChange("operatingExpenses", e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-32 ml-auto border border-border focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -409,7 +400,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.depreciation}
                               onChange={(e) => handleInputChange("depreciation", e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-32 ml-auto border border-border focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -426,7 +417,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.interestExpense}
                               onChange={(e) => handleInputChange("interestExpense", e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-32 ml-auto border border-border focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -453,7 +444,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.taxes}
                               onChange={(e) => handleInputChange("taxes", e.target.value)}
-                              className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-32 ml-auto border border-border focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -1635,6 +1626,15 @@ export default function DataEntry() {
                           placeholder="e.g., 2015" 
                           value={formData.founded}
                           onChange={(e) => handleInputChange("founded", e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <Label>Company Website</Label>
+                        <Input 
+                          type="url" 
+                          placeholder="https://www.example.com" 
+                          value={formData.companyWebsite}
+                          onChange={(e) => handleInputChange("companyWebsite", e.target.value)}
                         />
                       </div>
                         <div>
