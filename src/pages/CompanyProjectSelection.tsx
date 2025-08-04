@@ -108,7 +108,9 @@ export default function CompanyProjectSelection() {
   };
 
   const handleProjectSelect = (projectId: string) => {
-    navigate(`/data-entry?project=${projectId}`);
+    // Store selected project in localStorage for the dashboard to use
+    localStorage.setItem('selectedProject', projectId);
+    navigate('/dashboard');
   };
 
   if (loading) {

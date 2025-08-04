@@ -184,13 +184,13 @@ export function Home() {
                 Companies & Projects
               </CardTitle>
               <CardDescription>
-                Manage your companies and financial analysis projects
+                Manage your companies and financial analysis projects, then access the full dashboard
               </CardDescription>
             </CardHeader>
           </Card>
 
           <Card className="cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => navigate('/analytics')}>
+                onClick={() => navigate('/dashboard/analytics')}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BarChart3 className="w-5 h-5" />
@@ -203,7 +203,7 @@ export function Home() {
           </Card>
 
           <Card className="cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => navigate('/reports')}>
+                onClick={() => navigate('/dashboard/reports')}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <FileText className="w-5 h-5" />
@@ -231,7 +231,7 @@ export function Home() {
           )}
 
           <Card className="cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => navigate('/settings')}>
+                onClick={() => navigate('/dashboard/settings')}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="w-5 h-5" />
