@@ -152,7 +152,67 @@ export default function DataEntry() {
   ];
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    // Apply validation rules based on field type
+    let validatedValue = value;
+    
+    // Tax Rate section - only positive values
+    if (field === 'taxRates') {
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue) && numValue < 0) {
+        validatedValue = '0';
+      }
+    }
+    
+    // Balance Sheet - only positive values except Retained Earnings
+    const balanceSheetFields = [
+      'cash', 'accountsReceivable', 'inventory', 'otherCurrentAssets', 'ppe', 'otherAssets',
+      'accountsPayableProvisions', 'seniorSecured', 'debtTranche1', 'equity', 'shortTermDebt', 'otherLongTermDebt'
+    ];
+    if (balanceSheetFields.includes(field)) {
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue) && numValue < 0) {
+        validatedValue = '0';
+      }
+    }
+    
+    // Debt Structure - only positive values
+    const debtStructureFields = [
+      'additionalLoanSeniorSecured', 'bankBaseRateSeniorSecured', 'liquidityPremiumsSeniorSecured', 
+      'creditRiskPremiumsSeniorSecured', 'maturityYSeniorSecured', 'amortizationYSeniorSecured',
+      'additionalLoanShortTerm', 'bankBaseRateShortTerm', 'liquidityPremiumsShortTerm',
+      'creditRiskPremiumsShortTerm', 'maturityYShortTerm', 'amortizationYShortTerm'
+    ];
+    if (debtStructureFields.includes(field)) {
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue) && numValue < 0) {
+        validatedValue = '0';
+      }
+    }
+    
+    // Working Capital - only positive values
+    const workingCapitalFields = [
+      'accountReceivablePercent', 'otherCurrentAssetsPercent', 'inventoryPercent', 'accountsPayablePercent'
+    ];
+    if (workingCapitalFields.includes(field)) {
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue) && numValue < 0) {
+        validatedValue = '0';
+      }
+    }
+    
+    // Seasonality - only positive values
+    const seasonalityFields = [
+      'seasonalWorkingCapital', 'january', 'february', 'march', 'april', 'may', 'june',
+      'july', 'august', 'september', 'october', 'november', 'december'
+    ];
+    if (seasonalityFields.includes(field)) {
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue) && numValue < 0) {
+        validatedValue = '0';
+      }
+    }
+    
+    setFormData(prev => ({ ...prev, [field]: validatedValue }));
   };
 
   const handleIncrement = (field: string, step: number = 0.1) => {
@@ -1621,12 +1681,21 @@ export default function DataEntry() {
                       </div>
                       <div>
                         <Label>Founded Year</Label>
-                        <Input 
-                          type="number" 
-                          placeholder="e.g., 2015" 
-                          value={formData.founded}
-                          onChange={(e) => handleInputChange("founded", e.target.value)}
-                        />
+                        <Select value={formData.founded} onValueChange={(value) => handleInputChange("founded", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select founded year" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Array.from({ length: 50 }, (_, i) => {
+                              const year = new Date().getFullYear() - i;
+                              return (
+                                <SelectItem key={year} value={year.toString()}>
+                                  {year}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div>
                         <Label>Company Website</Label>
