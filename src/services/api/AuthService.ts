@@ -1,5 +1,8 @@
 import { supabase } from '@/integrations/supabase/client';
+import { databaseAdapter } from '../database/DatabaseAdapter';
 import { httpClient } from '../index';
+import { logger } from '../logging/LoggingService';
+import { browserService } from '../browser/BrowserService';
 import type { 
   LoginCredentials, 
   RegisterCredentials, 
@@ -12,32 +15,25 @@ import type {
 
 class AuthService {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: credentials.email,
-      password: credentials.password,
-    });
+    try {
+      const response = await httpClient.post('/auth/login', credentials);
+      
+      if (!response.success || !response.data) {
+        throw new Error(response.error?.message || 'Login failed');
+      }
 
-    if (error) {
-      throw new Error(error.message);
+      const { user, session } = response.data;
+      logger.info('User logged in successfully', { userId: user.id }, 'AuthService');
+      
+      return { user, session };
+    } catch (error: any) {
+      logger.error('Login failed', { error: error.message }, 'AuthService');
+      throw error;
     }
-
-    if (!data.user) {
-      throw new Error('Login failed');
-    }
-
-    // Ensure profile exists for existing users
-    await this.ensureUserProfile(data.user);
-
-    const user = await this.getUserWithProfile(data.user.id);
-    
-    return {
-      user,
-      session: data.session,
-    };
   }
 
   async register(credentials: RegisterCredentials): Promise<AuthResponse> {
-    const redirectUrl = `${window.location.origin}/`;
+    const redirectUrl = `${browserService.window.location.origin}/`;
     
     const { data, error } = await supabase.auth.signUp({
       email: credentials.email,
@@ -89,7 +85,7 @@ class AuthService {
     });
 
     if (error) {
-      console.error('Profile creation error:', error);
+      logger.error('Profile creation error', { error }, 'AuthService');
       // Don't throw error - registration should still succeed
     }
   }
@@ -111,7 +107,7 @@ class AuthService {
     try {
       return this.getUserWithProfile(user.id);
     } catch (error) {
-      console.error('Failed to get user profile:', error);
+      logger.error('Failed to get user profile', { error }, 'AuthService');
       return null;
     }
   }
@@ -121,7 +117,7 @@ class AuthService {
       const response = await httpClient.get(`/user-management/users/${userId}`);
       return response.data?.data || null;
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      logger.error('Error fetching user profile', { error }, 'AuthService');
       return null;
     }
   }
@@ -158,7 +154,7 @@ class AuthService {
     } catch (error) {
       // Retry logic for transient failures
       if (retryCount < maxRetries && this.isRetryableError(error)) {
-        console.log(`Retrying getUserWithProfile (${retryCount + 1}/${maxRetries})`);
+        logger.info('Retrying getUserWithProfile', { retryCount: retryCount + 1, maxRetries }, 'AuthService');
         await this.delay(1000 * (retryCount + 1)); // Exponential backoff
         return this.getUserWithProfile(userId, retryCount + 1);
       }
@@ -239,7 +235,7 @@ class AuthService {
           const user = await this.getUserWithProfile(session.user.id);
           callback(user);
         } catch (error) {
-          console.error('Error fetching user profile:', error);
+          logger.error('Error fetching user profile', { error }, 'AuthService');
           callback(null);
         }
       } else {

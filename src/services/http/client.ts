@@ -1,5 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { ApiResponse, ApiError, RequestConfig, ApiClientConfig } from '@/types/api';
+import { configService } from '../config/ConfigService';
+import { browserService } from '../browser/BrowserService';
 
 // Extend the AxiosRequestConfig to include metadata
 interface ExtendedAxiosRequestConfig extends AxiosRequestConfig {
@@ -40,15 +42,19 @@ class HttpClient {
         // Add timestamp
         config.headers['X-Request-Time'] = new Date().toISOString();
 
-        console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`, {
-          headers: config.headers,
-          data: config.data,
-        });
+        if (configService.isDevelopment()) {
+          console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`, {
+            headers: config.headers,
+            data: config.data,
+          });
+        }
 
         return config;
       },
       (error) => {
-        console.error('❌ Request Error:', error);
+        if (configService.isDevelopment()) {
+          console.error('❌ Request Error:', error);
+        }
         return Promise.reject(error);
       }
     );
@@ -56,10 +62,12 @@ class HttpClient {
     // Response interceptor
     this.client.interceptors.response.use(
       (response: AxiosResponse<ApiResponse>) => {
-        console.log(`✅ ${response.status} ${response.config.url}`, {
-          data: response.data,
-          duration: this.calculateDuration(response.config.headers['X-Request-Time']),
-        });
+        if (configService.isDevelopment()) {
+          console.log(`✅ ${response.status} ${response.config.url}`, {
+            data: response.data,
+            duration: this.calculateDuration(response.config.headers['X-Request-Time']),
+          });
+        }
 
         // Cache successful responses if enabled
         if (this.config.enableCache && response.config.method === 'get') {
@@ -69,10 +77,12 @@ class HttpClient {
         return response;
       },
       async (error: AxiosError) => {
-        console.error(`❌ ${error.response?.status} ${error.config?.url}`, {
-          error: error.response?.data,
-          duration: this.calculateDuration(error.config?.headers['X-Request-Time']),
-        });
+        if (configService.isDevelopment()) {
+          console.error(`❌ ${error.response?.status} ${error.config?.url}`, {
+            error: error.response?.data,
+            duration: this.calculateDuration(error.config?.headers['X-Request-Time']),
+          });
+        }
 
         // Handle specific error cases
         if (error.response?.status === 401) {
@@ -92,49 +102,32 @@ class HttpClient {
   }
 
   private getAuthToken(): string | null {
-    try {
-      // Try multiple token storage locations
-      const tokenSources = [
-        `sb-vmrvugezqpydlfjcoldl-auth-token`,
-        `supabase.auth.token`,
-        `auth-token`,
-      ];
+    const tokenSources = [
+      'sb-vmrvugezqpydlfjcoldl-auth-token',
+      'supabase.auth.token',
+      'auth-token',
+    ];
 
-      for (const source of tokenSources) {
-        // Check localStorage first
-        const stored = localStorage.getItem(source);
-        if (stored) {
-          try {
-            const parsed = JSON.parse(stored);
-            if (parsed.access_token || parsed.accessToken) {
-              return parsed.access_token || parsed.accessToken;
-            }
-          } catch {
-            // If not JSON, might be direct token
-            if (stored.startsWith('eyJ')) {
-              return stored;
-            }
-          }
-        }
-
-        // Check sessionStorage as fallback
-        const sessionStored = sessionStorage.getItem(source);
-        if (sessionStored) {
-          try {
-            const parsed = JSON.parse(sessionStored);
-            if (parsed.access_token || parsed.accessToken) {
-              return parsed.access_token || parsed.accessToken;
-            }
-          } catch {
-            if (sessionStored.startsWith('eyJ')) {
-              return sessionStored;
-            }
-          }
-        }
+    for (const source of tokenSources) {
+      // Check localStorage first
+      const stored = browserService.localStorage.getItem(source);
+      if (stored) {
+        const parsed = browserService.parseJSON(stored);
+        if (parsed?.access_token) return parsed.access_token;
+        if (parsed?.accessToken) return parsed.accessToken;
+        if (stored.startsWith('eyJ')) return stored;
       }
-    } catch (error) {
-      console.error('Error extracting auth token:', error);
+
+      // Check sessionStorage as fallback
+      const sessionStored = browserService.sessionStorage.getItem(source);
+      if (sessionStored) {
+        const parsed = browserService.parseJSON(sessionStored);
+        if (parsed?.access_token) return parsed.access_token;
+        if (parsed?.accessToken) return parsed.accessToken;
+        if (sessionStored.startsWith('eyJ')) return sessionStored;
+      }
     }
+    
     return null;
   }
 
@@ -162,7 +155,9 @@ class HttpClient {
     const cached = this.cache.get(cacheKey);
     
     if (cached && cached.expiry > Date.now()) {
-      console.log(`💾 Cache hit for ${url}`);
+      if (configService.isDevelopment()) {
+        console.log(`💾 Cache hit for ${url}`);
+      }
       return cached.data;
     }
     
@@ -202,7 +197,9 @@ class HttpClient {
     const delay = this.config.retryDelay * Math.pow(2, retryCount - 1);
     await this.sleep(delay);
 
-    console.log(`🔄 Retry attempt ${retryCount}/${maxRetries} for ${config.url}`);
+    if (configService.isDevelopment()) {
+      console.log(`🔄 Retry attempt ${retryCount}/${maxRetries} for ${config.url}`);
+    }
 
     config.metadata = { ...config.metadata, retryCount };
     return this.client.request(config);
@@ -213,8 +210,7 @@ class HttpClient {
   }
 
   private async handleUnauthorized(): Promise<void> {
-    // Simple redirect to auth page
-    window.location.href = '/auth';
+    browserService.window.location.href = '/auth';
   }
 
 
@@ -291,7 +287,9 @@ class HttpClient {
   // Utility methods
   clearCache(): void {
     this.cache.clear();
-    console.log('🗑️ Cache cleared');
+    if (configService.isDevelopment()) {
+      console.log('🗑️ Cache cleared');
+    }
   }
 
   getCacheStats(): { size: number; keys: string[] } {
@@ -316,14 +314,12 @@ class HttpClient {
 
 // Default configuration
 const defaultConfig: ApiClientConfig = {
-  baseURL: process.env.NODE_ENV === 'development' 
-    ? 'https://vmrvugezqpydlfjcoldl.supabase.co/functions/v1' 
-    : 'https://vmrvugezqpydlfjcoldl.supabase.co/functions/v1',
-  timeout: 30000,
-  retryAttempts: 3,
+  baseURL: configService.get('api').baseURL,
+  timeout: configService.get('api').timeout,
+  retryAttempts: configService.get('api').retryAttempts,
   retryDelay: 1000,
-  enableCache: true,
-  cacheExpiry: 5 * 60 * 1000, // 5 minutes
+  enableCache: configService.get('api').enableCache,
+  cacheExpiry: configService.get('api').cacheExpiry,
 };
 
 // Create and export the default client instance
