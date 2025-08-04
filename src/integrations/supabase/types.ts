@@ -14,6 +14,139 @@ export type Database = {
   }
   public: {
     Tables: {
+      balance_sheet_data: {
+        Row: {
+          accounts_payable_provisions: number | null
+          accounts_receivable: number | null
+          additional_capex_planned_next_year: number | null
+          asset_depreciated_over_years: number | null
+          asset_depreciated_over_years_new: number | null
+          capital_expenditure_additions: number | null
+          cash: number | null
+          created_at: string
+          debt_tranche1: number | null
+          equity: number | null
+          id: string
+          inventory: number | null
+          other_assets: number | null
+          other_current_assets: number | null
+          other_long_term_debt: number | null
+          ppe: number | null
+          project_id: string
+          retained_earnings: number | null
+          senior_secured: number | null
+          short_term_debt: number | null
+          total_assets: number | null
+          total_liabilities_and_equity: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accounts_payable_provisions?: number | null
+          accounts_receivable?: number | null
+          additional_capex_planned_next_year?: number | null
+          asset_depreciated_over_years?: number | null
+          asset_depreciated_over_years_new?: number | null
+          capital_expenditure_additions?: number | null
+          cash?: number | null
+          created_at?: string
+          debt_tranche1?: number | null
+          equity?: number | null
+          id?: string
+          inventory?: number | null
+          other_assets?: number | null
+          other_current_assets?: number | null
+          other_long_term_debt?: number | null
+          ppe?: number | null
+          project_id: string
+          retained_earnings?: number | null
+          senior_secured?: number | null
+          short_term_debt?: number | null
+          total_assets?: number | null
+          total_liabilities_and_equity?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accounts_payable_provisions?: number | null
+          accounts_receivable?: number | null
+          additional_capex_planned_next_year?: number | null
+          asset_depreciated_over_years?: number | null
+          asset_depreciated_over_years_new?: number | null
+          capital_expenditure_additions?: number | null
+          cash?: number | null
+          created_at?: string
+          debt_tranche1?: number | null
+          equity?: number | null
+          id?: string
+          inventory?: number | null
+          other_assets?: number | null
+          other_current_assets?: number | null
+          other_long_term_debt?: number | null
+          ppe?: number | null
+          project_id?: string
+          retained_earnings?: number | null
+          senior_secured?: number | null
+          short_term_debt?: number | null
+          total_assets?: number | null
+          total_liabilities_and_equity?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "balance_sheet_data_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cash_flow_data: {
+        Row: {
+          capital_expenditures: number | null
+          created_at: string
+          debt_service: number | null
+          free_cash_flow: number | null
+          id: string
+          operating_cash_flow: number | null
+          project_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          capital_expenditures?: number | null
+          created_at?: string
+          debt_service?: number | null
+          free_cash_flow?: number | null
+          id?: string
+          operating_cash_flow?: number | null
+          project_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          capital_expenditures?: number | null
+          created_at?: string
+          debt_service?: number | null
+          free_cash_flow?: number | null
+          id?: string
+          operating_cash_flow?: number | null
+          project_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cash_flow_data_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       companies: {
         Row: {
           created_at: string
@@ -46,6 +179,228 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      company_details: {
+        Row: {
+          business_case: string | null
+          company_name: string | null
+          company_website: string | null
+          country: string | null
+          created_at: string
+          employee_count: number | null
+          founded: number | null
+          id: string
+          industry: string | null
+          notes: string | null
+          project_id: string
+          projection_start_month: number | null
+          projection_start_year: number | null
+          projections_year: number | null
+          region: string | null
+          reporting_currency: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_case?: string | null
+          company_name?: string | null
+          company_website?: string | null
+          country?: string | null
+          created_at?: string
+          employee_count?: number | null
+          founded?: number | null
+          id?: string
+          industry?: string | null
+          notes?: string | null
+          project_id: string
+          projection_start_month?: number | null
+          projection_start_year?: number | null
+          projections_year?: number | null
+          region?: string | null
+          reporting_currency?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_case?: string | null
+          company_name?: string | null
+          company_website?: string | null
+          country?: string | null
+          created_at?: string
+          employee_count?: number | null
+          founded?: number | null
+          id?: string
+          industry?: string | null
+          notes?: string | null
+          project_id?: string
+          projection_start_month?: number | null
+          projection_start_year?: number | null
+          projections_year?: number | null
+          region?: string | null
+          reporting_currency?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_details_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      debt_structure_data: {
+        Row: {
+          additional_loan_senior_secured: number | null
+          additional_loan_short_term: number | null
+          amortization_y_senior_secured: number | null
+          amortization_y_short_term: number | null
+          bank_base_rate_senior_secured: number | null
+          bank_base_rate_short_term: number | null
+          created_at: string
+          credit_risk_premiums_senior_secured: number | null
+          credit_risk_premiums_short_term: number | null
+          id: string
+          liquidity_premiums_senior_secured: number | null
+          liquidity_premiums_short_term: number | null
+          maturity_y_senior_secured: number | null
+          maturity_y_short_term: number | null
+          project_id: string
+          senior_secured_loan_type: string | null
+          short_term_loan_type: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          additional_loan_senior_secured?: number | null
+          additional_loan_short_term?: number | null
+          amortization_y_senior_secured?: number | null
+          amortization_y_short_term?: number | null
+          bank_base_rate_senior_secured?: number | null
+          bank_base_rate_short_term?: number | null
+          created_at?: string
+          credit_risk_premiums_senior_secured?: number | null
+          credit_risk_premiums_short_term?: number | null
+          id?: string
+          liquidity_premiums_senior_secured?: number | null
+          liquidity_premiums_short_term?: number | null
+          maturity_y_senior_secured?: number | null
+          maturity_y_short_term?: number | null
+          project_id: string
+          senior_secured_loan_type?: string | null
+          short_term_loan_type?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          additional_loan_senior_secured?: number | null
+          additional_loan_short_term?: number | null
+          amortization_y_senior_secured?: number | null
+          amortization_y_short_term?: number | null
+          bank_base_rate_senior_secured?: number | null
+          bank_base_rate_short_term?: number | null
+          created_at?: string
+          credit_risk_premiums_senior_secured?: number | null
+          credit_risk_premiums_short_term?: number | null
+          id?: string
+          liquidity_premiums_senior_secured?: number | null
+          liquidity_premiums_short_term?: number | null
+          maturity_y_senior_secured?: number | null
+          maturity_y_short_term?: number | null
+          project_id?: string
+          senior_secured_loan_type?: string | null
+          short_term_loan_type?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "debt_structure_data_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      financial_calculations: {
+        Row: {
+          asset_turnover: number | null
+          calculated_at: string
+          calculation_version: number | null
+          created_at: string
+          current_ratio: number | null
+          debt_to_ebitda: number | null
+          debt_to_equity: number | null
+          dscr: number | null
+          ebitda_margin: number | null
+          gross_margin: number | null
+          id: string
+          interest_coverage: number | null
+          net_margin: number | null
+          operating_margin: number | null
+          project_id: string
+          quick_ratio: number | null
+          return_on_assets: number | null
+          return_on_equity: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          asset_turnover?: number | null
+          calculated_at?: string
+          calculation_version?: number | null
+          created_at?: string
+          current_ratio?: number | null
+          debt_to_ebitda?: number | null
+          debt_to_equity?: number | null
+          dscr?: number | null
+          ebitda_margin?: number | null
+          gross_margin?: number | null
+          id?: string
+          interest_coverage?: number | null
+          net_margin?: number | null
+          operating_margin?: number | null
+          project_id: string
+          quick_ratio?: number | null
+          return_on_assets?: number | null
+          return_on_equity?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          asset_turnover?: number | null
+          calculated_at?: string
+          calculation_version?: number | null
+          created_at?: string
+          current_ratio?: number | null
+          debt_to_ebitda?: number | null
+          debt_to_equity?: number | null
+          dscr?: number | null
+          ebitda_margin?: number | null
+          gross_margin?: number | null
+          id?: string
+          interest_coverage?: number | null
+          net_margin?: number | null
+          operating_margin?: number | null
+          project_id?: string
+          quick_ratio?: number | null
+          return_on_assets?: number | null
+          return_on_equity?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_calculations_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       financial_data: {
         Row: {
@@ -82,6 +437,182 @@ export type Database = {
           },
         ]
       }
+      growth_assumptions_data: {
+        Row: {
+          created_at: string
+          gr_capex_1: number | null
+          gr_capex_10: number | null
+          gr_capex_11: number | null
+          gr_capex_12: number | null
+          gr_capex_2: number | null
+          gr_capex_3: number | null
+          gr_capex_4: number | null
+          gr_capex_5: number | null
+          gr_capex_6: number | null
+          gr_capex_7: number | null
+          gr_capex_8: number | null
+          gr_capex_9: number | null
+          gr_cost_1: number | null
+          gr_cost_10: number | null
+          gr_cost_11: number | null
+          gr_cost_12: number | null
+          gr_cost_2: number | null
+          gr_cost_3: number | null
+          gr_cost_4: number | null
+          gr_cost_5: number | null
+          gr_cost_6: number | null
+          gr_cost_7: number | null
+          gr_cost_8: number | null
+          gr_cost_9: number | null
+          gr_cost_oper_1: number | null
+          gr_cost_oper_10: number | null
+          gr_cost_oper_11: number | null
+          gr_cost_oper_12: number | null
+          gr_cost_oper_2: number | null
+          gr_cost_oper_3: number | null
+          gr_cost_oper_4: number | null
+          gr_cost_oper_5: number | null
+          gr_cost_oper_6: number | null
+          gr_cost_oper_7: number | null
+          gr_cost_oper_8: number | null
+          gr_cost_oper_9: number | null
+          gr_revenue_1: number | null
+          gr_revenue_10: number | null
+          gr_revenue_11: number | null
+          gr_revenue_12: number | null
+          gr_revenue_2: number | null
+          gr_revenue_3: number | null
+          gr_revenue_4: number | null
+          gr_revenue_5: number | null
+          gr_revenue_6: number | null
+          gr_revenue_7: number | null
+          gr_revenue_8: number | null
+          gr_revenue_9: number | null
+          id: string
+          project_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          gr_capex_1?: number | null
+          gr_capex_10?: number | null
+          gr_capex_11?: number | null
+          gr_capex_12?: number | null
+          gr_capex_2?: number | null
+          gr_capex_3?: number | null
+          gr_capex_4?: number | null
+          gr_capex_5?: number | null
+          gr_capex_6?: number | null
+          gr_capex_7?: number | null
+          gr_capex_8?: number | null
+          gr_capex_9?: number | null
+          gr_cost_1?: number | null
+          gr_cost_10?: number | null
+          gr_cost_11?: number | null
+          gr_cost_12?: number | null
+          gr_cost_2?: number | null
+          gr_cost_3?: number | null
+          gr_cost_4?: number | null
+          gr_cost_5?: number | null
+          gr_cost_6?: number | null
+          gr_cost_7?: number | null
+          gr_cost_8?: number | null
+          gr_cost_9?: number | null
+          gr_cost_oper_1?: number | null
+          gr_cost_oper_10?: number | null
+          gr_cost_oper_11?: number | null
+          gr_cost_oper_12?: number | null
+          gr_cost_oper_2?: number | null
+          gr_cost_oper_3?: number | null
+          gr_cost_oper_4?: number | null
+          gr_cost_oper_5?: number | null
+          gr_cost_oper_6?: number | null
+          gr_cost_oper_7?: number | null
+          gr_cost_oper_8?: number | null
+          gr_cost_oper_9?: number | null
+          gr_revenue_1?: number | null
+          gr_revenue_10?: number | null
+          gr_revenue_11?: number | null
+          gr_revenue_12?: number | null
+          gr_revenue_2?: number | null
+          gr_revenue_3?: number | null
+          gr_revenue_4?: number | null
+          gr_revenue_5?: number | null
+          gr_revenue_6?: number | null
+          gr_revenue_7?: number | null
+          gr_revenue_8?: number | null
+          gr_revenue_9?: number | null
+          id?: string
+          project_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          gr_capex_1?: number | null
+          gr_capex_10?: number | null
+          gr_capex_11?: number | null
+          gr_capex_12?: number | null
+          gr_capex_2?: number | null
+          gr_capex_3?: number | null
+          gr_capex_4?: number | null
+          gr_capex_5?: number | null
+          gr_capex_6?: number | null
+          gr_capex_7?: number | null
+          gr_capex_8?: number | null
+          gr_capex_9?: number | null
+          gr_cost_1?: number | null
+          gr_cost_10?: number | null
+          gr_cost_11?: number | null
+          gr_cost_12?: number | null
+          gr_cost_2?: number | null
+          gr_cost_3?: number | null
+          gr_cost_4?: number | null
+          gr_cost_5?: number | null
+          gr_cost_6?: number | null
+          gr_cost_7?: number | null
+          gr_cost_8?: number | null
+          gr_cost_9?: number | null
+          gr_cost_oper_1?: number | null
+          gr_cost_oper_10?: number | null
+          gr_cost_oper_11?: number | null
+          gr_cost_oper_12?: number | null
+          gr_cost_oper_2?: number | null
+          gr_cost_oper_3?: number | null
+          gr_cost_oper_4?: number | null
+          gr_cost_oper_5?: number | null
+          gr_cost_oper_6?: number | null
+          gr_cost_oper_7?: number | null
+          gr_cost_oper_8?: number | null
+          gr_cost_oper_9?: number | null
+          gr_revenue_1?: number | null
+          gr_revenue_10?: number | null
+          gr_revenue_11?: number | null
+          gr_revenue_12?: number | null
+          gr_revenue_2?: number | null
+          gr_revenue_3?: number | null
+          gr_revenue_4?: number | null
+          gr_revenue_5?: number | null
+          gr_revenue_6?: number | null
+          gr_revenue_7?: number | null
+          gr_revenue_8?: number | null
+          gr_revenue_9?: number | null
+          id?: string
+          project_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "growth_assumptions_data_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -111,6 +642,74 @@ export type Database = {
           user_type?: Database["public"]["Enums"]["user_type"]
         }
         Relationships: []
+      }
+      profit_loss_data: {
+        Row: {
+          cogs: number | null
+          created_at: string
+          depreciation: number | null
+          ebit: number | null
+          ebitda: number | null
+          gross_profit: number | null
+          id: string
+          interest_expense: number | null
+          net_income: number | null
+          operating_expenses: number | null
+          pretax_income: number | null
+          project_id: string
+          revenue: number | null
+          tax_rates: number | null
+          taxes: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cogs?: number | null
+          created_at?: string
+          depreciation?: number | null
+          ebit?: number | null
+          ebitda?: number | null
+          gross_profit?: number | null
+          id?: string
+          interest_expense?: number | null
+          net_income?: number | null
+          operating_expenses?: number | null
+          pretax_income?: number | null
+          project_id: string
+          revenue?: number | null
+          tax_rates?: number | null
+          taxes?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cogs?: number | null
+          created_at?: string
+          depreciation?: number | null
+          ebit?: number | null
+          ebitda?: number | null
+          gross_profit?: number | null
+          id?: string
+          interest_expense?: number | null
+          net_income?: number | null
+          operating_expenses?: number | null
+          pretax_income?: number | null
+          project_id?: string
+          revenue?: number | null
+          tax_rates?: number | null
+          taxes?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profit_loss_data_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       projects: {
         Row: {
@@ -180,6 +779,80 @@ export type Database = {
         }
         Relationships: []
       }
+      seasonality_data: {
+        Row: {
+          april: number | null
+          august: number | null
+          created_at: string
+          december: number | null
+          february: number | null
+          id: string
+          january: number | null
+          july: number | null
+          june: number | null
+          march: number | null
+          may: number | null
+          november: number | null
+          october: number | null
+          project_id: string
+          seasonal_working_capital: number | null
+          seasonality_pattern: string | null
+          september: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          april?: number | null
+          august?: number | null
+          created_at?: string
+          december?: number | null
+          february?: number | null
+          id?: string
+          january?: number | null
+          july?: number | null
+          june?: number | null
+          march?: number | null
+          may?: number | null
+          november?: number | null
+          october?: number | null
+          project_id: string
+          seasonal_working_capital?: number | null
+          seasonality_pattern?: string | null
+          september?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          april?: number | null
+          august?: number | null
+          created_at?: string
+          december?: number | null
+          february?: number | null
+          id?: string
+          january?: number | null
+          july?: number | null
+          june?: number | null
+          march?: number | null
+          may?: number | null
+          november?: number | null
+          october?: number | null
+          project_id?: string
+          seasonal_working_capital?: number | null
+          seasonality_pattern?: string | null
+          september?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seasonality_data_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -203,6 +876,50 @@ export type Database = {
           user_type?: Database["public"]["Enums"]["user_type"]
         }
         Relationships: []
+      }
+      working_capital_data: {
+        Row: {
+          account_receivable_percent: number | null
+          accounts_payable_percent: number | null
+          created_at: string
+          id: string
+          inventory_percent: number | null
+          other_current_assets_percent: number | null
+          project_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_receivable_percent?: number | null
+          accounts_payable_percent?: number | null
+          created_at?: string
+          id?: string
+          inventory_percent?: number | null
+          other_current_assets_percent?: number | null
+          project_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_receivable_percent?: number | null
+          accounts_payable_percent?: number | null
+          created_at?: string
+          id?: string
+          inventory_percent?: number | null
+          other_current_assets_percent?: number | null
+          project_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "working_capital_data_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
