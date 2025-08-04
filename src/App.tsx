@@ -23,6 +23,7 @@ import TeamCollaboration from "./pages/TeamCollaboration";
 import InviteMembers from "./pages/InviteMembers";
 import PeerBenchmarking from "./pages/PeerBenchmarking";
 import IndustryAnalysis from "./pages/IndustryAnalysis";
+import CompanyProjectSelection from "./pages/CompanyProjectSelection";
 
 const queryClient = new QueryClient();
 
@@ -33,8 +34,10 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          <Route path="/companies" element={<CompanyProjectSelection />} />
           <Route path="/" element={<DashboardLayout />}>
-            <Route index element={<Dashboard />} />
+            <Route index element={<CompanyProjectSelection />} />
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="data-entry" element={<DataEntry />} />
             <Route path="analytics" element={<SpecificCharts />} />
             <Route path="reports" element={<Reports />} />

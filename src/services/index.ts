@@ -6,6 +6,8 @@ export { reportService, ReportService } from './api/ReportService';
 export { userService, UserService } from './api/UserService';
 export { validationService, ValidationService } from './api/ValidationService';
 export { mockDataService, MockDataService } from './api/MockDataService';
+export { companyService, CompanyService } from './api/CompanyService';
+export { projectService, ProjectService } from './api/ProjectService';
 
 // HTTP client
 export { httpClient, HttpClient } from './http/client';
