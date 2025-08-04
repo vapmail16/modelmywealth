@@ -94,7 +94,7 @@ class AuthService {
   private async getUserWithProfile(userId: string): Promise<AuthUser> {
     try {
       const response = await httpClient.get(`/user-management/users/${userId}`);
-      const userData = response.data?.data;
+      const userData = response.data?.data || response.data?.user;
       
       if (!userData) {
         throw new Error('User profile not found');
@@ -102,11 +102,11 @@ class AuthService {
 
       // Get user roles
       const rolesResponse = await httpClient.get(`/user-management/roles?user_id=${userId}`);
-      const roles = rolesResponse.data?.data || [];
+      const roles = rolesResponse.data?.data || rolesResponse.data?.roles || [];
 
       // Get user capabilities
       const capabilitiesResponse = await httpClient.get(`/user-management/role-capabilities`);
-      const allCapabilities = capabilitiesResponse.data?.data || [];
+      const allCapabilities = capabilitiesResponse.data?.data || capabilitiesResponse.data?.capabilities || [];
       
       const userCapabilities = this.extractUserCapabilities(roles, allCapabilities);
 
