@@ -642,7 +642,7 @@ export default function DataEntry() {
                                   placeholder="0"
                                   value={formData.otherAssets}
                                   onChange={(e) => handleInputChange("otherAssets", e.target.value)}
-                                  className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                                  className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                                 />
                               </TableCell>
                             </TableRow>
