@@ -791,6 +791,39 @@ export type Database = {
           },
         ]
       }
+      rate_limits: {
+        Row: {
+          attempts: number | null
+          blocked_until: string | null
+          created_at: string
+          id: string
+          identifier: string
+          limit_type: string
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          attempts?: number | null
+          blocked_until?: string | null
+          created_at?: string
+          id?: string
+          identifier: string
+          limit_type: string
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          attempts?: number | null
+          blocked_until?: string | null
+          created_at?: string
+          id?: string
+          identifier?: string
+          limit_type?: string
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       role_capabilities: {
         Row: {
           capability: Database["public"]["Enums"]["capability"]
@@ -889,6 +922,39 @@ export type Database = {
           },
         ]
       }
+      security_events: {
+        Row: {
+          created_at: string
+          details: Json | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          severity: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          severity: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          severity?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       subscribers: {
         Row: {
           created_at: string
@@ -946,6 +1012,42 @@ export type Database = {
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
           user_type?: Database["public"]["Enums"]["user_type"]
+        }
+        Relationships: []
+      }
+      user_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          ip_address: string | null
+          is_active: boolean | null
+          last_activity: string
+          session_token: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          is_active?: boolean | null
+          last_activity?: string
+          session_token: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          is_active?: boolean | null
+          last_activity?: string
+          session_token?: string
+          user_agent?: string | null
+          user_id?: string
         }
         Relationships: []
       }
