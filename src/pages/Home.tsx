@@ -92,8 +92,8 @@ export function Home() {
               <Button size="lg" onClick={() => navigate('/auth')}>
                 Start Your Analysis
               </Button>
-              <Button variant="outline" size="lg">
-                Learn More
+              <Button variant="outline" size="lg" onClick={() => navigate('/pricing')}>
+                View Pricing
               </Button>
             </div>
           </div>
@@ -131,9 +131,14 @@ export function Home() {
             <p className="text-muted-foreground mb-8">
               Join teams already using our platform for financial analysis
             </p>
-            <Button size="lg" onClick={() => navigate('/auth')}>
-              Create Your Account
-            </Button>
+            <div className="flex gap-4 justify-center">
+              <Button size="lg" onClick={() => navigate('/auth')}>
+                Create Your Account
+              </Button>
+              <Button size="lg" variant="outline" onClick={() => navigate('/pricing')}>
+                View Pricing Plans
+              </Button>
+            </div>
           </div>
         </section>
       </div>

@@ -9,6 +9,8 @@ import { DashboardLayout } from "./components/layout/DashboardLayout";
 import { Home } from "./pages/Home";
 import { Auth } from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import Pricing from "./pages/Pricing";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import DataEntry from "./pages/DataEntry";
 import Analytics from "./pages/Analytics";
 import Reports from "./pages/Reports";
@@ -47,6 +49,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/companies" element={<CompanyProjectSelection />} />
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route index element={<Dashboard />} />
