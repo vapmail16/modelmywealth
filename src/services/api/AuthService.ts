@@ -12,25 +12,37 @@ import type {
 
 class AuthService {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
+    console.log('Attempting login for:', credentials.email);
+    
     const { data, error } = await supabase.auth.signInWithPassword({
       email: credentials.email,
       password: credentials.password,
     });
 
     if (error) {
+      console.error('Supabase auth error:', error);
       throw new Error(error.message);
     }
 
     if (!data.user) {
+      console.error('No user returned from Supabase');
       throw new Error('Login failed');
     }
 
-    const user = await this.getUserWithProfile(data.user.id);
+    console.log('Supabase auth successful, getting user profile for:', data.user.id);
     
-    return {
-      user,
-      session: data.session,
-    };
+    try {
+      const user = await this.getUserWithProfile(data.user.id);
+      console.log('User profile retrieved successfully:', user);
+      
+      return {
+        user,
+        session: data.session,
+      };
+    } catch (profileError) {
+      console.error('Failed to get user profile:', profileError);
+      throw new Error(`Failed to get user profile: ${profileError.message}`);
+    }
   }
 
   async register(credentials: RegisterCredentials): Promise<AuthResponse> {
