@@ -1,4 +1,5 @@
-import { supabase } from '@/integrations/supabase/client';
+import { httpClient } from '../http/client';
+import { ApiResponse } from '@/types/api';
 import type { 
   UserProfile, 
   UserRole, 
@@ -9,135 +10,112 @@ import type {
 } from '@/types/auth';
 
 class UserManagementService {
-  async getAllUsers(): Promise<UserProfile[]> {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .order('created_at', { ascending: false });
+  private baseUrl = '/user-management';
 
-    if (error) {
-      throw new Error(`Failed to fetch users: ${error.message}`);
+  async getAllUsers(): Promise<UserProfile[]> {
+    const response: ApiResponse<UserProfile[]> = await httpClient.get(
+      `${this.baseUrl}/users`
+    );
+
+    if (!response.success || response.error) {
+      const errorMessage = response.error?.message || 'Failed to fetch users';
+      console.error('Failed to fetch users:', response.error);
+      throw new Error(errorMessage);
     }
 
-    return data || [];
+    return response.data || [];
   }
 
   async getUsersByType(userType: UserType): Promise<UserProfile[]> {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_type', userType)
-      .order('created_at', { ascending: false });
+    const response: ApiResponse<UserProfile[]> = await httpClient.get(
+      `${this.baseUrl}/users?user_type=${userType}`
+    );
 
-    if (error) {
-      throw new Error(`Failed to fetch users: ${error.message}`);
+    if (!response.success || response.error) {
+      const errorMessage = response.error?.message || 'Failed to fetch users';
+      console.error('Failed to fetch users:', response.error);
+      throw new Error(errorMessage);
     }
 
-    return data || [];
+    return response.data || [];
   }
 
   async getUserRoles(userId: string): Promise<UserRole[]> {
-    const { data, error } = await supabase
-      .from('user_roles')
-      .select('*')
-      .eq('user_id', userId);
+    const response: ApiResponse<UserRole[]> = await httpClient.get(
+      `${this.baseUrl}/roles?user_id=${userId}`
+    );
 
-    if (error) {
-      throw new Error(`Failed to fetch user roles: ${error.message}`);
+    if (!response.success || response.error) {
+      const errorMessage = response.error?.message || 'Failed to fetch user roles';
+      console.error('Failed to fetch user roles:', response.error);
+      throw new Error(errorMessage);
     }
 
-    return data || [];
+    return response.data || [];
   }
 
   async assignRole(userId: string, role: AppRole, userType: UserType): Promise<UserRole> {
-    const { data, error } = await supabase
-      .from('user_roles')
-      .insert({
+    const response: ApiResponse<UserRole> = await httpClient.post(
+      `${this.baseUrl}/assign-role`,
+      {
         user_id: userId,
         role,
-        user_type: userType,
-      })
-      .select()
-      .single();
+        user_type: userType
+      }
+    );
 
-    if (error) {
-      throw new Error(`Failed to assign role: ${error.message}`);
+    if (!response.success || response.error) {
+      const errorMessage = response.error?.message || 'Failed to assign role';
+      console.error('Failed to assign role:', response.error);
+      throw new Error(errorMessage);
     }
 
-    return data;
+    return response.data!;
   }
 
   async removeRole(userId: string, role: AppRole, userType: UserType): Promise<void> {
-    const { error } = await supabase
-      .from('user_roles')
-      .delete()
-      .eq('user_id', userId)
-      .eq('role', role)
-      .eq('user_type', userType);
-
-    if (error) {
-      throw new Error(`Failed to remove role: ${error.message}`);
-    }
-  }
-
-  async getRoleCapabilities(role: AppRole, userType: UserType): Promise<RoleCapability[]> {
-    const { data, error } = await supabase
-      .from('role_capabilities')
-      .select('*')
-      .eq('role', role)
-      .eq('user_type', userType);
-
-    if (error) {
-      throw new Error(`Failed to fetch role capabilities: ${error.message}`);
-    }
-
-    return data || [];
-  }
-
-  async addRoleCapability(role: AppRole, userType: UserType, capability: Capability): Promise<RoleCapability> {
-    const { data, error } = await supabase
-      .from('role_capabilities')
-      .insert({
+    // For DELETE with body, we need to use POST to the remove-role endpoint
+    const response: ApiResponse<void> = await httpClient.post(
+      `${this.baseUrl}/remove-role`,
+      {
+        user_id: userId,
         role,
-        user_type: userType,
-        capability,
-      })
-      .select()
-      .single();
+        user_type: userType
+      }
+    );
 
-    if (error) {
-      throw new Error(`Failed to add capability: ${error.message}`);
-    }
-
-    return data;
-  }
-
-  async removeRoleCapability(role: AppRole, userType: UserType, capability: Capability): Promise<void> {
-    const { error } = await supabase
-      .from('role_capabilities')
-      .delete()
-      .eq('role', role)
-      .eq('user_type', userType)
-      .eq('capability', capability);
-
-    if (error) {
-      throw new Error(`Failed to remove capability: ${error.message}`);
+    if (!response.success || response.error) {
+      const errorMessage = response.error?.message || 'Failed to remove role';
+      console.error('Failed to remove role:', response.error);
+      throw new Error(errorMessage);
     }
   }
 
-  async updateUserProfile(userId: string, updates: Partial<UserProfile>): Promise<UserProfile> {
-    const { data, error } = await supabase
-      .from('profiles')
-      .update(updates)
-      .eq('user_id', userId)
-      .select()
-      .single();
+  async getRoleCapabilities(): Promise<RoleCapability[]> {
+    const response: ApiResponse<RoleCapability[]> = await httpClient.get(
+      `${this.baseUrl}/role-capabilities`
+    );
 
-    if (error) {
-      throw new Error(`Failed to update profile: ${error.message}`);
+    if (!response.success || response.error) {
+      const errorMessage = response.error?.message || 'Failed to fetch role capabilities';
+      console.error('Failed to fetch role capabilities:', response.error);
+      throw new Error(errorMessage);
     }
 
-    return data;
+    return response.data || [];
+  }
+
+  async hasCapability(userId: string, capability: Capability): Promise<boolean> {
+    const response: ApiResponse<boolean> = await httpClient.get(
+      `${this.baseUrl}/capabilities?capability=${capability}`
+    );
+
+    if (!response.success || response.error) {
+      console.error('Error checking capability:', response.error);
+      return false;
+    }
+
+    return response.data || false;
   }
 
   async getAllCapabilities(): Promise<Capability[]> {
