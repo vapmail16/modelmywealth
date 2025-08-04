@@ -86,10 +86,66 @@ class AuthService {
       .from('profiles')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     if (profileError) {
       throw new Error(`Failed to fetch profile: ${profileError.message}`);
+    }
+
+    // If no profile exists, create one from auth user data
+    if (!profile) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      // Create profile manually if trigger failed
+      const { data: newProfile, error: createError } = await supabase
+        .from('profiles')
+        .insert({
+          user_id: userId,
+          email: user.email!,
+          full_name: user.user_metadata?.full_name || user.email!,
+          user_type: user.user_metadata?.user_type || 'business',
+        })
+        .select()
+        .single();
+
+      if (createError) {
+        throw new Error(`Failed to create profile: ${createError.message}`);
+      }
+
+      // Also create default role
+      await supabase
+        .from('user_roles')
+        .insert({
+          user_id: userId,
+          role: user.user_metadata?.user_type === 'tech' ? 'user' : 'analyst',
+          user_type: user.user_metadata?.user_type || 'business',
+        });
+
+      const finalProfile = newProfile;
+      
+      // Get user roles
+      const { data: roles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('*')
+        .eq('user_id', userId);
+
+      if (rolesError) {
+        throw new Error(`Failed to fetch roles: ${rolesError.message}`);
+      }
+
+      // Get capabilities for user's roles
+      const capabilities = await this.getUserCapabilities(userId);
+
+      return {
+        id: userId,
+        email: finalProfile.email,
+        profile: finalProfile,
+        roles: roles || [],
+        capabilities,
+      };
     }
 
     // Get user roles
