@@ -1,10 +1,24 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { User, Mail, Phone, MapPin, Calendar, Settings as SettingsIcon } from "lucide-react";
+import { User, Mail, Phone, MapPin, Calendar, Settings as SettingsIcon, LogOut } from "lucide-react";
+import { useAuthStore } from "@/stores/authStore";
 
 export default function Profile() {
+  const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -15,10 +29,16 @@ export default function Profile() {
             Manage your account information and preferences
           </p>
         </div>
-        <Button className="gap-2">
-          <SettingsIcon className="h-4 w-4" />
-          Edit Profile
-        </Button>
+        <div className="flex gap-2">
+          <Button className="gap-2">
+            <SettingsIcon className="h-4 w-4" />
+            Edit Profile
+          </Button>
+          <Button variant="destructive" onClick={handleLogout} className="gap-2">
+            <LogOut className="h-4 w-4" />
+            Sign out
+          </Button>
+        </div>
       </div>
 
       {/* Profile Information */}
@@ -29,10 +49,12 @@ export default function Profile() {
             <div className="w-24 h-24 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-4">
               <User className="h-12 w-12 text-primary" />
             </div>
-            <CardTitle className="text-xl">Umesh Sharma</CardTitle>
-            <p className="text-muted-foreground">Financial Analyst</p>
+            <CardTitle className="text-xl">{user?.profile?.full_name || 'User'}</CardTitle>
+            <p className="text-muted-foreground">
+              {user?.profile?.user_type === 'tech' ? 'Technical User' : 'Business User'}
+            </p>
             <Badge variant="outline" className="w-fit mx-auto mt-2">
-              Premium Account
+              {user?.roles?.map(r => r.role).join(', ') || 'User'}
             </Badge>
           </CardHeader>
         </Card>
@@ -47,7 +69,7 @@ export default function Profile() {
               <Mail className="h-4 w-4 text-muted-foreground" />
               <div>
                 <div className="text-sm font-medium">Email</div>
-                <div className="text-sm text-muted-foreground">umesh.sharma@company.com</div>
+                <div className="text-sm text-muted-foreground">{user?.profile?.email || 'No email'}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
