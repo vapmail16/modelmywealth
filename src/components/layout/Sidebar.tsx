@@ -31,34 +31,34 @@ import {
 import { cn } from "@/lib/utils";
 
 const mainNavigation = [
-  { title: "Dashboard", url: "/", icon: Home },
-  { title: "Data Entry", url: "/data-entry", icon: Calculator },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
-  { title: "Reports", url: "/reports", icon: FileText },
+  { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Data Entry", url: "/dashboard/data-entry", icon: Calculator },
+  { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
+  { title: "Reports", url: "/dashboard/reports", icon: FileText },
 ];
 
 const financialTools = [
-  { title: "Debt Analysis", url: "/debt-analysis", icon: DollarSign },
-  { title: "Cash Flow", url: "/cash-flow", icon: TrendingUp },
-  { title: "KPI Dashboard", url: "/kpi", icon: PieChart },
-  { title: "Covenant Testing", url: "/covenant-testing", icon: CheckSquare },
-  { title: "Governance", url: "/governance", icon: Shield },
+  { title: "Debt Analysis", url: "/dashboard/debt-analysis", icon: DollarSign },
+  { title: "Cash Flow", url: "/dashboard/cash-flow", icon: TrendingUp },
+  { title: "KPI Dashboard", url: "/dashboard/kpi", icon: PieChart },
+  { title: "Covenant Testing", url: "/dashboard/covenant-testing", icon: CheckSquare },
+  { title: "Governance", url: "/dashboard/governance", icon: Shield },
 ];
 
 const collaborationTools = [
-  { title: "Team Collaboration", url: "/collaboration", icon: Users },
-  { title: "Invite Members", url: "/collaboration/invite", icon: UserPlus },
+  { title: "Team Collaboration", url: "/dashboard/collaboration", icon: Users },
+  { title: "Invite Members", url: "/dashboard/collaboration/invite", icon: UserPlus },
 ];
 
 const benchmarkingTools = [
-  { title: "Peer Benchmarking", url: "/benchmarking", icon: Target },
-  { title: "Industry Analysis", url: "/benchmarking/industry", icon: LineChart },
+  { title: "Peer Benchmarking", url: "/dashboard/benchmarking", icon: Target },
+  { title: "Industry Analysis", url: "/dashboard/benchmarking/industry", icon: LineChart },
 ];
 
 const utilityNav = [
-  { title: "Profile", url: "/profile", icon: User },
-  { title: "Settings", url: "/settings", icon: Settings },
-  { title: "Help", url: "/help", icon: HelpCircle },
+  { title: "Profile", url: "/dashboard/profile", icon: User },
+  { title: "Settings", url: "/dashboard/settings", icon: Settings },
+  { title: "Help", url: "/dashboard/help", icon: HelpCircle },
 ];
 
 export function Sidebar() {
