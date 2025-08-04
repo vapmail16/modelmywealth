@@ -10,15 +10,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Building2, FolderPlus, Plus, ArrowRight } from 'lucide-react';
 import { companyService, projectService } from '@/services';
+import { useProjectStore } from '@/stores/projectStore';
 import type { CompanyWithProjects, CreateCompanyData, CreateProjectData } from '@/types/company';
 import { useToast } from '@/hooks/use-toast';
 
 export default function CompanyProjectSelection() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { setSelectedCompany, setSelectedProject, refreshProjects } = useProjectStore();
   const [companies, setCompanies] = useState<CompanyWithProjects[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCompany, setSelectedCompany] = useState<string>('');
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string>('');
   const [showCreateCompany, setShowCreateCompany] = useState(false);
   const [showCreateProject, setShowCreateProject] = useState(false);
 
@@ -58,14 +60,20 @@ export default function CompanyProjectSelection() {
 
   const handleCreateCompany = async () => {
     const response = await companyService.createCompany(companyForm);
-    if (response.success) {
+    if (response.success && response.data) {
+      // Set the company in the project store
+      setSelectedCompany(response.data);
+      
       toast({
         title: "Success",
-        description: "Company created successfully"
+        description: "Company created successfully. Redirecting to dashboard..."
       });
       setShowCreateCompany(false);
       setCompanyForm({ name: '', industry: '', headquarters: '', description: '' });
-      loadCompanies();
+      
+      // Refresh the project store and redirect to dashboard
+      await refreshProjects();
+      navigate('/dashboard');
     } else {
       toast({
         title: "Error",
@@ -76,7 +84,7 @@ export default function CompanyProjectSelection() {
   };
 
   const handleCreateProject = async () => {
-    if (!selectedCompany) {
+    if (!selectedCompanyId) {
       toast({
         title: "Error",
         description: "Please select a company first",
@@ -87,17 +95,27 @@ export default function CompanyProjectSelection() {
 
     const response = await projectService.createProject({
       ...projectForm,
-      company_id: selectedCompany
+      company_id: selectedCompanyId
     });
     
-    if (response.success) {
+    if (response.success && response.data) {
+      // Set both company and project in the project store
+      const selectedCompany = companies.find(c => c.id === selectedCompanyId);
+      if (selectedCompany) {
+        setSelectedCompany(selectedCompany);
+      }
+      setSelectedProject(response.data);
+      
       toast({
         title: "Success",
-        description: "Project created successfully"
+        description: "Project created successfully. Redirecting to dashboard..."
       });
       setShowCreateProject(false);
       setProjectForm({ company_id: '', name: '', description: '', project_type: 'analysis' });
-      loadCompanies();
+      
+      // Refresh the project store and redirect to dashboard
+      await refreshProjects();
+      navigate('/dashboard');
     } else {
       toast({
         title: "Error",
@@ -107,9 +125,14 @@ export default function CompanyProjectSelection() {
     }
   };
 
-  const handleProjectSelect = (projectId: string) => {
-    // Store selected project in localStorage for the dashboard to use
-    localStorage.setItem('selectedProject', projectId);
+  const handleProjectSelect = (project: any) => {
+    // Set both company and project in the project store
+    const selectedCompany = companies.find(c => c.id === project.company_id);
+    if (selectedCompany) {
+      setSelectedCompany(selectedCompany);
+    }
+    setSelectedProject(project);
+    
     navigate('/dashboard');
   };
 
@@ -213,7 +236,7 @@ export default function CompanyProjectSelection() {
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
                   <Label htmlFor="project-company">Company</Label>
-                  <Select value={selectedCompany} onValueChange={setSelectedCompany}>
+                  <Select value={selectedCompanyId} onValueChange={setSelectedCompanyId}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a company" />
                     </SelectTrigger>
@@ -309,7 +332,7 @@ export default function CompanyProjectSelection() {
                       size="sm"
                       variant="outline"
                       onClick={() => {
-                        setSelectedCompany(company.id);
+                        setSelectedCompanyId(company.id);
                         setShowCreateProject(true);
                       }}
                       className="gap-2"
@@ -333,7 +356,7 @@ export default function CompanyProjectSelection() {
                         variant="ghost"
                         size="sm"
                         onClick={() => {
-                          setSelectedCompany(company.id);
+                          setSelectedCompanyId(company.id);
                           setShowCreateProject(true);
                         }}
                         className="mt-2"
@@ -366,7 +389,7 @@ export default function CompanyProjectSelection() {
                               </div>
                               <Button
                                 size="sm"
-                                onClick={() => handleProjectSelect(project.id)}
+                                onClick={() => handleProjectSelect(project)}
                                 className="gap-2"
                               >
                                 Open

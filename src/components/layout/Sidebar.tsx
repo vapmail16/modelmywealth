@@ -1,4 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   BarChart3,
   Calculator,
@@ -16,6 +17,9 @@ import {
   LineChart,
   UserPlus,
   Target,
+  Building,
+  FolderOpen,
+  Plus,
 } from "lucide-react";
 import {
   Sidebar as SidebarPrimitive,
@@ -28,7 +32,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { useProjectStore } from "@/stores/projectStore";
+import { useToast } from "@/hooks/use-toast";
 
 const mainNavigation = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
@@ -65,6 +77,28 @@ export function Sidebar() {
   const { state } = useSidebar();
   const location = useLocation();
   const currentPath = location.pathname;
+  const { 
+    selectedProject, 
+    selectedCompany, 
+    userProjects, 
+    userCompanies,
+    loadUserProjects,
+    loadUserCompanies,
+    setSelectedProject,
+    setSelectedCompany,
+    createProject
+  } = useProjectStore();
+  const { toast } = useToast();
+  
+  const [showProjectDialog, setShowProjectDialog] = useState(false);
+  const [projectName, setProjectName] = useState("");
+  const [projectDescription, setProjectDescription] = useState("");
+  const [projectType, setProjectType] = useState("analysis");
+
+  useEffect(() => {
+    loadUserProjects();
+    loadUserCompanies();
+  }, []);
 
   const isActive = (path: string) => currentPath === path;
   const getNavClasses = (path: string) =>
@@ -75,9 +109,132 @@ export function Sidebar() {
         : "hover:bg-secondary/80 text-foreground"
     );
 
+  const handleCreateProject = async () => {
+    if (!projectName.trim()) {
+      toast({
+        title: "Error",
+        description: "Project name is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await createProject(projectName, projectDescription, projectType);
+      setShowProjectDialog(false);
+      setProjectName("");
+      setProjectDescription("");
+      setProjectType("analysis");
+      toast({
+        title: "Success",
+        description: "Project created successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create project",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <SidebarPrimitive className="border-r border-border bg-card shadow-elegant">
       <SidebarContent className="p-4">
+        {/* Project/Company Selector */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-muted-foreground font-medium mb-2">
+            Current Context
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <div className="space-y-2">
+              {selectedCompany && (
+                <div className="text-xs text-muted-foreground">
+                  <Building className="h-3 w-3 inline mr-1" />
+                  {selectedCompany.name}
+                </div>
+              )}
+              
+              <Select 
+                value={selectedProject?.id || ""} 
+                onValueChange={(value) => {
+                  const project = userProjects.find(p => p.id === value);
+                  if (project) setSelectedProject(project);
+                }}
+              >
+                <SelectTrigger className="h-8 text-xs">
+                  <SelectValue placeholder={state === "collapsed" ? "..." : "Select Project"}>
+                    {selectedProject && (
+                      <div className="flex items-center gap-1">
+                        <FolderOpen className="h-3 w-3" />
+                        {state !== "collapsed" && selectedProject.name}
+                      </div>
+                    )}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {userProjects.map((project) => (
+                    <SelectItem key={project.id} value={project.id}>
+                      {project.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <Dialog open={showProjectDialog} onOpenChange={setShowProjectDialog}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="w-full h-7 text-xs">
+                    <Plus className="h-3 w-3 mr-1" />
+                    {state !== "collapsed" && "New Project"}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Create New Project</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="project-name">Project Name</Label>
+                      <Input
+                        id="project-name"
+                        value={projectName}
+                        onChange={(e) => setProjectName(e.target.value)}
+                        placeholder="Enter project name"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="project-description">Description</Label>
+                      <Textarea
+                        id="project-description"
+                        value={projectDescription}
+                        onChange={(e) => setProjectDescription(e.target.value)}
+                        placeholder="Enter project description"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="project-type">Project Type</Label>
+                      <Select value={projectType} onValueChange={setProjectType}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="analysis">Financial Analysis</SelectItem>
+                          <SelectItem value="refinancing">Refinancing</SelectItem>
+                          <SelectItem value="acquisition">Acquisition</SelectItem>
+                          <SelectItem value="expansion">Expansion</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button onClick={handleCreateProject} className="w-full">
+                      Create Project
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </SidebarGroupContent>
+        </SidebarGroup>
         {/* Main Navigation */}
         <SidebarGroup>
           <SidebarGroupLabel className="text-muted-foreground font-medium mb-2">

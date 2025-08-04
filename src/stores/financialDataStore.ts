@@ -4,6 +4,7 @@ import { FinancialData, CalculationResults } from '@/types/financial';
 import { financialDataService } from '@/services/api/FinancialDataService';
 import { calculationService } from '@/services/api/CalculationService';
 import { validationService } from '@/services/api/ValidationService';
+import { useProjectStore } from '@/stores/projectStore';
 
 interface FinancialDataState {
   // Current data

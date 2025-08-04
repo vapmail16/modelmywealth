@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -11,27 +12,56 @@ import {
   FileText,
   AlertTriangle,
   CheckCircle,
-  Target
+  Target,
+  Building,
+  FolderOpen
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useProjectStore } from "@/stores/projectStore";
 
 export default function Dashboard() {
+  const { selectedProject, selectedCompany } = useProjectStore();
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground font-franklin">TTF-Refinancing Dashboard</h1>
-          <p className="text-muted-foreground mt-1">
-            Model My Wealth - Real-time insights for faster debt restructuring decisions
-          </p>
+          <h1 className="text-3xl font-bold text-foreground font-franklin">Financial Analysis Dashboard</h1>
+          <div className="flex items-center gap-4 mt-1">
+            <p className="text-muted-foreground">
+              Real-time insights for financial analysis and debt restructuring
+            </p>
+            {selectedCompany && selectedProject && (
+              <div className="flex items-center gap-2 text-sm">
+                <Badge variant="outline" className="gap-1">
+                  <Building className="h-3 w-3" />
+                  {selectedCompany.name}
+                </Badge>
+                <Badge variant="secondary" className="gap-1">
+                  <FolderOpen className="h-3 w-3" />
+                  {selectedProject.name}
+                </Badge>
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex gap-3">
           <Button asChild className="shadow-card">
-            <Link to="/data-entry">New Analysis</Link>
+            <Link to="/dashboard/data-entry">New Analysis</Link>
           </Button>
         </div>
       </div>
+
+      {/* Project Context Alert */}
+      {!selectedProject && (
+        <Alert>
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            No project selected. Please select or create a project from the sidebar to begin financial analysis.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -107,19 +137,19 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent className="space-y-3">
             <Button variant="outline" className="w-full justify-start" asChild>
-              <Link to="/data-entry">
+              <Link to="/dashboard/data-entry">
                 <Calculator className="mr-2 h-4 w-4" />
                 New Debt Analysis
               </Link>
             </Button>
             <Button variant="outline" className="w-full justify-start" asChild>
-              <Link to="/analytics">
+              <Link to="/dashboard/analytics">
                 <BarChart3 className="mr-2 h-4 w-4" />
                 View Analytics
               </Link>
             </Button>
             <Button variant="outline" className="w-full justify-start" asChild>
-              <Link to="/data-entry">
+              <Link to="/dashboard/data-entry">
                 <Target className="mr-2 h-4 w-4" />
                 Scenario Analysis / Stress Testing
               </Link>
