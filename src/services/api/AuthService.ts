@@ -111,29 +111,47 @@ class AuthService {
 
   private async getUserWithProfile(userId: string): Promise<AuthUser> {
     try {
-      // Get user profile via API
-      const profileResponse = await httpClient.get(`/user-management/users/${userId}`);
-      const profile = profileResponse.data?.data;
-      
-      if (!profile) {
+      // Temporary fallback to direct database access for login reliability
+      // Get user profile directly from Supabase
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      if (profileError) {
+        console.error('Error fetching profile:', profileError);
         throw new Error('User profile not found');
       }
 
-      // Get user roles via API
-      const rolesResponse = await httpClient.get(`/user-management/roles?user_id=${userId}`);
-      const roles = rolesResponse.data?.data || [];
+      // Get user roles directly from Supabase
+      const { data: roles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('*')
+        .eq('user_id', userId);
 
-      // Get role capabilities via API
-      const capabilitiesResponse = await httpClient.get(`/user-management/role-capabilities`);
-      const allCapabilities = capabilitiesResponse.data?.data || [];
+      if (rolesError) {
+        console.error('Error fetching roles:', rolesError);
+        // Don't throw error for roles, just use empty array
+      }
+
+      // Get role capabilities directly from Supabase
+      const { data: allCapabilities, error: capabilitiesError } = await supabase
+        .from('role_capabilities')
+        .select('*');
+
+      if (capabilitiesError) {
+        console.error('Error fetching capabilities:', capabilitiesError);
+        // Don't throw error for capabilities, just use empty array
+      }
       
-      const userCapabilities = this.extractUserCapabilities(roles, allCapabilities);
+      const userCapabilities = this.extractUserCapabilities(roles || [], allCapabilities || []);
 
       return {
         id: userId,
         email: profile.email,
         profile,
-        roles,
+        roles: roles || [],
         capabilities: userCapabilities,
       };
     } catch (error) {
