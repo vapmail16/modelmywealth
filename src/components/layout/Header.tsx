@@ -1,10 +1,9 @@
-import { logger } from '@/services/logging/LoggingService';
-import { Bell, User, Settings, Search } from "lucide-react";
 import React from 'react';
+import { Link, useNavigate } from "react-router-dom";
+import { Bell, User, Settings, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuthStore } from "@/stores/authStore";
+import { logger } from '@/services/logging/LoggingService';
 
 export function Header() {
   const { user, logout } = useAuthStore();
