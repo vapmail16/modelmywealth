@@ -68,6 +68,12 @@ class AuthService {
       throw new Error('Registration failed');
     }
 
+    // Check if email confirmation is required
+    if (!data.session) {
+      // Email confirmation is required - this is normal behavior
+      throw new Error('Please check your email and click the confirmation link to complete your registration.');
+    }
+
     const user = await this.getUserWithProfileFromAuthUser(data.user);
     
     return {
