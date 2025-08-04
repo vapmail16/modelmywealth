@@ -274,7 +274,7 @@ export default function CovenantTesting() {
                             placeholder="0"
                             value={actualData.revenue || ""}
                             onChange={(e) => handleInputChange('revenue', e.target.value)}
-                            className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            className="text-right w-32 ml-auto border"
                           />
                         </TableCell>
                       </TableRow>
@@ -287,7 +287,7 @@ export default function CovenantTesting() {
                             placeholder="0"
                             value={actualData.cogs || ""}
                             onChange={(e) => handleInputChange('cogs', e.target.value)}
-                            className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            className="text-right w-32 ml-auto border"
                           />
                         </TableCell>
                       </TableRow>
@@ -308,7 +308,7 @@ export default function CovenantTesting() {
                             placeholder="0"
                             value={actualData.operatingExpenses || ""}
                             onChange={(e) => handleInputChange('operatingExpenses', e.target.value)}
-                            className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                            className="text-right w-32 ml-auto border"
                           />
                         </TableCell>
                       </TableRow>
