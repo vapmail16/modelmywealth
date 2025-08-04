@@ -455,7 +455,7 @@ export default function Governance() {
                 <Input 
                   value={nextTestingDate}
                   onChange={(e) => setNextTestingDate(e.target.value)}
-                  className="text-2xl font-bold text-purple-600 border-0 bg-transparent p-0 h-auto focus-visible:ring-0"
+                  className="text-2xl font-bold text-purple-600 border p-2 h-auto"
                 />
                 <p className="text-xs text-muted-foreground mt-1">Quarterly review</p>
               </div>
@@ -503,7 +503,7 @@ export default function Governance() {
                       <Input 
                         value={covenant.threshold}
                         onChange={(e) => handleCovenantThresholdChange(covenant.id, e.target.value)}
-                        className="w-20 h-6 text-right text-sm font-medium border-0 bg-transparent p-0 focus-visible:ring-0"
+                        className="w-20 h-6 text-right text-sm font-medium border p-1"
                       />
                     </div>
                     <div className="flex justify-between text-sm">
