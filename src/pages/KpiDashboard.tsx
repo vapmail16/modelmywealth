@@ -199,6 +199,27 @@ export default function KpiDashboard() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <Select value={dateRange} onValueChange={setDateRange}>
+            <SelectTrigger className="w-32">
+              <SelectValue placeholder="Period" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="monthly">Monthly</SelectItem>
+              <SelectItem value="quarterly">Quarterly</SelectItem>
+              <SelectItem value="yearly">Yearly</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={timeFilter} onValueChange={setTimeFilter}>
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder="Time Range" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1-year">1 Year</SelectItem>
+              <SelectItem value="3-years">3 Years</SelectItem>
+              <SelectItem value="5-years">5 Years</SelectItem>
+              <SelectItem value="10-years">10 Years</SelectItem>
+            </SelectContent>
+          </Select>
           <Button 
             variant="outline" 
             className="gap-2"

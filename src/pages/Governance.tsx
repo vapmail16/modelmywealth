@@ -366,6 +366,29 @@ export default function Governance() {
             Covenant monitoring, governance requirements, and compliance tracking
           </p>
         </div>
+        <div className="flex items-center gap-3">
+          <Select defaultValue="quarterly">
+            <SelectTrigger className="w-32">
+              <SelectValue placeholder="Period" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="monthly">Monthly</SelectItem>
+              <SelectItem value="quarterly">Quarterly</SelectItem>
+              <SelectItem value="yearly">Yearly</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select defaultValue="current-year">
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder="Time Range" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="current-year">Current Year</SelectItem>
+              <SelectItem value="last-year">Last Year</SelectItem>
+              <SelectItem value="2-years">2 Years</SelectItem>
+              <SelectItem value="3-years">3 Years</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Governance Dashboard */}

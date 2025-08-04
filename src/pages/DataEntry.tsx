@@ -444,7 +444,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.taxes}
                               onChange={(e) => handleInputChange("taxes", e.target.value)}
-                              className="text-right w-32 ml-auto border border-border focus:border-primary"
+                              className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -577,7 +577,7 @@ export default function DataEntry() {
                                   placeholder="0"
                                   value={formData.cash}
                                   onChange={(e) => handleInputChange("cash", e.target.value)}
-                                  className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                                  className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                                 />
                               </TableCell>
                             </TableRow>
@@ -590,7 +590,7 @@ export default function DataEntry() {
                                   placeholder="0"
                                   value={formData.accountsReceivable}
                                   onChange={(e) => handleInputChange("accountsReceivable", e.target.value)}
-                                  className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                                  className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                                 />
                               </TableCell>
                             </TableRow>
@@ -603,7 +603,7 @@ export default function DataEntry() {
                                   placeholder="0"
                                   value={formData.inventory}
                                   onChange={(e) => handleInputChange("inventory", e.target.value)}
-                                  className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                                  className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                                 />
                               </TableCell>
                             </TableRow>
@@ -616,7 +616,7 @@ export default function DataEntry() {
                                   placeholder="0"
                                   value={formData.otherCurrentAssets}
                                   onChange={(e) => handleInputChange("otherCurrentAssets", e.target.value)}
-                                  className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                                  className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                                 />
                               </TableCell>
                             </TableRow>
@@ -629,7 +629,7 @@ export default function DataEntry() {
                                   placeholder="0"
                                   value={formData.ppe}
                                   onChange={(e) => handleInputChange("ppe", e.target.value)}
-                                  className="text-right w-32 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                                  className="text-right w-32 ml-auto border-2 border-gray-300 focus:border-primary"
                                 />
                               </TableCell>
                             </TableRow>
@@ -1811,7 +1811,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.inventoryPercent}
                               onChange={(e) => handleInputChange("inventoryPercent", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -1832,7 +1832,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.otherCurrentAssetsPercent}
                               onChange={(e) => handleInputChange("otherCurrentAssetsPercent", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -1853,7 +1853,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.accountsPayablePercent}
                               onChange={(e) => handleInputChange("accountsPayablePercent", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -1907,7 +1907,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.january}
                               onChange={(e) => handleInputChange("january", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -1922,7 +1922,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.february}
                               onChange={(e) => handleInputChange("february", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -1937,7 +1937,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.march}
                               onChange={(e) => handleInputChange("march", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -1952,7 +1952,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.april}
                               onChange={(e) => handleInputChange("april", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -1967,7 +1967,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.may}
                               onChange={(e) => handleInputChange("may", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -1982,7 +1982,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.june}
                               onChange={(e) => handleInputChange("june", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -1997,7 +1997,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.july}
                               onChange={(e) => handleInputChange("july", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -2012,7 +2012,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.august}
                               onChange={(e) => handleInputChange("august", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -2027,7 +2027,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.september}
                               onChange={(e) => handleInputChange("september", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -2042,7 +2042,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.october}
                               onChange={(e) => handleInputChange("october", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -2057,7 +2057,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.november}
                               onChange={(e) => handleInputChange("november", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -2072,7 +2072,7 @@ export default function DataEntry() {
                               placeholder="0"
                               value={formData.december}
                               onChange={(e) => handleInputChange("december", e.target.value)}
-                              className="text-right w-24 ml-auto border-0 focus:ring-0 focus:border-0 shadow-none bg-transparent"
+                              className="text-right w-24 ml-auto border-2 border-gray-300 focus:border-primary"
                             />
                           </TableCell>
                         </TableRow>
@@ -2164,27 +2164,9 @@ export default function DataEntry() {
                 <Download className="h-4 w-4" />
                 Export Data
               </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start gap-2">
-                <Upload className="h-4 w-4" />
-                Import Template
-              </Button>
             </CardContent>
           </Card>
 
-          {/* Help Card */}
-          <Card className="shadow-card">
-            <CardHeader>
-              <CardTitle className="text-lg">Need Help?</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="text-sm text-muted-foreground">
-                Having trouble with data entry? Contact our support team for assistance.
-              </p>
-              <Button variant="outline" size="sm" className="w-full">
-                Contact Support
-              </Button>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
