@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuthStore } from '@/stores/authStore';
 import { securityService } from '@/services/security/SecurityService';
-import { supabase } from '@/integrations/supabase/client';
+import { httpClient } from '@/services/http/client';
 import { AlertTriangle, Shield, Clock, Users, Activity } from 'lucide-react';
 
 interface SecurityEvent {
@@ -50,54 +50,50 @@ export function SecurityDashboard() {
     try {
       setLoading(true);
 
-      // Load security events from Supabase
-      const { data: eventsData, error: eventsError } = await supabase
-        .from('security_events')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      if (eventsError) {
-        console.error('Error loading security events:', eventsError);
-      } else {
-        // Cast the data to match our interface
-        setEvents((eventsData || []) as SecurityEvent[]);
-      }
+      // Load security events via SecurityService (API layer)
+      const eventsData = await securityService.getSecurityEvents();
+      // Map the API response to match our interface
+      const mappedEvents = eventsData.map(event => ({
+        id: event.id,
+        user_id: event.userId || '',
+        event_type: event.eventType || '',
+        severity: event.severity || 'low',
+        ip_address: event.ipAddress || 'unknown',
+        user_agent: event.userAgent || 'unknown',
+        details: event.details || {},
+        created_at: event.timestamp || new Date().toISOString(),
+      }));
+      setEvents(mappedEvents);
 
       // Calculate metrics
       const totalEvents = eventsData?.length || 0;
       const criticalEvents = eventsData?.filter(e => e.severity === 'critical').length || 0;
 
-      // Load active sessions
-      const { data: sessionsData, error: sessionsError } = await supabase
-        .from('user_sessions')
-        .select('*')
-        .eq('is_active', true);
+      // Load active sessions via API
+      try {
+        const response = await httpClient.get('/security-management/session-management?action=count_active');
+        const activeSessions = response.data?.count || 0;
 
-      if (sessionsError) {
-        console.error('Error loading sessions:', sessionsError);
+        // Load blocked attempts from rate limits via API
+        const rateLimitResponse = await httpClient.get('/security-management/rate-limit?action=count_blocked');
+        const blockedAttempts = rateLimitResponse.data?.count || 0;
+
+        setMetrics({
+          totalEvents,
+          criticalEvents,
+          activeSessions,
+          blockedAttempts,
+        });
+      } catch (error) {
+        console.error('Error loading session/rate limit data:', error);
+        // Use default values if API calls fail
+        setMetrics({
+          totalEvents,
+          criticalEvents,
+          activeSessions: 0,
+          blockedAttempts: 0,
+        });
       }
-
-      const activeSessions = sessionsData?.length || 0;
-
-      // Load blocked attempts from rate limits
-      const { data: rateLimitsData, error: rateLimitsError } = await supabase
-        .from('rate_limits')
-        .select('*')
-        .not('blocked_until', 'is', null);
-
-      if (rateLimitsError) {
-        console.error('Error loading rate limits:', rateLimitsError);
-      }
-
-      const blockedAttempts = rateLimitsData?.length || 0;
-
-      setMetrics({
-        totalEvents,
-        criticalEvents,
-        activeSessions,
-        blockedAttempts,
-      });
 
     } catch (error) {
       console.error('Error loading security data:', error);
@@ -124,16 +120,14 @@ export function SecurityDashboard() {
 
   const handleCleanupExpiredSessions = async () => {
     try {
-      // Call the security management edge function
-      const { data, error } = await supabase.functions.invoke('security-management', {
-        body: { action: 'cleanup' }
-      });
+      // Call the security management API for cleanup
+      const response = await httpClient.post('/security-management/cleanup');
 
-      if (error) {
-        console.error('Error cleaning up sessions:', error);
-      } else {
-        console.log('Cleanup completed:', data);
+      if (response.success) {
+        console.log('Cleanup completed:', response.data);
         await loadSecurityData(); // Refresh data
+      } else {
+        console.error('Error cleaning up sessions:', response.error);
       }
     } catch (error) {
       console.error('Error during cleanup:', error);

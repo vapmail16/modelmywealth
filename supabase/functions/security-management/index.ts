@@ -95,7 +95,25 @@ serve(async (req) => {
         break;
 
       case 'rate-limit':
-        if (method === 'POST') {
+        if (method === 'GET') {
+          const action = url.searchParams.get('action');
+          
+          if (action === 'count_blocked') {
+            const { data, error } = await supabaseClient
+              .from('rate_limits')
+              .select('id', { count: 'exact' })
+              .not('blocked_until', 'is', null);
+
+            if (error) {
+              throw error;
+            }
+
+            return new Response(
+              JSON.stringify({ success: true, data: { count: data?.length || 0 } }),
+              { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+        } else if (method === 'POST') {
           const { identifier, limit_type, max_attempts, window_ms } = await req.json();
           
           const windowStart = new Date(Date.now() - window_ms);
@@ -207,7 +225,25 @@ serve(async (req) => {
         break;
 
       case 'session-management':
-        if (method === 'POST') {
+        if (method === 'GET') {
+          const action = url.searchParams.get('action');
+          
+          if (action === 'count_active') {
+            const { data, error } = await supabaseClient
+              .from('user_sessions')
+              .select('id', { count: 'exact' })
+              .eq('is_active', true);
+
+            if (error) {
+              throw error;
+            }
+
+            return new Response(
+              JSON.stringify({ success: true, data: { count: data?.length || 0 } }),
+              { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+        } else if (method === 'POST') {
           const { action, user_id, session_token } = await req.json();
 
           switch (action) {

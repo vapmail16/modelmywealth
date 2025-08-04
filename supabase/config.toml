@@ -1,1 +1,32 @@
 project_id = "vmrvugezqpydlfjcoldl"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[functions.user-management]
+verify_jwt = true
+
+[functions.security-management]
+verify_jwt = true
+
+[functions.companies]
+verify_jwt = true
+
+[functions.projects]
+verify_jwt = true
+
+[functions.check-subscription]
+verify_jwt = true
+
+[functions.create-checkout]
+verify_jwt = false
+
+[functions.create-payment]
+verify_jwt = false
+
+[functions.customer-portal]
+verify_jwt = true

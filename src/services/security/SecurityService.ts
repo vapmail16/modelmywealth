@@ -1,4 +1,4 @@
-import { supabase } from '@/integrations/supabase/client';
+import { httpClient } from '@/services/http/client';
 import type { SecurityEvent, SessionInfo, SecurityEventType, SecurityConfig } from '@/types/security';
 
 class SecurityService {
@@ -37,26 +37,13 @@ class SecurityService {
       isActive: true,
     };
 
-    // Store session info (you'd implement this in your database)
+    // Store session info locally for immediate access
     localStorage.setItem(`session_${userId}`, JSON.stringify(sessionInfo));
+    
+    // Create session via API
+    await this.createSession(userId, `session_${Date.now()}`);
+    
     this.startSessionTimeout(userId);
-  }
-
-  async invalidateSession(userId: string, sessionId?: string): Promise<void> {
-    if (sessionId) {
-      localStorage.removeItem(`session_${userId}_${sessionId}`);
-    } else {
-      // Invalidate all sessions for user
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith(`session_${userId}`)) {
-          localStorage.removeItem(key);
-        }
-      });
-    }
-
-    await this.logSecurityEvent(userId, 'logout', 'low', {
-      reason: sessionId ? 'specific_session' : 'all_sessions',
-    });
   }
 
   private startSessionTimeout(userId: string): void {
@@ -79,7 +66,8 @@ class SecurityService {
       timeoutDuration: this.config.sessionTimeout,
     });
 
-    // Force logout
+    // Force logout - only auth operations are allowed direct Supabase access
+    const { supabase } = await import('@/integrations/supabase/client');
     await supabase.auth.signOut();
     
     // Clear session data
@@ -103,8 +91,25 @@ class SecurityService {
     }
   }
 
-  // Rate Limiting
+  // Rate Limiting - uses API layer
   async checkRateLimit(type: 'login' | 'api', identifier: string): Promise<boolean> {
+    try {
+      const config = this.config.rateLimits[type];
+      const response = await httpClient.post('/security-management/rate-limit', {
+        identifier,
+        limit_type: type,
+        max_attempts: config.maxAttempts,
+        window_ms: config.windowMs,
+      });
+
+      return response.data?.success && !response.data?.blocked;
+    } catch (error) {
+      console.error('Rate limit check failed, falling back to local check:', error);
+      return this.checkRateLimitLocally(type, identifier);
+    }
+  }
+
+  private checkRateLimitLocally(type: 'login' | 'api', identifier: string): boolean {
     const config = this.config.rateLimits[type];
     const key = `rateLimit_${type}_${identifier}`;
     const now = Date.now();
@@ -132,8 +137,30 @@ class SecurityService {
     return true; // Not rate limited
   }
 
-  // Security Event Logging
+  // Security Event Logging - uses API layer
   async logSecurityEvent(
+    userId: string,
+    eventType: SecurityEventType,
+    severity: SecurityEvent['severity'],
+    details?: Record<string, any>
+  ): Promise<void> {
+    try {
+      await httpClient.post('/security-management/log-event', {
+        user_id: userId,
+        event_type: eventType,
+        severity,
+        ip_address: await this.getClientIP(),
+        user_agent: navigator.userAgent,
+        details,
+      });
+    } catch (error) {
+      // Fallback to local storage if API call fails
+      console.error('Failed to log security event to API, storing locally:', error);
+      this.logSecurityEventLocally(userId, eventType, severity, details);
+    }
+  }
+
+  private async logSecurityEventLocally(
     userId: string,
     eventType: SecurityEventType,
     severity: SecurityEvent['severity'],
@@ -153,7 +180,7 @@ class SecurityService {
     // Log to console for development
     console.log(`🛡️ Security Event [${severity.toUpperCase()}]:`, event);
 
-    // Store in localStorage for demo (in production, send to server)
+    // Store in localStorage for demo
     const events = JSON.parse(localStorage.getItem('security_events') || '[]');
     events.push(event);
     
@@ -171,14 +198,54 @@ class SecurityService {
   }
 
   private handleCriticalSecurityEvent(event: SecurityEvent): void {
-    // In production, this would trigger real-time alerts
     console.error('🚨 CRITICAL SECURITY EVENT:', event);
-    
-    // Could trigger immediate actions like:
-    // - Force logout all sessions
-    // - Send email alerts
-    // - Block IP address
-    // - Require password reset
+  }
+
+  // Session management methods - use API layer
+  async createSession(userId: string, sessionToken: string): Promise<void> {
+    try {
+      await httpClient.post('/security-management/session-management', {
+        action: 'create',
+        user_id: userId,
+        session_token: sessionToken,
+      });
+    } catch (error) {
+      console.error('Failed to create session via API:', error);
+    }
+  }
+
+  async invalidateSession(userId: string, sessionId?: string): Promise<void> {
+    try {
+      if (sessionId) {
+        await httpClient.post('/security-management/session-management', {
+          action: 'invalidate',
+          user_id: userId,
+          session_token: sessionId,
+        });
+      } else {
+        await httpClient.post('/security-management/session-management', {
+          action: 'invalidate_all',
+          user_id: userId,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to invalidate session via API:', error);
+    }
+
+    // Also clear local session data
+    if (sessionId) {
+      localStorage.removeItem(`session_${userId}_${sessionId}`);
+    } else {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith(`session_${userId}`)) {
+          localStorage.removeItem(key);
+        }
+      });
+    }
+
+    await this.logSecurityEvent(userId, 'logout', 'low', {
+      reason: sessionId ? 'specific_session' : 'all_sessions',
+    });
   }
 
   // Password Policy Validation
@@ -223,10 +290,20 @@ class SecurityService {
     }
   }
 
-  // Get security events for monitoring
-  getSecurityEvents(userId?: string): SecurityEvent[] {
-    const events = JSON.parse(localStorage.getItem('security_events') || '[]');
-    return userId ? events.filter((e: SecurityEvent) => e.userId === userId) : events;
+  // Get security events for monitoring - uses API layer
+  async getSecurityEvents(userId?: string): Promise<SecurityEvent[]> {
+    try {
+      const params = new URLSearchParams();
+      if (userId) params.append('user_id', userId);
+      params.append('limit', '100');
+
+      const response = await httpClient.get(`/security-management/security-events?${params.toString()}`);
+      return response.data || [];
+    } catch (error) {
+      console.error('Failed to fetch security events from API, falling back to local storage:', error);
+      const events = JSON.parse(localStorage.getItem('security_events') || '[]');
+      return userId ? events.filter((e: SecurityEvent) => e.userId === userId) : events;
+    }
   }
 
   // Update security configuration
