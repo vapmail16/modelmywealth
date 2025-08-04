@@ -195,28 +195,41 @@ class AuthService {
   }
 
   async getUserCapabilities(userId: string): Promise<Capability[]> {
-    const { data, error } = await supabase
+    // Get user roles first
+    const { data: userRoles, error: rolesError } = await supabase
       .from('user_roles')
-      .select(`
-        role,
-        user_type,
-        role_capabilities!inner(capability)
-      `)
+      .select('role, user_type')
       .eq('user_id', userId);
 
-    if (error) {
-      throw new Error(`Failed to fetch capabilities: ${error.message}`);
+    if (rolesError) {
+      throw new Error(`Failed to fetch user roles: ${rolesError.message}`);
     }
 
-    const capabilities = new Set<Capability>();
-    
-    data?.forEach((userRole: any) => {
-      userRole.role_capabilities?.forEach((rc: any) => {
-        capabilities.add(rc.capability);
-      });
-    });
+    if (!userRoles || userRoles.length === 0) {
+      return [];
+    }
 
-    return Array.from(capabilities);
+    // Get capabilities for each role separately
+    const allCapabilities = new Set<Capability>();
+    
+    for (const userRole of userRoles) {
+      const { data: roleCapabilities, error: capError } = await supabase
+        .from('role_capabilities')
+        .select('capability')
+        .eq('role', userRole.role)
+        .eq('user_type', userRole.user_type);
+
+      if (capError) {
+        console.error('Error fetching capabilities for role:', capError);
+        continue;
+      }
+
+      roleCapabilities?.forEach((rc: any) => {
+        allCapabilities.add(rc.capability);
+      });
+    }
+
+    return Array.from(allCapabilities);
   }
 
   async hasCapability(capability: Capability): Promise<boolean> {
