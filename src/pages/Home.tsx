@@ -107,51 +107,131 @@ export function Home() {
         {/* Hero Section */}
         <section className="relative py-24 px-4 overflow-hidden">
           {/* Background decoration */}
-          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-          <div className="absolute top-20 right-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 left-20 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5"></div>
+          <div className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-r from-blue-500/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-violet-500/10 to-indigo-500/10 rounded-full blur-3xl"></div>
           
-          <div className="container mx-auto text-center relative">
-            <Badge variant="secondary" className="mb-6 px-4 py-2 text-sm font-medium animate-fade-in">
-              <Star className="w-4 h-4 mr-2 text-primary" />
-              Trusted by 10,000+ teams worldwide
-            </Badge>
-            
-            <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-primary via-primary/90 to-accent bg-clip-text text-transparent animate-fade-in">
-              Financial Analytics
-              <br />
-              <span className="text-4xl md:text-6xl">Made Simple</span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in">
-              Transform your financial data into actionable insights with our comprehensive 
-              analytics platform. Built for teams, secured for enterprises.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 animate-fade-in">
-              <Button 
-                size="lg" 
-                onClick={() => navigate('/auth')}
-                className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-lg px-8 py-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-              >
-                Start Free Trial
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                onClick={() => navigate('/pricing')}
-                className="text-lg px-8 py-6 border-2 hover:bg-muted/50 transition-all duration-300"
-              >
-                View Pricing
-              </Button>
+          <div className="container mx-auto relative">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left Column - Text Content */}
+              <div className="text-center lg:text-left">
+                <Badge variant="secondary" className="mb-6 px-4 py-2 text-sm font-medium animate-fade-in bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+                  <Star className="w-4 h-4 mr-2 text-blue-600" />
+                  Trusted by 10,000+ teams worldwide
+                </Badge>
+                
+                <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent animate-fade-in leading-tight">
+                  Financial Analytics
+                  <br />
+                  <span className="text-4xl md:text-6xl bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    Made Simple
+                  </span>
+                </h1>
+                
+                <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed animate-fade-in">
+                  Transform your financial data into actionable insights with our comprehensive 
+                  analytics platform. <span className="text-blue-600 font-semibold">Built for teams</span>, 
+                  <span className="text-emerald-600 font-semibold"> secured for enterprises</span>.
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12 animate-fade-in">
+                  <Button 
+                    size="lg" 
+                    onClick={() => navigate('/auth')}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                  >
+                    Start Free Trial
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    onClick={() => navigate('/pricing')}
+                    className="text-lg px-8 py-6 border-2 border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
+                  >
+                    View Pricing
+                  </Button>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-2 gap-6 max-w-md mx-auto lg:mx-0 animate-fade-in">
+                  {stats.slice(0, 2).map((stat, index) => (
+                    <div key={index} className="text-center lg:text-left">
+                      <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent mb-1">
+                        {stat.value}
+                      </div>
+                      <div className="text-sm text-muted-foreground">{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Column - Hero Image */}
+              <div className="relative animate-fade-in">
+                {/* Decorative elements */}
+                <div className="absolute -top-4 -right-4 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-full blur-2xl"></div>
+                <div className="absolute -bottom-4 -left-4 w-80 h-80 bg-gradient-to-tr from-emerald-400/20 to-blue-500/20 rounded-full blur-2xl"></div>
+                
+                {/* Main image container */}
+                <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
+                  <img 
+                    src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&h=400&fit=crop&crop=center"
+                    alt="Financial Analytics Dashboard on MacBook"
+                    className="w-full h-80 object-cover"
+                  />
+                  {/* Overlay with analytics visualization */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="bg-white/90 backdrop-blur rounded-lg p-4 shadow-lg">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-semibold text-gray-800">Live Analytics</h3>
+                        <Badge className="bg-green-100 text-green-800 border-green-200">
+                          <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></div>
+                          Real-time
+                        </Badge>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600">Revenue Growth</span>
+                          <span className="text-sm font-semibold text-emerald-600">+23.4%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="bg-gradient-to-r from-emerald-500 to-blue-500 h-2 rounded-full w-3/4 animate-pulse"></div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600">Data Points</span>
+                          <span className="text-sm font-semibold text-blue-600">1.2M</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating cards */}
+                <div className="absolute -top-8 -left-8 bg-white rounded-lg shadow-lg p-3 border border-blue-100">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                    <span className="text-xs font-medium text-gray-700">98% Uptime</span>
+                  </div>
+                </div>
+                
+                <div className="absolute -bottom-8 -right-8 bg-white rounded-lg shadow-lg p-3 border border-emerald-100">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                    <span className="text-xs font-medium text-gray-700">Bank-grade Security</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto animate-fade-in">
+            {/* Bottom Stats Row */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto mt-20 animate-fade-in">
               {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-3xl md:text-4xl font-bold text-primary mb-2">{stat.value}</div>
+                <div key={index} className="text-center p-4 bg-white/50 backdrop-blur rounded-lg border border-white/20 shadow-sm">
+                  <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent mb-2">
+                    {stat.value}
+                  </div>
                   <div className="text-sm text-muted-foreground">{stat.label}</div>
                 </div>
               ))}
@@ -160,14 +240,16 @@ export function Home() {
         </section>
 
         {/* Features Grid */}
-        <section className="py-24 px-4 bg-muted/30">
+        <section className="py-24 px-4 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-emerald-50/50">
           <div className="container mx-auto">
             <div className="text-center mb-16">
-              <Badge variant="outline" className="mb-4">
+              <Badge variant="outline" className="mb-4 border-blue-200 text-blue-700">
                 <Zap className="w-4 h-4 mr-2" />
                 Powerful Features
               </Badge>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">Everything You Need</h2>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent">
+                Everything You Need
+              </h2>
               <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
                 From data collection to insights generation, our platform provides all the tools 
                 your team needs for successful financial analysis
@@ -178,11 +260,11 @@ export function Home() {
               {features.map((feature, index) => (
                 <Card 
                   key={index} 
-                  className="border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:scale-105 bg-background/50 backdrop-blur"
+                  className="border-border/50 hover:border-blue-300 transition-all duration-300 hover:shadow-xl hover:scale-105 bg-white/80 backdrop-blur group"
                 >
                   <CardHeader className="pb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg flex items-center justify-center mb-4">
-                      <feature.icon className="w-6 h-6 text-primary" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 group-hover:from-blue-200 group-hover:to-purple-200 rounded-lg flex items-center justify-center mb-4 transition-all duration-300">
+                      <feature.icon className="w-6 h-6 text-blue-600 group-hover:text-purple-600 transition-colors duration-300" />
                     </div>
                     <CardTitle className="text-xl">{feature.title}</CardTitle>
                   </CardHeader>
@@ -202,11 +284,11 @@ export function Home() {
           <div className="container mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <Badge variant="secondary" className="mb-4">
+                <Badge variant="secondary" className="mb-4 bg-gradient-to-r from-emerald-50 to-blue-50 border-emerald-200 text-emerald-700">
                   <CheckCircle className="w-4 h-4 mr-2" />
                   Why Choose Us
                 </Badge>
-                <h2 className="text-4xl font-bold mb-6">
+                <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
                   Built for Modern Finance Teams
                 </h2>
                 <p className="text-lg text-muted-foreground mb-8">
@@ -217,7 +299,7 @@ export function Home() {
                 <div className="space-y-4">
                   {benefits.map((benefit, index) => (
                     <div key={index} className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-primary shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
                       <span className="text-base">{benefit}</span>
                     </div>
                   ))}
@@ -225,23 +307,23 @@ export function Home() {
               </div>
               
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 rounded-2xl blur-3xl"></div>
-                <Card className="relative bg-background/80 backdrop-blur border-primary/20 shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-emerald-400/20 rounded-2xl blur-3xl"></div>
+                <Card className="relative bg-white/90 backdrop-blur border-blue-200 shadow-2xl">
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
-                      <BarChart3 className="w-6 h-6 text-primary" />
+                      <BarChart3 className="w-6 h-6 text-blue-600" />
                       <span>Analytics Dashboard</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      <div className="h-4 bg-gradient-to-r from-primary/30 to-primary/10 rounded"></div>
-                      <div className="h-4 bg-gradient-to-r from-accent/30 to-accent/10 rounded w-3/4"></div>
-                      <div className="h-4 bg-gradient-to-r from-muted-foreground/30 to-muted-foreground/10 rounded w-1/2"></div>
+                      <div className="h-4 bg-gradient-to-r from-blue-400/50 to-blue-300/30 rounded animate-pulse"></div>
+                      <div className="h-4 bg-gradient-to-r from-emerald-400/50 to-emerald-300/30 rounded w-3/4 animate-pulse delay-300"></div>
+                      <div className="h-4 bg-gradient-to-r from-purple-400/50 to-purple-300/30 rounded w-1/2 animate-pulse delay-700"></div>
                       <div className="grid grid-cols-3 gap-4 pt-4">
-                        <div className="h-16 bg-gradient-to-t from-primary/20 to-primary/5 rounded"></div>
-                        <div className="h-20 bg-gradient-to-t from-accent/20 to-accent/5 rounded"></div>
-                        <div className="h-12 bg-gradient-to-t from-muted-foreground/20 to-muted-foreground/5 rounded"></div>
+                        <div className="h-16 bg-gradient-to-t from-blue-400/30 to-blue-200/10 rounded animate-pulse"></div>
+                        <div className="h-20 bg-gradient-to-t from-emerald-400/30 to-emerald-200/10 rounded animate-pulse delay-300"></div>
+                        <div className="h-12 bg-gradient-to-t from-purple-400/30 to-purple-200/10 rounded animate-pulse delay-700"></div>
                       </div>
                     </div>
                   </CardContent>
@@ -252,9 +334,11 @@ export function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 px-4 bg-gradient-to-r from-primary/5 via-background to-accent/5">
+        <section className="py-24 px-4 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-emerald-600/10">
           <div className="container mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Transform Your Analytics?</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent">
+              Ready to Transform Your Analytics?
+            </h2>
             <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
               Join thousands of teams already using our platform to make better financial decisions
             </p>
@@ -262,7 +346,7 @@ export function Home() {
               <Button 
                 size="lg" 
                 onClick={() => navigate('/auth')}
-                className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-lg px-8 py-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
               >
                 Start Your Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -271,7 +355,7 @@ export function Home() {
                 size="lg" 
                 variant="outline" 
                 onClick={() => navigate('/pricing')}
-                className="text-lg px-8 py-6 border-2 hover:bg-muted/50 transition-all duration-300"
+                className="text-lg px-8 py-6 border-2 border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
               >
                 View Pricing Plans
               </Button>
