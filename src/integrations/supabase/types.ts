@@ -82,6 +82,36 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          updated_at: string
+          user_id: string
+          user_type: Database["public"]["Enums"]["user_type"]
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          updated_at?: string
+          user_id: string
+          user_type: Database["public"]["Enums"]["user_type"]
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+          user_type?: Database["public"]["Enums"]["user_type"]
+        }
+        Relationships: []
+      }
       projects: {
         Row: {
           company_id: string
@@ -126,15 +156,81 @@ export type Database = {
           },
         ]
       }
+      role_capabilities: {
+        Row: {
+          capability: Database["public"]["Enums"]["capability"]
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_type: Database["public"]["Enums"]["user_type"]
+        }
+        Insert: {
+          capability: Database["public"]["Enums"]["capability"]
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_type: Database["public"]["Enums"]["user_type"]
+        }
+        Update: {
+          capability?: Database["public"]["Enums"]["capability"]
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_type?: Database["public"]["Enums"]["user_type"]
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+          user_type: Database["public"]["Enums"]["user_type"]
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+          user_type: Database["public"]["Enums"]["user_type"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+          user_type?: Database["public"]["Enums"]["user_type"]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      user_has_capability: {
+        Args: {
+          _user_id: string
+          _capability: Database["public"]["Enums"]["capability"]
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user" | "analyst"
+      capability:
+        | "manage_users"
+        | "manage_roles"
+        | "view_analytics"
+        | "create_reports"
+        | "manage_companies"
+        | "manage_projects"
+        | "view_financial_data"
+        | "edit_financial_data"
+        | "export_data"
+        | "system_settings"
+      user_type: "tech" | "business"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -261,6 +357,21 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user", "analyst"],
+      capability: [
+        "manage_users",
+        "manage_roles",
+        "view_analytics",
+        "create_reports",
+        "manage_companies",
+        "manage_projects",
+        "view_financial_data",
+        "edit_financial_data",
+        "export_data",
+        "system_settings",
+      ],
+      user_type: ["tech", "business"],
+    },
   },
 } as const

@@ -8,6 +8,8 @@ export { validationService, ValidationService } from './api/ValidationService';
 export { mockDataService, MockDataService } from './api/MockDataService';
 export { companyService, CompanyService } from './api/CompanyService';
 export { projectService, ProjectService } from './api/ProjectService';
+export { authService, AuthService } from './api/AuthService';
+export { userManagementService, UserManagementService } from './api/UserManagementService';
 
 // HTTP client
 export { httpClient, HttpClient } from './http/client';

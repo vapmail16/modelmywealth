@@ -3,7 +3,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { useAuthStore } from "@/stores/authStore";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
+import { Home } from "./pages/Home";
+import { Auth } from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import DataEntry from "./pages/DataEntry";
 import Analytics from "./pages/Analytics";
@@ -27,40 +31,50 @@ import CompanyProjectSelection from "./pages/CompanyProjectSelection";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/companies" element={<CompanyProjectSelection />} />
-          <Route path="/" element={<DashboardLayout />}>
-            <Route index element={<CompanyProjectSelection />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="data-entry" element={<DataEntry />} />
-            <Route path="analytics" element={<SpecificCharts />} />
-            <Route path="reports" element={<Reports />} />
-            <Route path="debt-analysis" element={<DebtAnalysis />} />
-            <Route path="cash-flow" element={<CashFlow />} />
-            <Route path="kpi" element={<KpiDashboard />} />
-            <Route path="covenant-testing" element={<CovenantTesting />} />
-            <Route path="governance" element={<Governance />} />
-            <Route path="introduction" element={<Introduction />} />
-            <Route path="charts" element={<SpecificCharts />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="help" element={<Help />} />
-            <Route path="collaboration" element={<TeamCollaboration />} />
-            <Route path="collaboration/invite" element={<InviteMembers />} />
-            <Route path="benchmarking" element={<PeerBenchmarking />} />
-            <Route path="benchmarking/industry" element={<IndustryAnalysis />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  const { initialize } = useAuthStore();
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/companies" element={<CompanyProjectSelection />} />
+            <Route path="/app" element={<DashboardLayout />}>
+              <Route index element={<CompanyProjectSelection />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="data-entry" element={<DataEntry />} />
+              <Route path="analytics" element={<SpecificCharts />} />
+              <Route path="reports" element={<Reports />} />
+              <Route path="debt-analysis" element={<DebtAnalysis />} />
+              <Route path="cash-flow" element={<CashFlow />} />
+              <Route path="kpi" element={<KpiDashboard />} />
+              <Route path="covenant-testing" element={<CovenantTesting />} />
+              <Route path="governance" element={<Governance />} />
+              <Route path="introduction" element={<Introduction />} />
+              <Route path="charts" element={<SpecificCharts />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="help" element={<Help />} />
+              <Route path="collaboration" element={<TeamCollaboration />} />
+              <Route path="collaboration/invite" element={<InviteMembers />} />
+              <Route path="benchmarking" element={<PeerBenchmarking />} />
+              <Route path="benchmarking/industry" element={<IndustryAnalysis />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
