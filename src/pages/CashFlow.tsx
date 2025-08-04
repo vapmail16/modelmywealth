@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Download, RefreshCw, TrendingUp, TrendingDown, DollarSign, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,9 +21,20 @@ export default function CashFlow() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [timeFilter, setTimeFilter] = useState<string>("3"); // Default to 3 months
   
   const data = mockDataService.generateMockData();
-  const currentData = data[data.length - 1]; // Latest year data
+  
+  // Filter data based on selected time period
+  const getFilteredData = () => {
+    const months = parseInt(timeFilter);
+    const totalPeriods = data.length;
+    const periodsToShow = Math.min(months, totalPeriods);
+    return data.slice(-periodsToShow);
+  };
+  
+  const filteredData = getFilteredData();
+  const currentData = filteredData[filteredData.length - 1]; // Latest period data
 
   // Handle refresh
   const handleRefresh = async () => {
@@ -121,8 +133,23 @@ export default function CashFlow() {
           <p className="text-muted-foreground mt-1">
             Cash generation, liquidity, and working capital management
           </p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Data is by default of last 3 months
+          </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 items-center">
+          <Select value={timeFilter} onValueChange={setTimeFilter}>
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder="Time Period" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="3">3 months</SelectItem>
+              <SelectItem value="6">6 months</SelectItem>
+              <SelectItem value="12">12 months</SelectItem>
+              <SelectItem value="24">24 months</SelectItem>
+              <SelectItem value="36">36 months</SelectItem>
+            </SelectContent>
+          </Select>
           <Button 
             variant="outline" 
             className="gap-2"
@@ -179,7 +206,7 @@ export default function CashFlow() {
             <CardTitle className="text-lg">Cash, PPE & Equity Trends</CardTitle>
           </CardHeader>
           <CardContent>
-            <CashPpeEquityChart data={data} />
+            <CashPpeEquityChart data={filteredData} />
           </CardContent>
         </Card>
 
@@ -188,7 +215,7 @@ export default function CashFlow() {
             <CardTitle className="text-lg">Working Capital Cycle</CardTitle>
           </CardHeader>
           <CardContent>
-            <ArInventoryCycleChart data={data} />
+            <ArInventoryCycleChart data={filteredData} />
           </CardContent>
         </Card>
       </div>
