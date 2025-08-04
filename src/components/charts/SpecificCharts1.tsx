@@ -1,4 +1,4 @@
-import React from 'react';
+import { ChartDataPoint, TooltipFormatterProps } from '@/types/common';
 import {
   LineChart,
   Line,
@@ -14,7 +14,7 @@ import {
 } from 'recharts';
 
 // Chart 1: Debt to EBITDA & DSCR (Dual-line chart)
-export const DebtToEbitdaDscrChart = ({ data }: { data: any[] }) => {
+export const DebtToEbitdaDscrChart = ({ data }: { data: ChartDataPoint[] }) => {
   return (
     <div className="bg-blue-50 p-4 rounded-lg" style={{ width: '6in', height: '2.5in' }}>
       <h3 className="text-sm font-semibold mb-2 text-gray-800">Debt to EBITDA & DSCR</h3>
@@ -75,7 +75,7 @@ export const DebtToEbitdaDscrChart = ({ data }: { data: any[] }) => {
 };
 
 // Chart 2: LTV and Interest Coverage Ratio
-export const LtvInterestCoverageChart = ({ data }: { data: any[] }) => {
+export const LtvInterestCoverageChart = ({ data }: { data: ChartDataPoint[] }) => {
   return (
     <div className="bg-blue-50 p-4 rounded-lg" style={{ width: '6in', height: '2.5in' }}>
       <h3 className="text-sm font-semibold mb-2 text-gray-800">LTV and Interest Coverage Ratio</h3>
@@ -136,7 +136,7 @@ export const LtvInterestCoverageChart = ({ data }: { data: any[] }) => {
 };
 
 // Chart 3: Debt to Equity Ratio & Operating Margin
-export const DebtEquityOperatingMarginChart = ({ data }: { data: any[] }) => {
+export const DebtEquityOperatingMarginChart = ({ data }: { data: ChartDataPoint[] }) => {
   return (
     <div className="bg-blue-50 p-4 rounded-lg" style={{ width: '6in', height: '2.5in' }}>
       <h3 className="text-sm font-semibold mb-2 text-gray-800">Debt to Equity Ratio & Operating Margin</h3>
@@ -168,7 +168,7 @@ export const DebtEquityOperatingMarginChart = ({ data }: { data: any[] }) => {
               borderRadius: '6px',
               fontSize: '10px'
             }}
-            formatter={(value: any, name: string) => [
+            formatter={(value: number, name: string) => [
               name === 'operatingMargin' ? `${(value * 100).toFixed(1)}%` : value.toFixed(2),
               name === 'operatingMargin' ? 'Operating Margin' : 'Debt/Equity'
             ]}
@@ -201,7 +201,7 @@ export const DebtEquityOperatingMarginChart = ({ data }: { data: any[] }) => {
 };
 
 // Chart 4: Revenue and EBITDA Bar Chart
-export const RevenueEbitdaChart = ({ data }: { data: any[] }) => {
+export const RevenueEbitdaChart = ({ data }: { data: ChartDataPoint[] }) => {
   return (
     <div className="bg-blue-50 p-4 rounded-lg" style={{ width: '6in', height: '2.5in' }}>
       <h3 className="text-sm font-semibold mb-2 text-gray-800">Revenue and EBITDA</h3>
@@ -225,7 +225,7 @@ export const RevenueEbitdaChart = ({ data }: { data: any[] }) => {
               borderRadius: '6px',
               fontSize: '10px'
             }}
-            formatter={(value: any) => [`$${(value / 1000000).toFixed(1)}M`, '']}
+            formatter={(value: number) => [`$${(value / 1000000).toFixed(1)}M`, '']}
           />
           <Legend 
             wrapperStyle={{ fontSize: '6px', paddingTop: '10px' }}
@@ -249,7 +249,7 @@ export const RevenueEbitdaChart = ({ data }: { data: any[] }) => {
 };
 
 // Chart 5: Outstanding Debt Balance and Interest Paid
-export const DebtBalanceInterestChart = ({ data }: { data: any[] }) => {
+export const DebtBalanceInterestChart = ({ data }: { data: ChartDataPoint[] }) => {
   return (
     <div className="bg-blue-50 p-4 rounded-lg" style={{ width: '6in', height: '2.5in' }}>
       <h3 className="text-sm font-semibold mb-2 text-gray-800">Outstanding Debt Balance and Interest Paid</h3>
@@ -281,7 +281,7 @@ export const DebtBalanceInterestChart = ({ data }: { data: any[] }) => {
               borderRadius: '6px',
               fontSize: '10px'
             }}
-            formatter={(value: any) => [`$${(value / 1000000).toFixed(1)}M`, '']}
+            formatter={(value: number) => [`$${(value / 1000000).toFixed(1)}M`, '']}
           />
           <Legend 
             wrapperStyle={{ fontSize: '6px', paddingTop: '10px' }}
@@ -319,7 +319,7 @@ export const DebtBalanceInterestChart = ({ data }: { data: any[] }) => {
 };
 
 // Chart 6: Cash, PPE and Total Equity Balance
-export const CashPpeEquityChart = ({ data }: { data: any[] }) => {
+export const CashPpeEquityChart = ({ data }: { data: ChartDataPoint[] }) => {
   return (
     <div className="bg-blue-50 p-4 rounded-lg" style={{ width: '6in', height: '2.5in' }}>
       <h3 className="text-sm font-semibold mb-2 text-gray-800">Cash, PPE and Total Equity Balance</h3>
@@ -351,7 +351,7 @@ export const CashPpeEquityChart = ({ data }: { data: any[] }) => {
               borderRadius: '6px',
               fontSize: '10px'
             }}
-            formatter={(value: any) => [`$${(value / 1000000).toFixed(1)}M`, '']}
+            formatter={(value: number) => [`$${(value / 1000000).toFixed(1)}M`, '']}
           />
           <Legend 
             wrapperStyle={{ fontSize: '6px', paddingTop: '10px' }}
