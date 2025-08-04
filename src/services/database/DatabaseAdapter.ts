@@ -4,16 +4,30 @@ import type { Database } from '@/integrations/supabase/types';
 export type DatabaseTable = string;
 export type DatabaseFunction = string;
 
+export interface DatabaseQueryOptions {
+  select?: string;
+  where?: Record<string, unknown>;
+  orderBy?: { column: string; ascending: boolean };
+  limit?: number;
+  single?: boolean;
+}
+
+export interface DatabaseError {
+  code?: string;
+  message: string;
+  details?: unknown;
+}
+
 export interface DatabaseAdapter {
-  select<T = any>(table: DatabaseTable, query?: any): Promise<{ data: T[] | null; error: any }>;
-  insert<T = any>(table: DatabaseTable, data: any): Promise<{ data: T | null; error: any }>;
-  update<T = any>(table: DatabaseTable, data: any, match?: any): Promise<{ data: T | null; error: any }>;
-  delete(table: DatabaseTable, match: any): Promise<{ error: any }>;
-  rpc<T = any>(fn: string, params?: any): Promise<{ data: T | null; error: any }>;
+  select<T = unknown>(table: DatabaseTable, query?: DatabaseQueryOptions): Promise<{ data: T[] | null; error: DatabaseError | null }>;
+  insert<T = unknown>(table: DatabaseTable, data: Record<string, unknown>): Promise<{ data: T | null; error: DatabaseError | null }>;
+  update<T = unknown>(table: DatabaseTable, data: Record<string, unknown>, match?: Record<string, unknown>): Promise<{ data: T | null; error: DatabaseError | null }>;
+  delete(table: DatabaseTable, match: Record<string, unknown>): Promise<{ error: DatabaseError | null }>;
+  rpc<T = unknown>(fn: string, params?: Record<string, unknown>): Promise<{ data: T | null; error: DatabaseError | null }>;
 }
 
 class SupabaseAdapter implements DatabaseAdapter {
-  async select<T = any>(table: DatabaseTable, query?: any): Promise<{ data: T[] | null; error: any }> {
+  async select<T = unknown>(table: DatabaseTable, query?: DatabaseQueryOptions): Promise<{ data: T[] | null; error: DatabaseError | null }> {
     try {
       let queryBuilder = (supabase as any).from(table).select(query?.select || '*');
       
@@ -31,27 +45,39 @@ class SupabaseAdapter implements DatabaseAdapter {
         queryBuilder = queryBuilder.limit(query.limit);
       }
       
-      if (query?.order) {
-        queryBuilder = queryBuilder.order(query.order.column, { ascending: query.order.ascending });
+      if (query?.orderBy) {
+        queryBuilder = queryBuilder.order(query.orderBy.column, { ascending: query.orderBy.ascending });
       }
       
       const result = await queryBuilder;
-      return { data: result.data as T[], error: result.error };
+      return { 
+        data: result.data as T[], 
+        error: result.error ? { message: result.error.message, code: result.error.code, details: result.error } : null 
+      };
     } catch (error) {
-      return { data: null, error };
+      return { 
+        data: null, 
+        error: { message: error instanceof Error ? error.message : 'Unknown error', details: error } 
+      };
     }
   }
 
-  async insert<T = any>(table: DatabaseTable, data: any): Promise<{ data: T | null; error: any }> {
+  async insert<T = unknown>(table: DatabaseTable, data: Record<string, unknown>): Promise<{ data: T | null; error: DatabaseError | null }> {
     try {
       const result = await (supabase as any).from(table).insert(data).select().single();
-      return { data: result.data as T, error: result.error };
+      return { 
+        data: result.data as T, 
+        error: result.error ? { message: result.error.message, code: result.error.code, details: result.error } : null 
+      };
     } catch (error) {
-      return { data: null, error };
+      return { 
+        data: null, 
+        error: { message: error instanceof Error ? error.message : 'Unknown error', details: error } 
+      };
     }
   }
 
-  async update<T = any>(table: DatabaseTable, data: any, match?: any): Promise<{ data: T | null; error: any }> {
+  async update<T = unknown>(table: DatabaseTable, data: Record<string, unknown>, match?: Record<string, unknown>): Promise<{ data: T | null; error: DatabaseError | null }> {
     try {
       let queryBuilder = (supabase as any).from(table).update(data);
       
@@ -62,13 +88,19 @@ class SupabaseAdapter implements DatabaseAdapter {
       }
       
       const result = await queryBuilder.select().single();
-      return { data: result.data as T, error: result.error };
+      return { 
+        data: result.data as T, 
+        error: result.error ? { message: result.error.message, code: result.error.code, details: result.error } : null 
+      };
     } catch (error) {
-      return { data: null, error };
+      return { 
+        data: null, 
+        error: { message: error instanceof Error ? error.message : 'Unknown error', details: error } 
+      };
     }
   }
 
-  async delete(table: DatabaseTable, match: any): Promise<{ error: any }> {
+  async delete(table: DatabaseTable, match: Record<string, unknown>): Promise<{ error: DatabaseError | null }> {
     try {
       let queryBuilder = (supabase as any).from(table).delete();
       
@@ -77,18 +109,28 @@ class SupabaseAdapter implements DatabaseAdapter {
       });
       
       const result = await queryBuilder;
-      return { error: result.error };
+      return { 
+        error: result.error ? { message: result.error.message, code: result.error.code, details: result.error } : null 
+      };
     } catch (error) {
-      return { error };
+      return { 
+        error: { message: error instanceof Error ? error.message : 'Unknown error', details: error } 
+      };
     }
   }
 
-  async rpc<T = any>(fn: string, params?: any): Promise<{ data: T | null; error: any }> {
+  async rpc<T = unknown>(fn: string, params?: Record<string, unknown>): Promise<{ data: T | null; error: DatabaseError | null }> {
     try {
       const result = await (supabase as any).rpc(fn, params);
-      return { data: result.data as T, error: result.error };
+      return { 
+        data: result.data as T, 
+        error: result.error ? { message: result.error.message, code: result.error.code, details: result.error } : null 
+      };
     } catch (error) {
-      return { data: null, error };
+      return { 
+        data: null, 
+        error: { message: error instanceof Error ? error.message : 'Unknown error', details: error } 
+      };
     }
   }
 }

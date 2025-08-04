@@ -1,4 +1,6 @@
+import { logger } from '@/services/logging/LoggingService';
 import { Bell, User, Settings, Search } from "lucide-react";
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -22,7 +24,7 @@ export function Header() {
       await logout();
       navigate('/');
     } catch (error) {
-      console.error('Logout failed:', error);
+      logger.error('Logout failed', { error: error instanceof Error ? error.message : 'Unknown error' }, 'Header');
     }
   };
 

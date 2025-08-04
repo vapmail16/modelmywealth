@@ -28,13 +28,17 @@ class ConfigService {
   private loadConfig(): AppConfig {
     const isDevelopment = import.meta.env.DEV;
     
+    // Use environment variables with fallbacks
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://vmrvugezqpydlfjcoldl.supabase.co";
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtcnZ1Z2V6cXB5ZGxmamNvbGRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTgxNTEsImV4cCI6MjA2OTM5NDE1MX0.gG3F0SxaIoCZoM5FhjB4YfrHwQkVBj9BpK94ldl_gBE";
+    
     return {
       supabase: {
-        url: "https://vmrvugezqpydlfjcoldl.supabase.co",
-        anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtcnZ1Z2V6cXB5ZGxmamNvbGRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTgxNTEsImV4cCI6MjA2OTM5NDE1MX0.gG3F0SxaIoCZoM5FhjB4YfrHwQkVBj9BpK94ldl_gBE",
+        url: supabaseUrl,
+        anonKey: supabaseAnonKey,
       },
       api: {
-        baseURL: `https://vmrvugezqpydlfjcoldl.supabase.co/functions/v1`,
+        baseURL: `${supabaseUrl}/functions/v1`,
         timeout: 30000,
         retryAttempts: 3,
         enableCache: true,

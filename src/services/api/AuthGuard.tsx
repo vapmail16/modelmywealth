@@ -1,3 +1,4 @@
+import { logger } from '@/services/logging/LoggingService';
 import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '@/stores/authStore';
 import { AuthErrorBoundary } from '@/components/ErrorBoundary';
@@ -23,7 +24,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
       try {
         await initialize();
       } catch (error) {
-        console.error('Auth initialization failed:', error);
+        logger.error('Auth initialization failed', { error: error instanceof Error ? error.message : 'Unknown error' }, 'AuthGuard');
       } finally {
         setIsInitialized(true);
       }
