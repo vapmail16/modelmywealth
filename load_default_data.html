@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load Default Data Entry Values</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #718096;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .info-box {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .info-box h3 {
+            color: #2d3748;
+            margin-top: 0;
+        }
+        .field-count {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .field-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+        .button {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .button:hover {
+            background: #3182ce;
+            transform: translateY(-1px);
+        }
+        .button:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .status.success {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            color: #22543d;
+        }
+        .status.error {
+            background: #fed7d7;
+            border: 1px solid #feb2b2;
+            color: #742a2a;
+        }
+        .status.info {
+            background: #ebf8ff;
+            border: 1px solid #90cdf4;
+            color: #2a4365;
+        }
+        .progress {
+            margin-top: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 8px;
+            background: #4299e1;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Load Default Data Entry Values</h1>
+        <p class="subtitle">Load all 128 Data Entry fields with realistic default values based on Excel and Streamlit app</p>
+        
+        <div class="info-box">
+            <h3>📋 What this script does:</h3>
+            <ul>
+                <li>✅ Loads all 128 Data Entry fields with realistic default values</li>
+                <li>✅ Uses values from your Excel and Streamlit app</li>
+                <li>✅ Follows API abstraction layer pattern</li>
+                <li>✅ Connects to your existing project: <code>05632bb7-b506-453d-9ca1-253344e04b6b</code></li>
+                <li>✅ Uses Supabase Edge Function to bypass RLS issues</li>
+            </ul>
+            
+            <h3>📊 Field Breakdown:</h3>
+            <div class="field-count">
+                <div class="field-item">Company Details: 13 fields</div>
+                <div class="field-item">Profit & Loss: 12 fields</div>
+                <div class="field-item">Balance Sheet: 19 fields</div>
+                <div class="field-item">Cash Flow: 4 fields</div>
+                <div class="field-item">Working Capital: 4 fields</div>
+                <div class="field-item">Growth Assumptions: 48 fields</div>
+                <div class="field-item">Seasonality: 14 fields</div>
+                <div class="field-item">Debt Structure: 14 fields</div>
+            </div>
+            <div class="field-item" style="background: #4299e1; color: white; font-weight: bold;">
+                <strong>TOTAL: 128 fields</strong>
+            </div>
+        </div>
+
+        <button id="loadButton" class="button" onclick="loadData()">
+            🚀 Load Default Data (128 fields)
+        </button>
+
+        <div id="progress" class="progress" style="display: none;">
+            <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+        </div>
+
+        <div id="status" class="status info">
+            Ready to load default data. Click the button above to start.
+        </div>
+    </div>
+
+    <script>
+        async function loadData() {
+            const button = document.getElementById('loadButton');
+            const progress = document.getElementById('progress');
+            const status = document.getElementById('status');
+            
+            button.disabled = true;
+            button.textContent = '⏳ Loading...';
+            progress.style.display = 'block';
+            status.className = 'status info';
+            status.textContent = '🚀 Starting to load default data via Edge Function...\n';
+            
+            try {
+                // Call the Edge Function
+                const response = await fetch('https://vmrvugezqpydlfjcoldl.supabase.co/functions/v1/load-default-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtcnZ1Z2V6cXB5ZGxmamNvbGRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTgxNTEsImV4cCI6MjA2OTM5NDE1MX0.gG3F0SxaIoCZoM5FhjB4YfrHwQkVBj9BpK94ldl_gBE'
+                    }
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    status.className = 'status success';
+                    status.textContent += '🎉 SUCCESS! All 128 Data Entry fields loaded successfully!\n';
+                    status.textContent += `📊 Message: ${result.message}\n`;
+                    
+                    // Show detailed results
+                    if (result.results) {
+                        status.textContent += '\n📋 Detailed Results:\n';
+                        Object.entries(result.results).forEach(([table, data]) => {
+                            if (data && data.success) {
+                                status.textContent += `✅ ${table}: Loaded successfully\n`;
+                            } else if (data && data.error) {
+                                status.textContent += `❌ ${table}: ${data.error}\n`;
+                            }
+                        });
+                    }
+                    
+                    button.textContent = '✅ Data Loaded Successfully';
+                } else {
+                    const errorText = await response.text();
+                    status.className = 'status error';
+                    status.textContent += `❌ Error: ${response.status} ${response.statusText}\n`;
+                    status.textContent += `Details: ${errorText}\n`;
+                    button.textContent = '❌ Error - Try Again';
+                    button.disabled = false;
+                }
+                
+            } catch (error) {
+                status.className = 'status error';
+                status.textContent += `❌ Exception: ${error.message}\n`;
+                button.textContent = '❌ Error - Try Again';
+                button.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html> 

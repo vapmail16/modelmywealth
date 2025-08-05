@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Connection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Database Connection Test</h1>
+    
+    <div class="test-section">
+        <h3>Test 1: Check if tables exist</h3>
+        <button onclick="testTablesExist()">Test Tables</button>
+        <div id="tables-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 2: Test Debt Calculations API</h3>
+        <button onclick="testDebtCalculations()">Test Debt API</button>
+        <div id="debt-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 3: Test Depreciation API</h3>
+        <button onclick="testDepreciationSchedule()">Test Depreciation API</button>
+        <div id="depreciation-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 4: Create Sample Data</h3>
+        <button onclick="createSampleData()">Create Sample Data</button>
+        <div id="sample-result"></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://vmrvugezqpydlfjcoldl.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtcnZ1Z2V6cXB5ZGxmamNvbGRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTgxNTEsImV4cCI6MjA2OTM5NDE1MX0.gG3F0SxaIoCZoM5FhjB4YfrHwQkVBj9BpK94ldl_gBE';
+        
+        // Use the actual project ID from your database
+        const ACTUAL_PROJECT_ID = '05632bb7-b506-453d-9ca1-253344e04b6';
+
+        async function testTablesExist() {
+            const resultDiv = document.getElementById('tables-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                // Test if we can query the tables
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/debt_calculations?select=count`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = '<div class="success">✅ debt_calculations table exists and is accessible</div>';
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ debt_calculations table error: ${response.status} ${response.statusText}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error testing tables: ${error.message}</div>`;
+            }
+        }
+
+        async function testDebtCalculations() {
+            const resultDiv = document.getElementById('debt-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/debt-calculations/${ACTUAL_PROJECT_ID}/senior_secured`, {
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                
+                const data = await response.json();
+                resultDiv.innerHTML = `<div class="success">✅ Debt calculations API working</div><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Debt calculations API error: ${error.message}</div>`;
+            }
+        }
+
+        async function testDepreciationSchedule() {
+            const resultDiv = document.getElementById('depreciation-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/depreciation-schedule/${ACTUAL_PROJECT_ID}`, {
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                
+                const data = await response.json();
+                resultDiv.innerHTML = `<div class="success">✅ Depreciation schedule API working</div><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Depreciation schedule API error: ${error.message}</div>`;
+            }
+        }
+
+        async function createSampleData() {
+            const resultDiv = document.getElementById('sample-result');
+            resultDiv.innerHTML = 'Creating sample data...';
+            
+            try {
+                // Create a sample debt calculation
+                        const sampleDebtData = {
+            projectId: ACTUAL_PROJECT_ID,
+            debtType: 'senior_secured',
+                    schedule: [
+                        {
+                            monthCum: 1,
+                            year: 1,
+                            month: 'January',
+                            openingBalance: 12000,
+                            additionalLoan: 60000,
+                            amortisation: 0,
+                            interest: 420,
+                            repayment: 0,
+                            closingBalance: 72420
+                        }
+                    ]
+                };
+
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/debt-calculations`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(sampleDebtData)
+                });
+                
+                const data = await response.json();
+                resultDiv.innerHTML = `<div class="success">✅ Sample data created successfully</div><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error creating sample data: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html> 

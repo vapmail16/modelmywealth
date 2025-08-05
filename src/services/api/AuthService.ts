@@ -16,14 +16,28 @@ import type {
 class AuthService {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      const response = await httpClient.post('/auth/login', credentials);
+      const response = await httpClient.post('/auth', credentials);
       
+      console.log('AuthService: Raw response from Edge Function:', response);
+      
+      // The Edge Function returns { success: true, data: { user, session } }
       if (!response.success || !response.data) {
+        console.log('AuthService: Login failed - response structure:', { success: response.success, hasData: !!response.data, error: response.error });
         throw new Error(response.error?.message || 'Login failed');
       }
 
       const { user, session } = response.data;
       logger.info('User logged in successfully', { userId: user.id }, 'AuthService');
+      
+      // Store the session token in localStorage for the HTTP client
+      if (session?.access_token) {
+        const tokenData = {
+          access_token: session.access_token,
+          refresh_token: session.refresh_token,
+          expires_at: session.expires_at,
+        };
+        localStorage.setItem('sb-vmrvugezqpydlfjcoldl-auth-token', JSON.stringify(tokenData));
+      }
       
       return { user, session };
     } catch (error: any) {
@@ -95,6 +109,9 @@ class AuthService {
     if (error) {
       throw new Error(error.message);
     }
+    
+    // Clear the stored token
+    localStorage.removeItem('sb-vmrvugezqpydlfjcoldl-auth-token');
   }
 
   async getCurrentUser(): Promise<AuthUser | null> {

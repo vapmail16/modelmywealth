@@ -132,17 +132,20 @@ export class ProjectService {
 
   async getUserProjects(): Promise<ProjectsListResponse> {
     try {
+      console.log('ProjectService: Making request to:', this.baseUrl);
       const response: ApiResponse<ProjectWithCompany[]> = await httpClient.get(this.baseUrl);
+      console.log('ProjectService: Response received:', response);
 
       if (!response.success || response.error) {
         const errorMessage = response.error?.message || 'Failed to fetch user projects';
-        console.error('Failed to fetch user projects:', response.error);
+        console.error('ProjectService: Failed to fetch user projects:', response.error);
         return { success: false, error: errorMessage };
       }
 
+      console.log('ProjectService: Projects loaded successfully:', response.data?.length || 0);
       return { success: true, data: response.data || [] };
     } catch (error) {
-      console.error('Service error fetching user projects:', error);
+      console.error('ProjectService: Error fetching user projects:', error);
       return { success: false, error: 'Failed to fetch user projects' };
     }
   }

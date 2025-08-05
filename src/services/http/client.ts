@@ -34,6 +34,9 @@ class HttpClient {
         const token = this.getAuthToken();
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
+        } else {
+          // For requests without auth token (like login), use anon key
+          config.headers.Authorization = `Bearer ${this.getAnonKey()}`;
         }
 
         // Add request ID for tracking
@@ -129,6 +132,10 @@ class HttpClient {
     }
     
     return null;
+  }
+
+  private getAnonKey(): string {
+    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtcnZ1Z2V6cXB5ZGxmamNvbGRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTgxNTEsImV4cCI6MjA2OTM5NDE1MX0.gG3F0SxaIoCZoM5FhjB4YfrHwQkVBj9BpK94ldl_gBE';
   }
 
   private generateRequestId(): string {

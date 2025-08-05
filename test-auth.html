@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Test</title>
+</head>
+<body>
+    <h1>Auth Function Test</h1>
+    <button onclick="testAuth()">Test Auth Function</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAuth() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('https://vmrvugezqpydlfjcoldl.supabase.co/functions/v1/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-request-id': 'test-' + Date.now(),
+                        'x-request-time': new Date().toISOString()
+                    },
+                    body: JSON.stringify({
+                        email: 'vapmail16@gmail.com',
+                        password: 'password123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <h3>Response Status: ${response.status}</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h3>Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 

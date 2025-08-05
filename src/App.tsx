@@ -32,6 +32,8 @@ import PeerBenchmarking from "./pages/PeerBenchmarking";
 import IndustryAnalysis from "./pages/IndustryAnalysis";
 import CompanyProjectSelection from "./pages/CompanyProjectSelection";
 import { SecurityDashboard } from "./components/security/SecurityDashboard";
+import SupabaseConnectionTest from "./components/SupabaseConnectionTest";
+import CalculationEngine from "./pages/CalculationEngine";
 
 const queryClient = new QueryClient();
 
@@ -77,6 +79,8 @@ const App = () => {
               <Route path="benchmarking" element={<PeerBenchmarking />} />
               <Route path="benchmarking/industry" element={<IndustryAnalysis />} />
               <Route path="security" element={<SecurityDashboard />} />
+              <Route path="test-supabase" element={<SupabaseConnectionTest />} />
+              <Route path="calculation-engine" element={<CalculationEngine />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

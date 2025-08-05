@@ -1,10 +1,12 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Save, Download } from "lucide-react";
+import { useProjectStore } from "@/stores/projectStore";
+import { SupabaseDataService } from "@/services/api/SupabaseDataService";
 
 // Import form components
 import CompanyDetailsForm from "@/components/data-entry/CompanyDetailsForm";
@@ -173,16 +175,201 @@ const initialFormData: DataEntryFormData = {
 
 export default function DataEntry() {
   const { toast } = useToast();
+  const { selectedProject } = useProjectStore();
   const [currentStep, setCurrentStep] = useState("company-details");
   const [formData, setFormData] = useState<DataEntryFormData>(initialFormData);
+  const [isLoading, setIsLoading] = useState(false);
+
+  console.log('DataEntry: Component rendered, selectedProject:', selectedProject);
 
   const updateFormData = (data: Partial<DataEntryFormData>) => {
     setFormData(prev => ({ ...prev, ...data }));
   };
 
+  // Load existing data when a project is selected
+  useEffect(() => {
+    console.log('DataEntry: selectedProject changed:', selectedProject);
+    if (selectedProject?.id) {
+      console.log('DataEntry: Loading data for project ID:', selectedProject.id);
+      console.log('DataEntry: About to call loadProjectData...');
+      loadProjectData(selectedProject.id);
+      console.log('DataEntry: loadProjectData called successfully');
+    } else {
+      console.log('DataEntry: No selectedProject.id found');
+    }
+  }, [selectedProject?.id]);
+
+  const loadProjectData = async (projectId: string) => {
+    console.log('DataEntry: loadProjectData called with projectId:', projectId);
+    setIsLoading(true);
+    try {
+      console.log('Loading data for project:', projectId);
+      
+      const projectData = await SupabaseDataService.loadProjectData(projectId);
+      console.log('Project data loaded:', projectData);
+      
+      if (projectData) {
+        // Map the loaded data to form fields
+        const mappedData: Partial<DataEntryFormData> = {};
+        
+        // Company Details - Use dedicated company_details table
+        if (projectData.companyDetailsData) {
+          mappedData.company_name = projectData.companyDetailsData.company_name || '';
+          mappedData.industry = projectData.companyDetailsData.industry || '';
+          mappedData.region = projectData.companyDetailsData.region || '';
+          mappedData.country = projectData.companyDetailsData.country || '';
+          mappedData.employee_count = projectData.companyDetailsData.employee_count || '';
+          mappedData.founded = projectData.companyDetailsData.founded || '';
+          mappedData.company_website = projectData.companyDetailsData.company_website || '';
+          mappedData.business_case = projectData.companyDetailsData.business_case || '';
+          mappedData.notes = projectData.companyDetailsData.notes || '';
+          mappedData.projection_start_month = projectData.companyDetailsData.projection_start_month || '';
+          mappedData.projection_start_year = projectData.companyDetailsData.projection_start_year || '';
+          mappedData.projections_year = projectData.companyDetailsData.projections_year || '';
+          mappedData.reporting_currency = projectData.companyDetailsData.reporting_currency || 'USD';
+        }
+        
+        // Profit & Loss Data
+        if (projectData.profitLossData) {
+          mappedData.revenue = projectData.profitLossData.revenue?.toString() || '';
+          mappedData.cogs = projectData.profitLossData.cogs?.toString() || '';
+          mappedData.gross_profit = projectData.profitLossData.gross_profit?.toString() || '';
+          mappedData.operating_expenses = projectData.profitLossData.operating_expenses?.toString() || '';
+          mappedData.ebitda = projectData.profitLossData.ebitda?.toString() || '';
+          mappedData.depreciation = projectData.profitLossData.depreciation?.toString() || '';
+          mappedData.ebit = projectData.profitLossData.ebit?.toString() || '';
+          mappedData.interest_expense = projectData.profitLossData.interest_expense?.toString() || '';
+          mappedData.pretax_income = projectData.profitLossData.pretax_income?.toString() || '';
+          mappedData.tax_rates = projectData.profitLossData.tax_rates?.toString() || '';
+          mappedData.taxes = projectData.profitLossData.taxes?.toString() || '';
+          mappedData.net_income = projectData.profitLossData.net_income?.toString() || '';
+        }
+        
+        // Balance Sheet Data
+        if (projectData.balanceSheetData) {
+          mappedData.cash = projectData.balanceSheetData.cash?.toString() || '';
+          mappedData.accounts_receivable = projectData.balanceSheetData.accounts_receivable?.toString() || '';
+          mappedData.inventory = projectData.balanceSheetData.inventory?.toString() || '';
+          mappedData.other_current_assets = projectData.balanceSheetData.other_current_assets?.toString() || '';
+          mappedData.ppe = projectData.balanceSheetData.ppe?.toString() || '';
+          mappedData.other_assets = projectData.balanceSheetData.other_assets?.toString() || '';
+          mappedData.total_assets = projectData.balanceSheetData.total_assets?.toString() || '';
+          mappedData.accounts_payable_provisions = projectData.balanceSheetData.accounts_payable_provisions?.toString() || '';
+          mappedData.short_term_debt = projectData.balanceSheetData.short_term_debt?.toString() || '';
+          mappedData.other_long_term_debt = projectData.balanceSheetData.other_long_term_debt?.toString() || '';
+          mappedData.senior_secured = projectData.balanceSheetData.senior_secured?.toString() || '';
+          mappedData.debt_tranche1 = projectData.balanceSheetData.debt_tranche1?.toString() || '';
+          mappedData.retained_earnings = projectData.balanceSheetData.retained_earnings?.toString() || '';
+          mappedData.equity = projectData.balanceSheetData.equity?.toString() || '';
+          mappedData.total_liabilities_and_equity = projectData.balanceSheetData.total_liabilities_and_equity?.toString() || '';
+          mappedData.capital_expenditure_additions = projectData.balanceSheetData.capital_expenditure_additions?.toString() || '';
+          mappedData.asset_depreciated_over_years = projectData.balanceSheetData.asset_depreciated_over_years?.toString() || '';
+          mappedData.additional_capex_planned_next_year = projectData.balanceSheetData.additional_capex_planned_next_year?.toString() || '';
+          mappedData.asset_depreciated_over_years_new = projectData.balanceSheetData.asset_depreciated_over_years_new?.toString() || '';
+        }
+        
+        // Debt Structure Data
+        if (projectData.debtStructureData) {
+          mappedData.senior_secured_loan_type = projectData.debtStructureData.senior_secured_loan_type || '';
+          mappedData.additional_loan_senior_secured = projectData.debtStructureData.additional_loan_senior_secured?.toString() || '';
+          mappedData.bank_base_rate_senior_secured = projectData.debtStructureData.bank_base_rate_senior_secured?.toString() || '';
+          mappedData.liquidity_premiums_senior_secured = projectData.debtStructureData.liquidity_premiums_senior_secured?.toString() || '';
+          mappedData.credit_risk_premiums_senior_secured = projectData.debtStructureData.credit_risk_premiums_senior_secured?.toString() || '';
+          mappedData.maturity_y_senior_secured = projectData.debtStructureData.maturity_y_senior_secured?.toString() || '';
+          mappedData.amortization_y_senior_secured = projectData.debtStructureData.amortization_y_senior_secured?.toString() || '';
+          mappedData.short_term_loan_type = projectData.debtStructureData.short_term_loan_type || '';
+          mappedData.additional_loan_short_term = projectData.debtStructureData.additional_loan_short_term?.toString() || '';
+          mappedData.bank_base_rate_short_term = projectData.debtStructureData.bank_base_rate_short_term?.toString() || '';
+          mappedData.liquidity_premiums_short_term = projectData.debtStructureData.liquidity_premiums_short_term?.toString() || '';
+          mappedData.credit_risk_premiums_short_term = projectData.debtStructureData.credit_risk_premiums_short_term?.toString() || '';
+          mappedData.maturity_y_short_term = projectData.debtStructureData.maturity_y_short_term?.toString() || '';
+          mappedData.amortization_y_short_term = projectData.debtStructureData.amortization_y_short_term?.toString() || '';
+        }
+        
+        // Working Capital Data
+        if (projectData.workingCapitalData) {
+          mappedData.account_receivable_percent = projectData.workingCapitalData.account_receivable_percent?.toString() || '';
+          mappedData.inventory_percent = projectData.workingCapitalData.inventory_percent?.toString() || '';
+          mappedData.other_current_assets_percent = projectData.workingCapitalData.other_current_assets_percent?.toString() || '';
+          mappedData.accounts_payable_percent = projectData.workingCapitalData.accounts_payable_percent?.toString() || '';
+        }
+        
+        // Growth Assumptions Data
+        if (projectData.growthAssumptionsData) {
+          // Map all growth rate fields
+          for (let i = 1; i <= 12; i++) {
+            mappedData[`gr_revenue_${i}` as keyof DataEntryFormData] = projectData.growthAssumptionsData[`gr_revenue_${i}`]?.toString() || '';
+            mappedData[`gr_cost_${i}` as keyof DataEntryFormData] = projectData.growthAssumptionsData[`gr_cost_${i}`]?.toString() || '';
+            mappedData[`gr_cost_oper_${i}` as keyof DataEntryFormData] = projectData.growthAssumptionsData[`gr_cost_oper_${i}`]?.toString() || '';
+            mappedData[`gr_capex_${i}` as keyof DataEntryFormData] = projectData.growthAssumptionsData[`gr_capex_${i}`]?.toString() || '';
+          }
+        }
+        
+        // Seasonality Data
+        if (projectData.seasonalityData) {
+          mappedData.january = projectData.seasonalityData.january?.toString() || '';
+          mappedData.february = projectData.seasonalityData.february?.toString() || '';
+          mappedData.march = projectData.seasonalityData.march?.toString() || '';
+          mappedData.april = projectData.seasonalityData.april?.toString() || '';
+          mappedData.may = projectData.seasonalityData.may?.toString() || '';
+          mappedData.june = projectData.seasonalityData.june?.toString() || '';
+          mappedData.july = projectData.seasonalityData.july?.toString() || '';
+          mappedData.august = projectData.seasonalityData.august?.toString() || '';
+          mappedData.september = projectData.seasonalityData.september?.toString() || '';
+          mappedData.october = projectData.seasonalityData.october?.toString() || '';
+          mappedData.november = projectData.seasonalityData.november?.toString() || '';
+          mappedData.december = projectData.seasonalityData.december?.toString() || '';
+          mappedData.seasonal_working_capital = projectData.seasonalityData.seasonal_working_capital?.toString() || '';
+          mappedData.seasonality_pattern = projectData.seasonalityData.seasonality_pattern || '';
+        }
+        
+        // Cash Flow Data - Use dedicated cash_flow_data table
+        if (projectData.cashFlowData) {
+          mappedData.operating_cash_flow = projectData.cashFlowData.operating_cash_flow?.toString() || '';
+          mappedData.capital_expenditures = projectData.cashFlowData.capital_expenditures?.toString() || '';
+          mappedData.free_cash_flow = projectData.cashFlowData.free_cash_flow?.toString() || '';
+          mappedData.debt_service = projectData.cashFlowData.debt_service?.toString() || '';
+        }
+        
+        console.log('Loaded project data:', mappedData);
+        setFormData(prev => {
+          const newFormData = { ...prev, ...mappedData };
+          console.log('DataEntry: Updated formData:', newFormData);
+          return newFormData;
+        });
+        
+        toast({
+          title: "Data Loaded",
+          description: `Loaded existing data for project: ${selectedProject?.name}`,
+        });
+      }
+    } catch (error) {
+      console.error('Error loading project data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load project data. Starting with empty form.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const calculateProgress = (): { completed: number; total: number; percentage: number } => {
     const allFields = Object.values(formData);
-    const completed = allFields.filter(field => field && field.trim() !== '').length;
+    
+    // Debug: Log any non-string fields
+    const nonStringFields = allFields.filter((field, index) => field !== null && field !== undefined && typeof field !== 'string');
+    if (nonStringFields.length > 0) {
+      console.warn('DataEntry: Found non-string fields in formData:', nonStringFields);
+    }
+    
+    const completed = allFields.filter(field => {
+      if (field === null || field === undefined) return false;
+      if (typeof field !== 'string') return false;
+      return field.trim() !== '';
+    }).length;
+    
     const total = allFields.length;
     const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
     
@@ -205,6 +392,17 @@ export default function DataEntry() {
 
   const progress = calculateProgress();
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading project data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
       <div className="container mx-auto px-4 py-8">
@@ -213,7 +411,9 @@ export default function DataEntry() {
           <div className="lg:col-span-3 space-y-6">
             <div className="text-center space-y-2">
               <h1 className="text-3xl font-bold text-foreground">Financial Data Entry</h1>
-              <p className="text-muted-foreground">Enter your company's financial information for analysis</p>
+              <p className="text-muted-foreground">
+                {selectedProject ? `Editing data for project: ${selectedProject.name}` : 'Enter your company\'s financial information for analysis'}
+              </p>
             </div>
 
             <Tabs value={currentStep} onValueChange={setCurrentStep} className="w-full">

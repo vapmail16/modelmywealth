@@ -20,6 +20,9 @@ import {
   Building,
   FolderOpen,
   Plus,
+  Calendar,
+  PieChart as PieChartIcon,
+  Target as TargetIcon,
 } from "lucide-react";
 import {
   Sidebar as SidebarPrimitive,
@@ -45,6 +48,7 @@ import { useToast } from "@/hooks/use-toast";
 const mainNavigation = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Data Entry", url: "/dashboard/data-entry", icon: Calculator },
+  { title: "Calculation Engine", url: "/dashboard/calculation-engine", icon: Calculator },
   { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
   { title: "Reports", url: "/dashboard/reports", icon: FileText },
 ];
@@ -97,8 +101,51 @@ export function Sidebar() {
   const [projectType, setProjectType] = useState("analysis");
 
   useEffect(() => {
+    console.log('Sidebar: Loading projects and companies...');
     loadUserProjects();
     loadUserCompanies();
+  }, []);
+
+  // Debug logging
+  useEffect(() => {
+    console.log('Sidebar: Current state:', {
+      userProjects: userProjects.length,
+      selectedProject: selectedProject?.id,
+      selectedCompany: selectedCompany?.id
+    });
+  }, [userProjects, selectedProject, selectedCompany]);
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      const tokenSources = [
+        'sb-vmrvugezqpydlfjcoldl-auth-token',
+        'supabase.auth.token',
+        'auth-token',
+      ];
+
+      let foundToken = false;
+      for (const source of tokenSources) {
+        const stored = localStorage.getItem(source);
+        if (stored) {
+          console.log(`Sidebar: Found token in ${source}:`, stored.substring(0, 50) + '...');
+          foundToken = true;
+          break;
+        }
+      }
+
+      if (!foundToken) {
+        console.log('Sidebar: No authentication token found! User needs to login.');
+        // Show a toast notification to the user
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to access your projects.",
+          variant: "destructive"
+        });
+      }
+    };
+
+    checkAuth();
   }, []);
 
   const isActive = (path: string) => currentPath === path;
@@ -156,31 +203,37 @@ export function Sidebar() {
                 </div>
               )}
               
-              <Select 
-                value={selectedProject?.id || ""} 
-                onValueChange={(value) => {
-                  const project = userProjects.find(p => p.id === value);
-                  if (project) setSelectedProject(project);
-                }}
-              >
-                <SelectTrigger className="h-8 text-xs">
-                  <SelectValue placeholder={state === "collapsed" ? "..." : "Select Project"}>
-                    {selectedProject && (
-                      <div className="flex items-center gap-1">
-                        <FolderOpen className="h-3 w-3" />
-                        {state !== "collapsed" && selectedProject.name}
-                      </div>
-                    )}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  {userProjects.map((project) => (
-                    <SelectItem key={project.id} value={project.id}>
-                      {project.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {userProjects.length > 0 ? (
+                <Select 
+                  value={selectedProject?.id || ""} 
+                  onValueChange={(value) => {
+                    const project = userProjects.find(p => p.id === value);
+                    if (project) setSelectedProject(project);
+                  }}
+                >
+                  <SelectTrigger className="h-8 text-xs">
+                    <SelectValue placeholder={state === "collapsed" ? "..." : "Select Project"}>
+                      {selectedProject && (
+                        <div className="flex items-center gap-1">
+                          <FolderOpen className="h-3 w-3" />
+                          {state !== "collapsed" && selectedProject.name}
+                        </div>
+                      )}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {userProjects.map((project) => (
+                      <SelectItem key={project.id} value={project.id}>
+                        {project.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <div className="text-xs text-muted-foreground p-2 text-center">
+                  {userProjects.length === 0 && "No projects found"}
+                </div>
+              )}
               
               <Dialog open={showProjectDialog} onOpenChange={setShowProjectDialog}>
                 <DialogTrigger asChild>

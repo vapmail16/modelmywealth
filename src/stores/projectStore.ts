@@ -50,15 +50,19 @@ export const useProjectStore = create<ProjectState>()(
       loadUserProjects: async () => {
         set({ isLoadingProjects: true });
         try {
+          console.log('ProjectStore: Loading user projects...');
           const response = await projectService.getUserProjects();
+          console.log('ProjectStore: Response:', response);
+          
           if (response.success && response.data) {
+            console.log('ProjectStore: Projects loaded successfully:', response.data.length);
             set({ userProjects: response.data, isLoadingProjects: false });
           } else {
-            console.error('Failed to load projects:', response.error);
+            console.error('ProjectStore: Failed to load projects:', response.error);
             set({ isLoadingProjects: false });
           }
         } catch (error) {
-          console.error('Error loading projects:', error);
+          console.error('ProjectStore: Error loading projects:', error);
           set({ isLoadingProjects: false });
         }
       },
