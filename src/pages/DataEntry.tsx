@@ -15,145 +15,103 @@ import GrowthProjectionsForm from "@/components/data-entry/GrowthProjectionsForm
 import CovenantForm from "@/components/data-entry/CovenantForm";
 
 interface DataEntryFormData {
-  // Company Info
-  companyName: string;
+  // Company Details (from company_details table)
+  company_name: string;
   industry: string;
-  location: string;
-  fiscalYearEnd: string;
-  employees: string;
-  businessDescription: string;
+  region: string;
+  country: string;
+  employee_count: string;
+  founded: string;
+  company_website: string;
+  business_case: string;
+  notes: string;
+  projection_start_month: string;
+  projection_start_year: string;
+  projections_year: string;
+  reporting_currency: string;
   
-  // Financial Data - P&L
+  // Profit & Loss Data (from profit_loss_data table)
   revenue: string;
   cogs: string;
-  grossProfit: string;
-  operatingExpenses: string;
+  gross_profit: string;
+  operating_expenses: string;
   ebitda: string;
   depreciation: string;
   ebit: string;
-  interestExpense: string;
-  pretaxIncome: string;
-  taxRate: string; // MISSING FIELD 1: Tax Rate
+  interest_expense: string;
+  pretax_income: string;
+  tax_rates: string; // This is the Tax Rate field!
   taxes: string;
-  netIncome: string;
+  net_income: string;
   
-  // Financial Data - Balance Sheet Assets
+  // Balance Sheet Data (from balance_sheet_data table)
   cash: string;
-  accountsReceivable: string;
+  accounts_receivable: string;
   inventory: string;
-  otherCurrentAssets: string;
-  totalCurrentAssets: string;
+  other_current_assets: string;
   ppe: string;
-  intangibleAssets: string;
-  otherAssets: string;
-  totalAssets: string;
+  other_assets: string;
+  total_assets: string;
+  accounts_payable_provisions: string;
+  short_term_debt: string;
+  other_long_term_debt: string;
+  senior_secured: string;
+  debt_tranche1: string;
+  retained_earnings: string;
+  equity: string;
+  total_liabilities_and_equity: string;
+  capital_expenditure_additions: string; // This is Capex!
+  asset_depreciated_over_years: string; // This is Depreciation Years!
+  additional_capex_planned_next_year: string;
+  asset_depreciated_over_years_new: string;
   
-  // Financial Data - Balance Sheet Liabilities
-  accountsPayable: string;
-  accruedLiabilities: string;
-  shortTermDebt: string;
-  otherCurrentLiabilities: string;
-  currentLiabilities: string;
-  longTermDebt: string;
-  otherLiabilities: string;
-  totalLiabilities: string;
+  // Cash Flow Data (from cash_flow_data table)
+  operating_cash_flow: string;
+  capital_expenditures: string;
+  free_cash_flow: string;
+  debt_service: string;
   
-  // Financial Data - Balance Sheet Equity
-  shareCapital: string;
-  retainedEarnings: string;
-  otherEquity: string;
-  totalEquity: string;
+  // Working Capital Data (from working_capital_data table)
+  account_receivable_percent: string; // Working Capital fields!
+  inventory_percent: string;
+  other_current_assets_percent: string;
+  accounts_payable_percent: string;
   
-  // Financial Data - Cash Flow
-  operatingCashFlow: string;
-  investingCashFlow: string;
-  financingCashFlow: string;
-  freeCashFlow: string;
-  capex: string; // MISSING FIELD 2: Capex (already present)
+  // Growth Assumptions Data (from growth_assumptions_data table) - Growth Rates!
+  gr_revenue_1: string; gr_revenue_2: string; gr_revenue_3: string; gr_revenue_4: string; gr_revenue_5: string;
+  gr_revenue_6: string; gr_revenue_7: string; gr_revenue_8: string; gr_revenue_9: string; gr_revenue_10: string;
+  gr_revenue_11: string; gr_revenue_12: string;
+  gr_cost_1: string; gr_cost_2: string; gr_cost_3: string; gr_cost_4: string; gr_cost_5: string;
+  gr_cost_6: string; gr_cost_7: string; gr_cost_8: string; gr_cost_9: string; gr_cost_10: string;
+  gr_cost_11: string; gr_cost_12: string;
+  gr_cost_oper_1: string; gr_cost_oper_2: string; gr_cost_oper_3: string; gr_cost_oper_4: string; gr_cost_oper_5: string;
+  gr_cost_oper_6: string; gr_cost_oper_7: string; gr_cost_oper_8: string; gr_cost_oper_9: string; gr_cost_oper_10: string;
+  gr_cost_oper_11: string; gr_cost_oper_12: string;
+  gr_capex_1: string; gr_capex_2: string; gr_capex_3: string; gr_capex_4: string; gr_capex_5: string;
+  gr_capex_6: string; gr_capex_7: string; gr_capex_8: string; gr_capex_9: string; gr_capex_10: string;
+  gr_capex_11: string; gr_capex_12: string;
   
-  // Capital & Depreciation (MISSING FIELDS)
-  depreciationYears: string; // MISSING FIELD 3: Depreciation Years
-  capexAsPercentOfRevenue: string;
+  // Seasonality Data (from seasonality_data table)
+  january: string; february: string; march: string; april: string; may: string; june: string;
+  july: string; august: string; september: string; october: string; november: string; december: string;
+  seasonal_working_capital: string;
+  seasonality_pattern: string;
   
-  // Working Capital (MISSING FIELD 5)
-  workingCapitalDays: string;
-  workingCapitalAccountsReceivable: string;
-  workingCapitalInventory: string;
-  workingCapitalAccountsPayable: string;
-  
-  // Growth Projections (MISSING FIELD 4: Projections Year Growth Rates)
-  projectionYears: string;
-  revenueGrowthYear1: string;
-  revenueGrowthYear2: string;
-  revenueGrowthYear3: string;
-  revenueGrowthYear4: string;
-  revenueGrowthYear5: string;
-  ebitdaMarginYear1: string;
-  ebitdaMarginYear2: string;
-  ebitdaMarginYear3: string;
-  ebitdaMarginYear4: string;
-  ebitdaMarginYear5: string;
-  
-  // Growth Scenarios
-  baseScenarioName: string;
-  baseScenarioDescription: string;
-  baseScenarioProbability: string;
-  optimisticScenarioName: string;
-  optimisticScenarioDescription: string;
-  optimisticScenarioProbability: string;
-  pessimisticScenarioName: string;
-  pessimisticScenarioDescription: string;
-  pessimisticScenarioProbability: string;
-  
-  // Seasonality
-  january: string;
-  february: string;
-  march: string;
-  april: string;
-  may: string;
-  june: string;
-  july: string;
-  august: string;
-  september: string;
-  october: string;
-  november: string;
-  december: string;
-  seasonalWorkingCapital: string;
-  seasonalityPattern: string;
-  
-  // Debt Structure - Senior Secured
-  seniorSecuredType: string;
-  seniorSecuredPrincipal: string;
-  seniorSecuredOutstanding: string;
-  seniorSecuredInterestRate: string;
-  seniorSecuredBaseRate: string;
-  seniorSecuredSpread: string;
-  seniorSecuredMaturityDate: string;
-  
-  // Debt Structure - Subordinated
-  subordinatedType: string;
-  subordinatedPrincipal: string;
-  subordinatedOutstanding: string;
-  subordinatedInterestRate: string;
-  subordinatedBaseRate: string;
-  subordinatedSpread: string;
-  subordinatedMaturityDate: string;
-  
-  // Debt Structure - Revolving Credit
-  revolvingType: string;
-  revolvingPrincipal: string;
-  revolvingOutstanding: string;
-  revolvingInterestRate: string;
-  revolvingBaseRate: string;
-  revolvingSpread: string;
-  revolvingMaturityDate: string;
-  
-  // Covenants
-  debtToEbitdaThreshold: string;
-  dscrThreshold: string;
-  interestCoverageThreshold: string;
-  liquidityThreshold: string;
-  capexThreshold: string;
+  // Debt Structure Data (from debt_structure_data table)
+  senior_secured_loan_type: string;
+  additional_loan_senior_secured: string;
+  bank_base_rate_senior_secured: string;
+  liquidity_premiums_senior_secured: string;
+  credit_risk_premiums_senior_secured: string;
+  maturity_y_senior_secured: string;
+  amortization_y_senior_secured: string;
+  short_term_loan_type: string;
+  additional_loan_short_term: string;
+  bank_base_rate_short_term: string;
+  liquidity_premiums_short_term: string;
+  credit_risk_premiums_short_term: string;
+  maturity_y_short_term: string;
+  amortization_y_short_term: string;
 }
 
 const initialFormData: DataEntryFormData = {
