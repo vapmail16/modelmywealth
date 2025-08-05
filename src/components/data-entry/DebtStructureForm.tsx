@@ -64,6 +64,9 @@ export default function DebtStructureForm({ data, onChange }: DebtStructureFormP
               <Input
                 id={field.key}
                 type={field.type || "number"}
+                step={field.type === "number" ? "0.01" : undefined}
+                min={field.type === "number" ? "0" : undefined}
+                required={field.key.includes("additional_loan") || field.key.includes("bank_base_rate")}
                 value={data[field.key] as string}
                 onChange={(e) => onChange({ [field.key]: e.target.value })}
                 placeholder={`Enter ${field.label.toLowerCase()}`}

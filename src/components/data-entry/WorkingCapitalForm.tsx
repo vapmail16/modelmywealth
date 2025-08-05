@@ -31,30 +31,32 @@ export default function WorkingCapitalForm({ data, onChange }: WorkingCapitalFor
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="account_receivable_percent">Accounts Receivable (%)</Label>
+            <Label htmlFor="account_receivable_percent">Accounts Receivable (%) *</Label>
             <Input
               id="account_receivable_percent"
               type="number"
               step="0.01"
               min="0"
               max="100"
+              required
               value={data.account_receivable_percent}
               onChange={(e) => onChange({ account_receivable_percent: e.target.value })}
-              placeholder="Accounts receivable as % of revenue"
+              placeholder="Accounts receivable as % of revenue (0-100)"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="inventory_percent">Inventory (%)</Label>
+            <Label htmlFor="inventory_percent">Inventory (%) *</Label>
             <Input
               id="inventory_percent"
               type="number"
               step="0.01"
               min="0"
               max="100"
+              required
               value={data.inventory_percent}
               onChange={(e) => onChange({ inventory_percent: e.target.value })}
-              placeholder="Inventory as % of revenue"
+              placeholder="Inventory as % of revenue (0-100)"
             />
           </div>
           
@@ -68,21 +70,22 @@ export default function WorkingCapitalForm({ data, onChange }: WorkingCapitalFor
               max="100"
               value={data.other_current_assets_percent}
               onChange={(e) => onChange({ other_current_assets_percent: e.target.value })}
-              placeholder="Other current assets as % of revenue"
+              placeholder="Other current assets as % of revenue (0-100)"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="accounts_payable_percent">Accounts Payable (%)</Label>
+            <Label htmlFor="accounts_payable_percent">Accounts Payable (%) *</Label>
             <Input
               id="accounts_payable_percent"
               type="number"
               step="0.01"
               min="0"
               max="100"
+              required
               value={data.accounts_payable_percent}
               onChange={(e) => onChange({ accounts_payable_percent: e.target.value })}
-              placeholder="Accounts payable as % of revenue"
+              placeholder="Accounts payable as % of revenue (0-100)"
             />
           </div>
         </div>

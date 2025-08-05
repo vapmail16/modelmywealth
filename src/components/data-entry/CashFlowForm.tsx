@@ -31,11 +31,13 @@ export default function CashFlowForm({ data, onChange }: CashFlowFormProps) {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="operating_cash_flow">Operating Cash Flow</Label>
+            <Label htmlFor="operating_cash_flow">Operating Cash Flow *</Label>
             <Input
               id="operating_cash_flow"
               type="number"
               step="0.01"
+              min="0"
+              required
               value={data.operating_cash_flow}
               onChange={(e) => onChange({ operating_cash_flow: e.target.value })}
               placeholder="Operating cash flow in millions"
@@ -43,11 +45,13 @@ export default function CashFlowForm({ data, onChange }: CashFlowFormProps) {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="capital_expenditures">Capital Expenditures</Label>
+            <Label htmlFor="capital_expenditures">Capital Expenditures *</Label>
             <Input
               id="capital_expenditures"
               type="number"
               step="0.01"
+              min="0"
+              required
               value={data.capital_expenditures}
               onChange={(e) => onChange({ capital_expenditures: e.target.value })}
               placeholder="Capital expenditures in millions"
@@ -62,7 +66,8 @@ export default function CashFlowForm({ data, onChange }: CashFlowFormProps) {
               step="0.01"
               value={data.free_cash_flow}
               onChange={(e) => onChange({ free_cash_flow: e.target.value })}
-              placeholder="Free cash flow in millions"
+              placeholder="Auto-calculated: Operating CF - Capex"
+              disabled
             />
           </div>
           
@@ -72,6 +77,7 @@ export default function CashFlowForm({ data, onChange }: CashFlowFormProps) {
               id="debt_service"
               type="number"
               step="0.01"
+              min="0"
               value={data.debt_service}
               onChange={(e) => onChange({ debt_service: e.target.value })}
               placeholder="Debt service in millions"

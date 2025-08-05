@@ -82,9 +82,11 @@ export default function SeasonalityForm({ data, onChange }: SeasonalityFormProps
             <Input
               id="seasonal_working_capital"
               type="number"
+              step="0.01"
+              min="0"
               value={data.seasonal_working_capital}
               onChange={(e) => onChange({ seasonal_working_capital: e.target.value })}
-              placeholder="Working capital requirement"
+              placeholder="Working capital requirement (positive values only)"
             />
           </div>
         </div>
