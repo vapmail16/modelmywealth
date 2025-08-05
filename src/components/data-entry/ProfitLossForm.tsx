@@ -39,11 +39,13 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="revenue">Revenue</Label>
+            <Label htmlFor="revenue">Revenue *</Label>
             <Input
               id="revenue"
               type="number"
               step="0.01"
+              min="0"
+              required
               value={data.revenue}
               onChange={(e) => onChange({ revenue: e.target.value })}
               placeholder="Revenue in millions"
@@ -51,11 +53,13 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="cogs">Cost of Goods Sold (COGS)</Label>
+            <Label htmlFor="cogs">Cost of Goods Sold (COGS) *</Label>
             <Input
               id="cogs"
               type="number"
               step="0.01"
+              min="0"
+              required
               value={data.cogs}
               onChange={(e) => onChange({ cogs: e.target.value })}
               placeholder="COGS in millions"
@@ -68,18 +72,22 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               id="gross_profit"
               type="number"
               step="0.01"
+              min="0"
               value={data.gross_profit}
               onChange={(e) => onChange({ gross_profit: e.target.value })}
-              placeholder="Gross profit in millions"
+              placeholder="Auto-calculated: Revenue - COGS"
+              disabled
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="operating_expenses">Operating Expenses</Label>
+            <Label htmlFor="operating_expenses">Operating Expenses *</Label>
             <Input
               id="operating_expenses"
               type="number"
               step="0.01"
+              min="0"
+              required
               value={data.operating_expenses}
               onChange={(e) => onChange({ operating_expenses: e.target.value })}
               placeholder="Operating expenses in millions"
@@ -94,7 +102,8 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               step="0.01"
               value={data.ebitda}
               onChange={(e) => onChange({ ebitda: e.target.value })}
-              placeholder="EBITDA in millions"
+              placeholder="Auto-calculated: Gross Profit - Operating Expenses"
+              disabled
             />
           </div>
           
@@ -104,6 +113,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               id="depreciation"
               type="number"
               step="0.01"
+              min="0"
               value={data.depreciation}
               onChange={(e) => onChange({ depreciation: e.target.value })}
               placeholder="Depreciation in millions"
@@ -118,7 +128,8 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               step="0.01"
               value={data.ebit}
               onChange={(e) => onChange({ ebit: e.target.value })}
-              placeholder="EBIT in millions"
+              placeholder="Auto-calculated: EBITDA - Depreciation"
+              disabled
             />
           </div>
           
@@ -128,6 +139,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               id="interest_expense"
               type="number"
               step="0.01"
+              min="0"
               value={data.interest_expense}
               onChange={(e) => onChange({ interest_expense: e.target.value })}
               placeholder="Interest expense in millions"
@@ -142,21 +154,23 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               step="0.01"
               value={data.pretax_income}
               onChange={(e) => onChange({ pretax_income: e.target.value })}
-              placeholder="Pre-tax income in millions"
+              placeholder="Auto-calculated: EBIT - Interest Expense"
+              disabled
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="tax_rates">Tax Rate (%)</Label>
+            <Label htmlFor="tax_rates">Tax Rate (%) *</Label>
             <Input
               id="tax_rates"
               type="number"
               step="0.01"
               min="0"
               max="100"
+              required
               value={data.tax_rates}
               onChange={(e) => onChange({ tax_rates: e.target.value })}
-              placeholder="Tax rate percentage"
+              placeholder="Tax rate percentage (0-100)"
             />
           </div>
           
@@ -166,9 +180,11 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               id="taxes"
               type="number"
               step="0.01"
+              min="0"
               value={data.taxes}
               onChange={(e) => onChange({ taxes: e.target.value })}
-              placeholder="Taxes in millions"
+              placeholder="Auto-calculated: Pre-tax Income × Tax Rate"
+              disabled
             />
           </div>
           
@@ -180,7 +196,8 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               step="0.01"
               value={data.net_income}
               onChange={(e) => onChange({ net_income: e.target.value })}
-              placeholder="Net income in millions"
+              placeholder="Auto-calculated: Pre-tax Income - Taxes"
+              disabled
             />
           </div>
         </div>

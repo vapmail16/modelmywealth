@@ -101,13 +101,16 @@ export default function CompanyDetailsForm({ data, onChange }: CompanyDetailsFor
           
           <div className="space-y-2">
             <Label htmlFor="founded">Founded Year</Label>
-            <Input
-              id="founded"
-              type="number"
-              value={data.founded}
-              onChange={(e) => onChange({ founded: e.target.value })}
-              placeholder="Year founded"
-            />
+            <Select value={data.founded} onValueChange={(value) => onChange({ founded: value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select year" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                  <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           
           <div className="space-y-2">
@@ -151,24 +154,30 @@ export default function CompanyDetailsForm({ data, onChange }: CompanyDetailsFor
           
           <div className="space-y-2">
             <Label htmlFor="projection_start_year">Projection Start Year</Label>
-            <Input
-              id="projection_start_year"
-              type="number"
-              value={data.projection_start_year}
-              onChange={(e) => onChange({ projection_start_year: e.target.value })}
-              placeholder="Year"
-            />
+            <Select value={data.projection_start_year} onValueChange={(value) => onChange({ projection_start_year: value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select year" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map((year) => (
+                  <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="projections_year">Projections Year</Label>
-            <Input
-              id="projections_year"
-              type="number"
-              value={data.projections_year}
-              onChange={(e) => onChange({ projections_year: e.target.value })}
-              placeholder="Projection year"
-            />
+            <Select value={data.projections_year} onValueChange={(value) => onChange({ projections_year: value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select year" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map((year) => (
+                  <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
         
