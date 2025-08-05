@@ -7,10 +7,14 @@ import { useToast } from "@/hooks/use-toast";
 import { Save, Download } from "lucide-react";
 
 // Import form components
-import CompanyInfoForm from "@/components/data-entry/CompanyInfoForm";
-import FinancialDataForm from "@/components/data-entry/FinancialDataForm";
-import SeasonalityForm from "@/components/data-entry/SeasonalityForm";
+import CompanyDetailsForm from "@/components/data-entry/CompanyDetailsForm";
+import ProfitLossForm from "@/components/data-entry/ProfitLossForm";
+import BalanceSheetForm from "@/components/data-entry/BalanceSheetForm";
 import DebtStructureForm from "@/components/data-entry/DebtStructureForm";
+import GrowthAssumptionsForm from "@/components/data-entry/GrowthAssumptionsForm";
+import WorkingCapitalForm from "@/components/data-entry/WorkingCapitalForm";
+import SeasonalityForm from "@/components/data-entry/SeasonalityForm";
+import CashFlowForm from "@/components/data-entry/CashFlowForm";
 
 interface DataEntryFormData {
   // Company Details (from company_details table)
@@ -169,7 +173,7 @@ const initialFormData: DataEntryFormData = {
 
 export default function DataEntry() {
   const { toast } = useToast();
-  const [currentStep, setCurrentStep] = useState("company-info");
+  const [currentStep, setCurrentStep] = useState("company-details");
   const [formData, setFormData] = useState<DataEntryFormData>(initialFormData);
 
   const updateFormData = (data: Partial<DataEntryFormData>) => {
@@ -214,104 +218,137 @@ export default function DataEntry() {
 
             <Tabs value={currentStep} onValueChange={setCurrentStep} className="w-full">
               <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="company-info">Company Info</TabsTrigger>
-                <TabsTrigger value="financial-data">Financial Data</TabsTrigger>
-                <TabsTrigger value="seasonality">Seasonality</TabsTrigger>
+                <TabsTrigger value="company-details">Company Details</TabsTrigger>
+                <TabsTrigger value="profit-loss">P&L & Tax</TabsTrigger>
+                <TabsTrigger value="balance-sheet">Balance Sheet</TabsTrigger>
                 <TabsTrigger value="debt-structure">Debt Structure</TabsTrigger>
               </TabsList>
+              <TabsList className="grid w-full grid-cols-4 mt-2">
+                <TabsTrigger value="growth-assumptions">Growth & Projections</TabsTrigger>
+                <TabsTrigger value="working-capital">Working Capital</TabsTrigger>
+                <TabsTrigger value="seasonality">Seasonality</TabsTrigger>
+                <TabsTrigger value="cash-flow">Cash Flow</TabsTrigger>
+              </TabsList>
 
-              <TabsContent value="company-info" className="space-y-4">
-                <CompanyInfoForm 
+              <TabsContent value="company-details" className="space-y-4">
+                <CompanyDetailsForm 
                   data={{
-                    companyName: formData.company_name,
+                    company_name: formData.company_name,
                     industry: formData.industry,
-                    location: formData.region,
-                    fiscalYearEnd: formData.projection_start_month,
-                    employees: formData.employee_count,
-                    businessDescription: formData.business_case,
+                    region: formData.region,
+                    country: formData.country,
+                    employee_count: formData.employee_count,
+                    founded: formData.founded,
+                    company_website: formData.company_website,
+                    business_case: formData.business_case,
+                    notes: formData.notes,
+                    projection_start_month: formData.projection_start_month,
+                    projection_start_year: formData.projection_start_year,
+                    projections_year: formData.projections_year,
+                    reporting_currency: formData.reporting_currency,
                   }}
-                  onChange={(data) => updateFormData({
-                    company_name: data.companyName || formData.company_name,
-                    industry: data.industry || formData.industry,
-                    region: data.location || formData.region,
-                    projection_start_month: data.fiscalYearEnd || formData.projection_start_month,
-                    employee_count: data.employees || formData.employee_count,
-                    business_case: data.businessDescription || formData.business_case,
-                  })}
+                  onChange={(data) => updateFormData(data)}
                 />
               </TabsContent>
 
-              <TabsContent value="financial-data" className="space-y-4">
-                <FinancialDataForm 
+              <TabsContent value="profit-loss" className="space-y-4">
+                <ProfitLossForm 
                   data={{
                     revenue: formData.revenue,
                     cogs: formData.cogs,
-                    grossProfit: formData.gross_profit,
-                    operatingExpenses: formData.operating_expenses,
+                    gross_profit: formData.gross_profit,
+                    operating_expenses: formData.operating_expenses,
                     ebitda: formData.ebitda,
                     depreciation: formData.depreciation,
                     ebit: formData.ebit,
-                    interestExpense: formData.interest_expense,
-                    pretaxIncome: formData.pretax_income,
-                    taxRate: formData.tax_rates,
+                    interest_expense: formData.interest_expense,
+                    pretax_income: formData.pretax_income,
+                    tax_rates: formData.tax_rates,
                     taxes: formData.taxes,
-                    netIncome: formData.net_income,
-                    cash: formData.cash,
-                    accountsReceivable: formData.accounts_receivable,
-                    inventory: formData.inventory,
-                    otherCurrentAssets: formData.other_current_assets,
-                    totalCurrentAssets: "", // Not in DB
-                    ppe: formData.ppe,
-                    intangibleAssets: "", // Not in DB
-                    otherAssets: formData.other_assets,
-                    totalAssets: formData.total_assets,
-                    accountsPayable: formData.accounts_payable_provisions,
-                    accruedLiabilities: "", // Not in DB
-                    shortTermDebt: formData.short_term_debt,
-                    otherCurrentLiabilities: "", // Not in DB
-                    currentLiabilities: "", // Not in DB
-                    longTermDebt: formData.other_long_term_debt,
-                    otherLiabilities: "", // Not in DB
-                    totalLiabilities: "", // Not in DB
-                    shareCapital: "", // Not in DB
-                    retainedEarnings: formData.retained_earnings,
-                    otherEquity: "", // Not in DB
-                    totalEquity: formData.equity,
-                    operatingCashFlow: formData.operating_cash_flow,
-                    investingCashFlow: "", // Not in DB
-                    financingCashFlow: "", // Not in DB
-                    freeCashFlow: formData.free_cash_flow,
-                    capex: formData.capital_expenditure_additions,
+                    net_income: formData.net_income,
                   }}
-                  onChange={(data) => updateFormData({
-                    revenue: data.revenue || formData.revenue,
-                    cogs: data.cogs || formData.cogs,
-                    gross_profit: data.grossProfit || formData.gross_profit,
-                    operating_expenses: data.operatingExpenses || formData.operating_expenses,
-                    ebitda: data.ebitda || formData.ebitda,
-                    depreciation: data.depreciation || formData.depreciation,
-                    ebit: data.ebit || formData.ebit,
-                    interest_expense: data.interestExpense || formData.interest_expense,
-                    pretax_income: data.pretaxIncome || formData.pretax_income,
-                    tax_rates: data.taxRate || formData.tax_rates,
-                    taxes: data.taxes || formData.taxes,
-                    net_income: data.netIncome || formData.net_income,
-                    cash: data.cash || formData.cash,
-                    accounts_receivable: data.accountsReceivable || formData.accounts_receivable,
-                    inventory: data.inventory || formData.inventory,
-                    other_current_assets: data.otherCurrentAssets || formData.other_current_assets,
-                    ppe: data.ppe || formData.ppe,
-                    other_assets: data.otherAssets || formData.other_assets,
-                    total_assets: data.totalAssets || formData.total_assets,
-                    accounts_payable_provisions: data.accountsPayable || formData.accounts_payable_provisions,
-                    short_term_debt: data.shortTermDebt || formData.short_term_debt,
-                    other_long_term_debt: data.longTermDebt || formData.other_long_term_debt,
-                    retained_earnings: data.retainedEarnings || formData.retained_earnings,
-                    equity: data.totalEquity || formData.equity,
-                    operating_cash_flow: data.operatingCashFlow || formData.operating_cash_flow,
-                    free_cash_flow: data.freeCashFlow || formData.free_cash_flow,
-                    capital_expenditure_additions: data.capex || formData.capital_expenditure_additions,
-                  })}
+                  onChange={(data) => updateFormData(data)}
+                />
+              </TabsContent>
+
+              <TabsContent value="balance-sheet" className="space-y-4">
+                <BalanceSheetForm 
+                  data={{
+                    cash: formData.cash,
+                    accounts_receivable: formData.accounts_receivable,
+                    inventory: formData.inventory,
+                    other_current_assets: formData.other_current_assets,
+                    ppe: formData.ppe,
+                    other_assets: formData.other_assets,
+                    total_assets: formData.total_assets,
+                    accounts_payable_provisions: formData.accounts_payable_provisions,
+                    short_term_debt: formData.short_term_debt,
+                    other_long_term_debt: formData.other_long_term_debt,
+                    senior_secured: formData.senior_secured,
+                    debt_tranche1: formData.debt_tranche1,
+                    retained_earnings: formData.retained_earnings,
+                    equity: formData.equity,
+                    total_liabilities_and_equity: formData.total_liabilities_and_equity,
+                    capital_expenditure_additions: formData.capital_expenditure_additions,
+                    asset_depreciated_over_years: formData.asset_depreciated_over_years,
+                    additional_capex_planned_next_year: formData.additional_capex_planned_next_year,
+                    asset_depreciated_over_years_new: formData.asset_depreciated_over_years_new,
+                  }}
+                  onChange={(data) => updateFormData(data)}
+                />
+              </TabsContent>
+
+              <TabsContent value="debt-structure" className="space-y-4">
+                <DebtStructureForm 
+                  data={{
+                    senior_secured_loan_type: formData.senior_secured_loan_type,
+                    additional_loan_senior_secured: formData.additional_loan_senior_secured,
+                    bank_base_rate_senior_secured: formData.bank_base_rate_senior_secured,
+                    liquidity_premiums_senior_secured: formData.liquidity_premiums_senior_secured,
+                    credit_risk_premiums_senior_secured: formData.credit_risk_premiums_senior_secured,
+                    maturity_y_senior_secured: formData.maturity_y_senior_secured,
+                    amortization_y_senior_secured: formData.amortization_y_senior_secured,
+                    short_term_loan_type: formData.short_term_loan_type,
+                    additional_loan_short_term: formData.additional_loan_short_term,
+                    bank_base_rate_short_term: formData.bank_base_rate_short_term,
+                    liquidity_premiums_short_term: formData.liquidity_premiums_short_term,
+                    credit_risk_premiums_short_term: formData.credit_risk_premiums_short_term,
+                    maturity_y_short_term: formData.maturity_y_short_term,
+                    amortization_y_short_term: formData.amortization_y_short_term,
+                  }}
+                  onChange={(data) => updateFormData(data)}
+                />
+              </TabsContent>
+
+              <TabsContent value="growth-assumptions" className="space-y-4">
+                <GrowthAssumptionsForm 
+                  data={{
+                    gr_revenue_1: formData.gr_revenue_1, gr_revenue_2: formData.gr_revenue_2, gr_revenue_3: formData.gr_revenue_3, gr_revenue_4: formData.gr_revenue_4, gr_revenue_5: formData.gr_revenue_5,
+                    gr_revenue_6: formData.gr_revenue_6, gr_revenue_7: formData.gr_revenue_7, gr_revenue_8: formData.gr_revenue_8, gr_revenue_9: formData.gr_revenue_9, gr_revenue_10: formData.gr_revenue_10,
+                    gr_revenue_11: formData.gr_revenue_11, gr_revenue_12: formData.gr_revenue_12,
+                    gr_cost_1: formData.gr_cost_1, gr_cost_2: formData.gr_cost_2, gr_cost_3: formData.gr_cost_3, gr_cost_4: formData.gr_cost_4, gr_cost_5: formData.gr_cost_5,
+                    gr_cost_6: formData.gr_cost_6, gr_cost_7: formData.gr_cost_7, gr_cost_8: formData.gr_cost_8, gr_cost_9: formData.gr_cost_9, gr_cost_10: formData.gr_cost_10,
+                    gr_cost_11: formData.gr_cost_11, gr_cost_12: formData.gr_cost_12,
+                    gr_cost_oper_1: formData.gr_cost_oper_1, gr_cost_oper_2: formData.gr_cost_oper_2, gr_cost_oper_3: formData.gr_cost_oper_3, gr_cost_oper_4: formData.gr_cost_oper_4, gr_cost_oper_5: formData.gr_cost_oper_5,
+                    gr_cost_oper_6: formData.gr_cost_oper_6, gr_cost_oper_7: formData.gr_cost_oper_7, gr_cost_oper_8: formData.gr_cost_oper_8, gr_cost_oper_9: formData.gr_cost_oper_9, gr_cost_oper_10: formData.gr_cost_oper_10,
+                    gr_cost_oper_11: formData.gr_cost_oper_11, gr_cost_oper_12: formData.gr_cost_oper_12,
+                    gr_capex_1: formData.gr_capex_1, gr_capex_2: formData.gr_capex_2, gr_capex_3: formData.gr_capex_3, gr_capex_4: formData.gr_capex_4, gr_capex_5: formData.gr_capex_5,
+                    gr_capex_6: formData.gr_capex_6, gr_capex_7: formData.gr_capex_7, gr_capex_8: formData.gr_capex_8, gr_capex_9: formData.gr_capex_9, gr_capex_10: formData.gr_capex_10,
+                    gr_capex_11: formData.gr_capex_11, gr_capex_12: formData.gr_capex_12,
+                  }}
+                  onChange={(data) => updateFormData(data)}
+                />
+              </TabsContent>
+
+              <TabsContent value="working-capital" className="space-y-4">
+                <WorkingCapitalForm 
+                  data={{
+                    account_receivable_percent: formData.account_receivable_percent,
+                    inventory_percent: formData.inventory_percent,
+                    other_current_assets_percent: formData.other_current_assets_percent,
+                    accounts_payable_percent: formData.accounts_payable_percent,
+                  }}
+                  onChange={(data) => updateFormData(data)}
                 />
               </TabsContent>
 
@@ -330,64 +367,25 @@ export default function DataEntry() {
                     october: formData.october,
                     november: formData.november,
                     december: formData.december,
-                    seasonalWorkingCapital: formData.seasonal_working_capital,
-                    seasonalityPattern: formData.seasonality_pattern,
+                    seasonal_working_capital: formData.seasonal_working_capital,
+                    seasonality_pattern: formData.seasonality_pattern,
                   }}
-                  onChange={(data) => updateFormData({
-                    january: data.january || formData.january,
-                    february: data.february || formData.february,
-                    march: data.march || formData.march,
-                    april: data.april || formData.april,
-                    may: data.may || formData.may,
-                    june: data.june || formData.june,
-                    july: data.july || formData.july,
-                    august: data.august || formData.august,
-                    september: data.september || formData.september,
-                    october: data.october || formData.october,
-                    november: data.november || formData.november,
-                    december: data.december || formData.december,
-                    seasonal_working_capital: data.seasonalWorkingCapital || formData.seasonal_working_capital,
-                    seasonality_pattern: data.seasonalityPattern || formData.seasonality_pattern,
-                  })}
+                  onChange={(data) => updateFormData(data)}
                 />
               </TabsContent>
 
-              <TabsContent value="debt-structure" className="space-y-4">
-                <DebtStructureForm 
+              <TabsContent value="cash-flow" className="space-y-4">
+                <CashFlowForm 
                   data={{
-                    seniorSecuredLoanType: formData.senior_secured_loan_type,
-                    additionalLoanSeniorSecured: formData.additional_loan_senior_secured,
-                    bankBaseRateSeniorSecured: formData.bank_base_rate_senior_secured,
-                    liquidityPremiumsSeniorSecured: formData.liquidity_premiums_senior_secured,
-                    creditRiskPremiumsSeniorSecured: formData.credit_risk_premiums_senior_secured,
-                    maturityYearsSeniorSecured: formData.maturity_y_senior_secured,
-                    amortizationYearsSeniorSecured: formData.amortization_y_senior_secured,
-                    shortTermLoanType: formData.short_term_loan_type,
-                    additionalLoanShortTerm: formData.additional_loan_short_term,
-                    bankBaseRateShortTerm: formData.bank_base_rate_short_term,
-                    liquidityPremiumsShortTerm: formData.liquidity_premiums_short_term,
-                    creditRiskPremiumsShortTerm: formData.credit_risk_premiums_short_term,
-                    maturityYearsShortTerm: formData.maturity_y_short_term,
-                    amortizationYearsShortTerm: formData.amortization_y_short_term,
+                    operating_cash_flow: formData.operating_cash_flow,
+                    capital_expenditures: formData.capital_expenditures,
+                    free_cash_flow: formData.free_cash_flow,
+                    debt_service: formData.debt_service,
                   }}
-                  onChange={(data) => updateFormData({
-                    senior_secured_loan_type: data.seniorSecuredLoanType || formData.senior_secured_loan_type,
-                    additional_loan_senior_secured: data.additionalLoanSeniorSecured || formData.additional_loan_senior_secured,
-                    bank_base_rate_senior_secured: data.bankBaseRateSeniorSecured || formData.bank_base_rate_senior_secured,
-                    liquidity_premiums_senior_secured: data.liquidityPremiumsSeniorSecured || formData.liquidity_premiums_senior_secured,
-                    credit_risk_premiums_senior_secured: data.creditRiskPremiumsSeniorSecured || formData.credit_risk_premiums_senior_secured,
-                    maturity_y_senior_secured: data.maturityYearsSeniorSecured || formData.maturity_y_senior_secured,
-                    amortization_y_senior_secured: data.amortizationYearsSeniorSecured || formData.amortization_y_senior_secured,
-                    short_term_loan_type: data.shortTermLoanType || formData.short_term_loan_type,
-                    additional_loan_short_term: data.additionalLoanShortTerm || formData.additional_loan_short_term,
-                    bank_base_rate_short_term: data.bankBaseRateShortTerm || formData.bank_base_rate_short_term,
-                    liquidity_premiums_short_term: data.liquidityPremiumsShortTerm || formData.liquidity_premiums_short_term,
-                    credit_risk_premiums_short_term: data.creditRiskPremiumsShortTerm || formData.credit_risk_premiums_short_term,
-                    maturity_y_short_term: data.maturityYearsShortTerm || formData.maturity_y_short_term,
-                    amortization_y_short_term: data.amortizationYearsShortTerm || formData.amortization_y_short_term,
-                  })}
+                  onChange={(data) => updateFormData(data)}
                 />
               </TabsContent>
+
             </Tabs>
 
             {/* Navigation */}
@@ -395,25 +393,25 @@ export default function DataEntry() {
               <Button 
                 variant="outline"
                 onClick={() => {
-                  const steps = ["company-info", "financial-data", "seasonality", "debt-structure"];
+                  const steps = ["company-details", "profit-loss", "balance-sheet", "debt-structure", "growth-assumptions", "working-capital", "seasonality", "cash-flow"];
                   const currentIndex = steps.indexOf(currentStep);
                   if (currentIndex > 0) {
                     setCurrentStep(steps[currentIndex - 1]);
                   }
                 }}
-                disabled={currentStep === "company-info"}
+                disabled={currentStep === "company-details"}
               >
                 Previous
               </Button>
               <Button
                 onClick={() => {
-                  const steps = ["company-info", "financial-data", "seasonality", "debt-structure"];
+                  const steps = ["company-details", "profit-loss", "balance-sheet", "debt-structure", "growth-assumptions", "working-capital", "seasonality", "cash-flow"];
                   const currentIndex = steps.indexOf(currentStep);
                   if (currentIndex < steps.length - 1) {
                     setCurrentStep(steps[currentIndex + 1]);
                   }
                 }}
-                disabled={currentStep === "debt-structure"}
+                disabled={currentStep === "cash-flow"}
               >
                 Next
               </Button>

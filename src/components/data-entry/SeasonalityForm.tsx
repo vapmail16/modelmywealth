@@ -18,8 +18,8 @@ interface SeasonalityData {
   october: string;
   november: string;
   december: string;
-  seasonalWorkingCapital: string;
-  seasonalityPattern: string;
+  seasonal_working_capital: string;
+  seasonality_pattern: string;
 }
 
 interface SeasonalityFormProps {
@@ -62,8 +62,8 @@ export default function SeasonalityForm({ data, onChange }: SeasonalityFormProps
           <div className="space-y-2">
             <Label htmlFor="seasonalityPattern">Seasonality Pattern</Label>
             <Select 
-              value={data.seasonalityPattern} 
-              onValueChange={(value) => onChange({ seasonalityPattern: value })}
+              value={data.seasonality_pattern} 
+              onValueChange={(value) => onChange({ seasonality_pattern: value })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select pattern" />
@@ -80,10 +80,10 @@ export default function SeasonalityForm({ data, onChange }: SeasonalityFormProps
           <div className="space-y-2">
             <Label htmlFor="seasonalWorkingCapital">Seasonal Working Capital</Label>
             <Input
-              id="seasonalWorkingCapital"
+              id="seasonal_working_capital"
               type="number"
-              value={data.seasonalWorkingCapital}
-              onChange={(e) => onChange({ seasonalWorkingCapital: e.target.value })}
+              value={data.seasonal_working_capital}
+              onChange={(e) => onChange({ seasonal_working_capital: e.target.value })}
               placeholder="Working capital requirement"
             />
           </div>
