@@ -16,18 +16,35 @@ interface FinancialData {
   ebit: string;
   interestExpense: string;
   pretaxIncome: string;
+  taxRate: string; // NEW: Tax Rate
   taxes: string;
   netIncome: string;
   
-  // Balance Sheet Data
+  // Balance Sheet Assets
   cash: string;
   accountsReceivable: string;
   inventory: string;
-  currentAssets: string;
+  otherCurrentAssets: string;
+  totalCurrentAssets: string;
+  ppe: string;
+  intangibleAssets: string;
+  otherAssets: string;
   totalAssets: string;
+  
+  // Balance Sheet Liabilities
   accountsPayable: string;
+  accruedLiabilities: string;
+  shortTermDebt: string;
+  otherCurrentLiabilities: string;
   currentLiabilities: string;
-  totalDebt: string;
+  longTermDebt: string;
+  otherLiabilities: string;
+  totalLiabilities: string;
+  
+  // Balance Sheet Equity
+  shareCapital: string;
+  retainedEarnings: string;
+  otherEquity: string;
   totalEquity: string;
   
   // Cash Flow Data
@@ -87,22 +104,52 @@ export default function FinancialDataForm({ data, onChange }: FinancialDataFormP
               {renderInput('ebit', 'EBIT', 'Earnings before interest and taxes')}
               {renderInput('interestExpense', 'Interest Expense', 'Interest expense')}
               {renderInput('pretaxIncome', 'Pre-tax Income', 'Income before taxes')}
+              {renderInput('taxRate', 'Tax Rate (%)', 'Corporate tax rate percentage')}
               {renderInput('taxes', 'Taxes', 'Tax expense')}
               {renderInput('netIncome', 'Net Income', 'Net income after taxes')}
             </div>
           </TabsContent>
           
           <TabsContent value="balance" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {renderInput('cash', 'Cash & Cash Equivalents', 'Cash and equivalents')}
-              {renderInput('accountsReceivable', 'Accounts Receivable', 'Accounts receivable')}
-              {renderInput('inventory', 'Inventory', 'Inventory value')}
-              {renderInput('currentAssets', 'Current Assets', 'Total current assets')}
-              {renderInput('totalAssets', 'Total Assets', 'Total assets')}
-              {renderInput('accountsPayable', 'Accounts Payable', 'Accounts payable')}
-              {renderInput('currentLiabilities', 'Current Liabilities', 'Total current liabilities')}
-              {renderInput('totalDebt', 'Total Debt', 'Total debt outstanding')}
-              {renderInput('totalEquity', 'Total Equity', 'Total shareholders equity')}
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium text-muted-foreground">ASSETS</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {renderInput('cash', 'Cash & Cash Equivalents', 'Cash and equivalents')}
+                  {renderInput('accountsReceivable', 'Accounts Receivable', 'Accounts receivable')}
+                  {renderInput('inventory', 'Inventory', 'Inventory value')}
+                  {renderInput('otherCurrentAssets', 'Other Current Assets', 'Other current assets')}
+                  {renderInput('totalCurrentAssets', 'Total Current Assets', 'Total current assets')}
+                  {renderInput('ppe', 'Property, Plant & Equipment', 'Net PPE value')}
+                  {renderInput('intangibleAssets', 'Intangible Assets', 'Intangible assets')}
+                  {renderInput('otherAssets', 'Other Assets', 'Other non-current assets')}
+                  {renderInput('totalAssets', 'Total Assets', 'Total assets')}
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium text-muted-foreground">LIABILITIES</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {renderInput('accountsPayable', 'Accounts Payable', 'Accounts payable')}
+                  {renderInput('accruedLiabilities', 'Accrued Liabilities', 'Accrued liabilities')}
+                  {renderInput('shortTermDebt', 'Short-term Debt', 'Short-term debt')}
+                  {renderInput('otherCurrentLiabilities', 'Other Current Liabilities', 'Other current liabilities')}
+                  {renderInput('currentLiabilities', 'Total Current Liabilities', 'Total current liabilities')}
+                  {renderInput('longTermDebt', 'Long-term Debt', 'Long-term debt')}
+                  {renderInput('otherLiabilities', 'Other Liabilities', 'Other non-current liabilities')}
+                  {renderInput('totalLiabilities', 'Total Liabilities', 'Total liabilities')}
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium text-muted-foreground">EQUITY</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {renderInput('shareCapital', 'Share Capital', 'Share capital')}
+                  {renderInput('retainedEarnings', 'Retained Earnings', 'Retained earnings')}
+                  {renderInput('otherEquity', 'Other Equity', 'Other equity items')}
+                  {renderInput('totalEquity', 'Total Equity', 'Total shareholders equity')}
+                </div>
+              </div>
             </div>
           </TabsContent>
           
