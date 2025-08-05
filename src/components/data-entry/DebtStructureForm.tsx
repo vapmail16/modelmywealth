@@ -6,21 +6,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CreditCard } from "lucide-react";
 
 interface DebtStructureData {
-  seniorSecuredLoanType: string;
-  additionalLoanSeniorSecured: string;
-  bankBaseRateSeniorSecured: string;
-  liquidityPremiumsSeniorSecured: string;
-  creditRiskPremiumsSeniorSecured: string;
-  maturityYearsSeniorSecured: string;
-  amortizationYearsSeniorSecured: string;
+  senior_secured_loan_type: string;
+  additional_loan_senior_secured: string;
+  bank_base_rate_senior_secured: string;
+  liquidity_premiums_senior_secured: string;
+  credit_risk_premiums_senior_secured: string;
+  maturity_y_senior_secured: string;
+  amortization_y_senior_secured: string;
   
-  shortTermLoanType: string;
-  additionalLoanShortTerm: string;
-  bankBaseRateShortTerm: string;
-  liquidityPremiumsShortTerm: string;
-  creditRiskPremiumsShortTerm: string;
-  maturityYearsShortTerm: string;
-  amortizationYearsShortTerm: string;
+  short_term_loan_type: string;
+  additional_loan_short_term: string;
+  bank_base_rate_short_term: string;
+  liquidity_premiums_short_term: string;
+  credit_risk_premiums_short_term: string;
+  maturity_y_short_term: string;
+  amortization_y_short_term: string;
 }
 
 interface DebtStructureFormProps {
@@ -95,28 +95,28 @@ export default function DebtStructureForm({ data, onChange }: DebtStructureFormP
         {renderLoanSection(
           "Senior Secured Debt",
           "seniorSecured",
-          "seniorSecuredLoanType",
+          "senior_secured_loan_type",
           [
-            { key: "additionalLoanSeniorSecured", label: "Additional Loan Amount", suffix: "$" },
-            { key: "bankBaseRateSeniorSecured", label: "Bank Base Rate", suffix: "%" },
-            { key: "liquidityPremiumsSeniorSecured", label: "Liquidity Premium", suffix: "%" },
-            { key: "creditRiskPremiumsSeniorSecured", label: "Credit Risk Premium", suffix: "%" },
-            { key: "maturityYearsSeniorSecured", label: "Maturity", suffix: "years" },
-            { key: "amortizationYearsSeniorSecured", label: "Amortization Period", suffix: "years" },
+            { key: "additional_loan_senior_secured", label: "Additional Loan Amount", suffix: "$" },
+            { key: "bank_base_rate_senior_secured", label: "Bank Base Rate", suffix: "%" },
+            { key: "liquidity_premiums_senior_secured", label: "Liquidity Premium", suffix: "%" },
+            { key: "credit_risk_premiums_senior_secured", label: "Credit Risk Premium", suffix: "%" },
+            { key: "maturity_y_senior_secured", label: "Maturity", suffix: "years" },
+            { key: "amortization_y_senior_secured", label: "Amortization Period", suffix: "years" },
           ]
         )}
         
         {renderLoanSection(
           "Short-Term Debt",
           "shortTerm",
-          "shortTermLoanType",
+          "short_term_loan_type",
           [
-            { key: "additionalLoanShortTerm", label: "Additional Loan Amount", suffix: "$" },
-            { key: "bankBaseRateShortTerm", label: "Bank Base Rate", suffix: "%" },
-            { key: "liquidityPremiumsShortTerm", label: "Liquidity Premium", suffix: "%" },
-            { key: "creditRiskPremiumsShortTerm", label: "Credit Risk Premium", suffix: "%" },
-            { key: "maturityYearsShortTerm", label: "Maturity", suffix: "years" },
-            { key: "amortizationYearsShortTerm", label: "Amortization Period", suffix: "years" },
+            { key: "additional_loan_short_term", label: "Additional Loan Amount", suffix: "$" },
+            { key: "bank_base_rate_short_term", label: "Bank Base Rate", suffix: "%" },
+            { key: "liquidity_premiums_short_term", label: "Liquidity Premium", suffix: "%" },
+            { key: "credit_risk_premiums_short_term", label: "Credit Risk Premium", suffix: "%" },
+            { key: "maturity_y_short_term", label: "Maturity", suffix: "years" },
+            { key: "amortization_y_short_term", label: "Amortization Period", suffix: "years" },
           ]
         )}
       </CardContent>
