@@ -11,8 +11,6 @@ import CompanyInfoForm from "@/components/data-entry/CompanyInfoForm";
 import FinancialDataForm from "@/components/data-entry/FinancialDataForm";
 import SeasonalityForm from "@/components/data-entry/SeasonalityForm";
 import DebtStructureForm from "@/components/data-entry/DebtStructureForm";
-import GrowthProjectionsForm from "@/components/data-entry/GrowthProjectionsForm";
-import CovenantForm from "@/components/data-entry/CovenantForm";
 
 interface DataEntryFormData {
   // Company Details (from company_details table)
@@ -115,65 +113,58 @@ interface DataEntryFormData {
 }
 
 const initialFormData: DataEntryFormData = {
-  // Company Info
-  companyName: "", industry: "", location: "", fiscalYearEnd: "", 
-  employees: "", businessDescription: "",
+  // Company Details
+  company_name: "", industry: "", region: "", country: "", employee_count: "",
+  founded: "", company_website: "", business_case: "", notes: "",
+  projection_start_month: "", projection_start_year: "", projections_year: "",
+  reporting_currency: "USD",
   
   // P&L
-  revenue: "", cogs: "", grossProfit: "", operatingExpenses: "", 
-  ebitda: "", depreciation: "", ebit: "", interestExpense: "", 
-  pretaxIncome: "", taxRate: "", taxes: "", netIncome: "",
+  revenue: "", cogs: "", gross_profit: "", operating_expenses: "", 
+  ebitda: "", depreciation: "", ebit: "", interest_expense: "", 
+  pretax_income: "", tax_rates: "", taxes: "", net_income: "",
   
-  // Balance Sheet Assets
-  cash: "", accountsReceivable: "", inventory: "", otherCurrentAssets: "",
-  totalCurrentAssets: "", ppe: "", intangibleAssets: "", otherAssets: "", totalAssets: "",
-  
-  // Balance Sheet Liabilities  
-  accountsPayable: "", accruedLiabilities: "", shortTermDebt: "", otherCurrentLiabilities: "",
-  currentLiabilities: "", longTermDebt: "", otherLiabilities: "", totalLiabilities: "",
-  
-  // Balance Sheet Equity
-  shareCapital: "", retainedEarnings: "", otherEquity: "", totalEquity: "",
+  // Balance Sheet
+  cash: "", accounts_receivable: "", inventory: "", other_current_assets: "",
+  ppe: "", other_assets: "", total_assets: "", accounts_payable_provisions: "",
+  short_term_debt: "", other_long_term_debt: "", senior_secured: "", debt_tranche1: "",
+  retained_earnings: "", equity: "", total_liabilities_and_equity: "",
+  capital_expenditure_additions: "", asset_depreciated_over_years: "",
+  additional_capex_planned_next_year: "", asset_depreciated_over_years_new: "",
   
   // Cash Flow
-  operatingCashFlow: "", investingCashFlow: "", financingCashFlow: "", 
-  freeCashFlow: "", capex: "",
-  
-  // Capital & Depreciation
-  depreciationYears: "", capexAsPercentOfRevenue: "",
+  operating_cash_flow: "", capital_expenditures: "", free_cash_flow: "", debt_service: "",
   
   // Working Capital
-  workingCapitalDays: "", workingCapitalAccountsReceivable: "", 
-  workingCapitalInventory: "", workingCapitalAccountsPayable: "",
+  account_receivable_percent: "", inventory_percent: "", 
+  other_current_assets_percent: "", accounts_payable_percent: "",
   
-  // Growth Projections
-  projectionYears: "", revenueGrowthYear1: "", revenueGrowthYear2: "", 
-  revenueGrowthYear3: "", revenueGrowthYear4: "", revenueGrowthYear5: "",
-  ebitdaMarginYear1: "", ebitdaMarginYear2: "", ebitdaMarginYear3: "",
-  ebitdaMarginYear4: "", ebitdaMarginYear5: "",
-  
-  // Growth Scenarios
-  baseScenarioName: "", baseScenarioDescription: "", baseScenarioProbability: "",
-  optimisticScenarioName: "", optimisticScenarioDescription: "", optimisticScenarioProbability: "",
-  pessimisticScenarioName: "", pessimisticScenarioDescription: "", pessimisticScenarioProbability: "",
+  // Growth Assumptions
+  gr_revenue_1: "", gr_revenue_2: "", gr_revenue_3: "", gr_revenue_4: "", gr_revenue_5: "",
+  gr_revenue_6: "", gr_revenue_7: "", gr_revenue_8: "", gr_revenue_9: "", gr_revenue_10: "",
+  gr_revenue_11: "", gr_revenue_12: "",
+  gr_cost_1: "", gr_cost_2: "", gr_cost_3: "", gr_cost_4: "", gr_cost_5: "",
+  gr_cost_6: "", gr_cost_7: "", gr_cost_8: "", gr_cost_9: "", gr_cost_10: "",
+  gr_cost_11: "", gr_cost_12: "",
+  gr_cost_oper_1: "", gr_cost_oper_2: "", gr_cost_oper_3: "", gr_cost_oper_4: "", gr_cost_oper_5: "",
+  gr_cost_oper_6: "", gr_cost_oper_7: "", gr_cost_oper_8: "", gr_cost_oper_9: "", gr_cost_oper_10: "",
+  gr_cost_oper_11: "", gr_cost_oper_12: "",
+  gr_capex_1: "", gr_capex_2: "", gr_capex_3: "", gr_capex_4: "", gr_capex_5: "",
+  gr_capex_6: "", gr_capex_7: "", gr_capex_8: "", gr_capex_9: "", gr_capex_10: "",
+  gr_capex_11: "", gr_capex_12: "",
   
   // Seasonality
   january: "", february: "", march: "", april: "", may: "", june: "",
   july: "", august: "", september: "", october: "", november: "", december: "",
-  seasonalWorkingCapital: "", seasonalityPattern: "",
+  seasonal_working_capital: "", seasonality_pattern: "",
   
   // Debt Structure
-  seniorSecuredType: "", seniorSecuredPrincipal: "", seniorSecuredOutstanding: "",
-  seniorSecuredInterestRate: "", seniorSecuredBaseRate: "", seniorSecuredSpread: "",
-  seniorSecuredMaturityDate: "", subordinatedType: "", subordinatedPrincipal: "",
-  subordinatedOutstanding: "", subordinatedInterestRate: "", subordinatedBaseRate: "",
-  subordinatedSpread: "", subordinatedMaturityDate: "", revolvingType: "",
-  revolvingPrincipal: "", revolvingOutstanding: "", revolvingInterestRate: "",
-  revolvingBaseRate: "", revolvingSpread: "", revolvingMaturityDate: "",
-  
-  // Covenants
-  debtToEbitdaThreshold: "", dscrThreshold: "", interestCoverageThreshold: "",
-  liquidityThreshold: "", capexThreshold: "",
+  senior_secured_loan_type: "", additional_loan_senior_secured: "", bank_base_rate_senior_secured: "",
+  liquidity_premiums_senior_secured: "", credit_risk_premiums_senior_secured: "",
+  maturity_y_senior_secured: "", amortization_y_senior_secured: "",
+  short_term_loan_type: "", additional_loan_short_term: "", bank_base_rate_short_term: "",
+  liquidity_premiums_short_term: "", credit_risk_premiums_short_term: "",
+  maturity_y_short_term: "", amortization_y_short_term: "",
 };
 
 export default function DataEntry() {
@@ -222,26 +213,31 @@ export default function DataEntry() {
             </div>
 
             <Tabs value={currentStep} onValueChange={setCurrentStep} className="w-full">
-              <TabsList className="grid w-full grid-cols-6">
-                <TabsTrigger value="company-info">Company</TabsTrigger>
-                <TabsTrigger value="financial-data">Financial</TabsTrigger>
-                <TabsTrigger value="growth-projections">Growth</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="company-info">Company Info</TabsTrigger>
+                <TabsTrigger value="financial-data">Financial Data</TabsTrigger>
                 <TabsTrigger value="seasonality">Seasonality</TabsTrigger>
-                <TabsTrigger value="debt-structure">Debt</TabsTrigger>
-                <TabsTrigger value="covenants">Covenants</TabsTrigger>
+                <TabsTrigger value="debt-structure">Debt Structure</TabsTrigger>
               </TabsList>
 
               <TabsContent value="company-info" className="space-y-4">
                 <CompanyInfoForm 
                   data={{
-                    companyName: formData.companyName,
+                    companyName: formData.company_name,
                     industry: formData.industry,
-                    location: formData.location,
-                    fiscalYearEnd: formData.fiscalYearEnd,
-                    employees: formData.employees,
-                    businessDescription: formData.businessDescription,
+                    location: formData.region,
+                    fiscalYearEnd: formData.projection_start_month,
+                    employees: formData.employee_count,
+                    businessDescription: formData.business_case,
                   }}
-                  onChange={updateFormData}
+                  onChange={(data) => updateFormData({
+                    company_name: data.companyName || formData.company_name,
+                    industry: data.industry || formData.industry,
+                    region: data.location || formData.region,
+                    projection_start_month: data.fiscalYearEnd || formData.projection_start_month,
+                    employee_count: data.employees || formData.employee_count,
+                    business_case: data.businessDescription || formData.business_case,
+                  })}
                 />
               </TabsContent>
 
@@ -250,78 +246,72 @@ export default function DataEntry() {
                   data={{
                     revenue: formData.revenue,
                     cogs: formData.cogs,
-                    grossProfit: formData.grossProfit,
-                    operatingExpenses: formData.operatingExpenses,
+                    grossProfit: formData.gross_profit,
+                    operatingExpenses: formData.operating_expenses,
                     ebitda: formData.ebitda,
                     depreciation: formData.depreciation,
                     ebit: formData.ebit,
-                    interestExpense: formData.interestExpense,
-                    pretaxIncome: formData.pretaxIncome,
-                    taxRate: formData.taxRate,
+                    interestExpense: formData.interest_expense,
+                    pretaxIncome: formData.pretax_income,
+                    taxRate: formData.tax_rates,
                     taxes: formData.taxes,
-                    netIncome: formData.netIncome,
+                    netIncome: formData.net_income,
                     cash: formData.cash,
-                    accountsReceivable: formData.accountsReceivable,
+                    accountsReceivable: formData.accounts_receivable,
                     inventory: formData.inventory,
-                    otherCurrentAssets: formData.otherCurrentAssets,
-                    totalCurrentAssets: formData.totalCurrentAssets,
+                    otherCurrentAssets: formData.other_current_assets,
+                    totalCurrentAssets: "", // Not in DB
                     ppe: formData.ppe,
-                    intangibleAssets: formData.intangibleAssets,
-                    otherAssets: formData.otherAssets,
-                    totalAssets: formData.totalAssets,
-                    accountsPayable: formData.accountsPayable,
-                    accruedLiabilities: formData.accruedLiabilities,
-                    shortTermDebt: formData.shortTermDebt,
-                    otherCurrentLiabilities: formData.otherCurrentLiabilities,
-                    currentLiabilities: formData.currentLiabilities,
-                    longTermDebt: formData.longTermDebt,
-                    otherLiabilities: formData.otherLiabilities,
-                    totalLiabilities: formData.totalLiabilities,
-                    shareCapital: formData.shareCapital,
-                    retainedEarnings: formData.retainedEarnings,
-                    otherEquity: formData.otherEquity,
-                    totalEquity: formData.totalEquity,
-                    operatingCashFlow: formData.operatingCashFlow,
-                    investingCashFlow: formData.investingCashFlow,
-                    financingCashFlow: formData.financingCashFlow,
-                    freeCashFlow: formData.freeCashFlow,
-                    capex: formData.capex,
+                    intangibleAssets: "", // Not in DB
+                    otherAssets: formData.other_assets,
+                    totalAssets: formData.total_assets,
+                    accountsPayable: formData.accounts_payable_provisions,
+                    accruedLiabilities: "", // Not in DB
+                    shortTermDebt: formData.short_term_debt,
+                    otherCurrentLiabilities: "", // Not in DB
+                    currentLiabilities: "", // Not in DB
+                    longTermDebt: formData.other_long_term_debt,
+                    otherLiabilities: "", // Not in DB
+                    totalLiabilities: "", // Not in DB
+                    shareCapital: "", // Not in DB
+                    retainedEarnings: formData.retained_earnings,
+                    otherEquity: "", // Not in DB
+                    totalEquity: formData.equity,
+                    operatingCashFlow: formData.operating_cash_flow,
+                    investingCashFlow: "", // Not in DB
+                    financingCashFlow: "", // Not in DB
+                    freeCashFlow: formData.free_cash_flow,
+                    capex: formData.capital_expenditure_additions,
                   }}
-                  onChange={updateFormData}
-                />
-              </TabsContent>
-
-              <TabsContent value="growth-projections" className="space-y-4">
-                <GrowthProjectionsForm 
-                  data={{
-                    projectionYears: formData.projectionYears,
-                    capexAsPercentOfRevenue: formData.capexAsPercentOfRevenue,
-                    depreciationYears: formData.depreciationYears,
-                    workingCapitalDays: formData.workingCapitalDays,
-                    workingCapitalAccountsReceivable: formData.workingCapitalAccountsReceivable,
-                    workingCapitalInventory: formData.workingCapitalInventory,
-                    workingCapitalAccountsPayable: formData.workingCapitalAccountsPayable,
-                    revenueGrowthYear1: formData.revenueGrowthYear1,
-                    revenueGrowthYear2: formData.revenueGrowthYear2,
-                    revenueGrowthYear3: formData.revenueGrowthYear3,
-                    revenueGrowthYear4: formData.revenueGrowthYear4,
-                    revenueGrowthYear5: formData.revenueGrowthYear5,
-                    ebitdaMarginYear1: formData.ebitdaMarginYear1,
-                    ebitdaMarginYear2: formData.ebitdaMarginYear2,
-                    ebitdaMarginYear3: formData.ebitdaMarginYear3,
-                    ebitdaMarginYear4: formData.ebitdaMarginYear4,
-                    ebitdaMarginYear5: formData.ebitdaMarginYear5,
-                    baseScenarioName: formData.baseScenarioName,
-                    baseScenarioDescription: formData.baseScenarioDescription,
-                    baseScenarioProbability: formData.baseScenarioProbability,
-                    optimisticScenarioName: formData.optimisticScenarioName,
-                    optimisticScenarioDescription: formData.optimisticScenarioDescription,
-                    optimisticScenarioProbability: formData.optimisticScenarioProbability,
-                    pessimisticScenarioName: formData.pessimisticScenarioName,
-                    pessimisticScenarioDescription: formData.pessimisticScenarioDescription,
-                    pessimisticScenarioProbability: formData.pessimisticScenarioProbability,
-                  }}
-                  onChange={updateFormData}
+                  onChange={(data) => updateFormData({
+                    revenue: data.revenue || formData.revenue,
+                    cogs: data.cogs || formData.cogs,
+                    gross_profit: data.grossProfit || formData.gross_profit,
+                    operating_expenses: data.operatingExpenses || formData.operating_expenses,
+                    ebitda: data.ebitda || formData.ebitda,
+                    depreciation: data.depreciation || formData.depreciation,
+                    ebit: data.ebit || formData.ebit,
+                    interest_expense: data.interestExpense || formData.interest_expense,
+                    pretax_income: data.pretaxIncome || formData.pretax_income,
+                    tax_rates: data.taxRate || formData.tax_rates,
+                    taxes: data.taxes || formData.taxes,
+                    net_income: data.netIncome || formData.net_income,
+                    cash: data.cash || formData.cash,
+                    accounts_receivable: data.accountsReceivable || formData.accounts_receivable,
+                    inventory: data.inventory || formData.inventory,
+                    other_current_assets: data.otherCurrentAssets || formData.other_current_assets,
+                    ppe: data.ppe || formData.ppe,
+                    other_assets: data.otherAssets || formData.other_assets,
+                    total_assets: data.totalAssets || formData.total_assets,
+                    accounts_payable_provisions: data.accountsPayable || formData.accounts_payable_provisions,
+                    short_term_debt: data.shortTermDebt || formData.short_term_debt,
+                    other_long_term_debt: data.longTermDebt || formData.other_long_term_debt,
+                    retained_earnings: data.retainedEarnings || formData.retained_earnings,
+                    equity: data.totalEquity || formData.equity,
+                    operating_cash_flow: data.operatingCashFlow || formData.operating_cash_flow,
+                    free_cash_flow: data.freeCashFlow || formData.free_cash_flow,
+                    capital_expenditure_additions: data.capex || formData.capital_expenditure_additions,
+                  })}
                 />
               </TabsContent>
 
@@ -340,52 +330,62 @@ export default function DataEntry() {
                     october: formData.october,
                     november: formData.november,
                     december: formData.december,
-                    seasonalWorkingCapital: formData.seasonalWorkingCapital,
-                    seasonalityPattern: formData.seasonalityPattern,
+                    seasonalWorkingCapital: formData.seasonal_working_capital,
+                    seasonalityPattern: formData.seasonality_pattern,
                   }}
-                  onChange={updateFormData}
+                  onChange={(data) => updateFormData({
+                    january: data.january || formData.january,
+                    february: data.february || formData.february,
+                    march: data.march || formData.march,
+                    april: data.april || formData.april,
+                    may: data.may || formData.may,
+                    june: data.june || formData.june,
+                    july: data.july || formData.july,
+                    august: data.august || formData.august,
+                    september: data.september || formData.september,
+                    october: data.october || formData.october,
+                    november: data.november || formData.november,
+                    december: data.december || formData.december,
+                    seasonal_working_capital: data.seasonalWorkingCapital || formData.seasonal_working_capital,
+                    seasonality_pattern: data.seasonalityPattern || formData.seasonality_pattern,
+                  })}
                 />
               </TabsContent>
 
               <TabsContent value="debt-structure" className="space-y-4">
                 <DebtStructureForm 
                   data={{
-                    seniorSecuredType: formData.seniorSecuredType,
-                    seniorSecuredPrincipal: formData.seniorSecuredPrincipal,
-                    seniorSecuredOutstanding: formData.seniorSecuredOutstanding,
-                    seniorSecuredInterestRate: formData.seniorSecuredInterestRate,
-                    seniorSecuredBaseRate: formData.seniorSecuredBaseRate,
-                    seniorSecuredSpread: formData.seniorSecuredSpread,
-                    seniorSecuredMaturityDate: formData.seniorSecuredMaturityDate,
-                    subordinatedType: formData.subordinatedType,
-                    subordinatedPrincipal: formData.subordinatedPrincipal,
-                    subordinatedOutstanding: formData.subordinatedOutstanding,
-                    subordinatedInterestRate: formData.subordinatedInterestRate,
-                    subordinatedBaseRate: formData.subordinatedBaseRate,
-                    subordinatedSpread: formData.subordinatedSpread,
-                    subordinatedMaturityDate: formData.subordinatedMaturityDate,
-                    revolvingType: formData.revolvingType,
-                    revolvingPrincipal: formData.revolvingPrincipal,
-                    revolvingOutstanding: formData.revolvingOutstanding,
-                    revolvingInterestRate: formData.revolvingInterestRate,
-                    revolvingBaseRate: formData.revolvingBaseRate,
-                    revolvingSpread: formData.revolvingSpread,
-                    revolvingMaturityDate: formData.revolvingMaturityDate,
+                    seniorSecuredLoanType: formData.senior_secured_loan_type,
+                    additionalLoanSeniorSecured: formData.additional_loan_senior_secured,
+                    bankBaseRateSeniorSecured: formData.bank_base_rate_senior_secured,
+                    liquidityPremiumsSeniorSecured: formData.liquidity_premiums_senior_secured,
+                    creditRiskPremiumsSeniorSecured: formData.credit_risk_premiums_senior_secured,
+                    maturityYearsSeniorSecured: formData.maturity_y_senior_secured,
+                    amortizationYearsSeniorSecured: formData.amortization_y_senior_secured,
+                    shortTermLoanType: formData.short_term_loan_type,
+                    additionalLoanShortTerm: formData.additional_loan_short_term,
+                    bankBaseRateShortTerm: formData.bank_base_rate_short_term,
+                    liquidityPremiumsShortTerm: formData.liquidity_premiums_short_term,
+                    creditRiskPremiumsShortTerm: formData.credit_risk_premiums_short_term,
+                    maturityYearsShortTerm: formData.maturity_y_short_term,
+                    amortizationYearsShortTerm: formData.amortization_y_short_term,
                   }}
-                  onChange={updateFormData}
-                />
-              </TabsContent>
-
-              <TabsContent value="covenants" className="space-y-4">
-                <CovenantForm 
-                  data={{
-                    debtToEbitdaThreshold: formData.debtToEbitdaThreshold,
-                    dscrThreshold: formData.dscrThreshold,
-                    interestCoverageThreshold: formData.interestCoverageThreshold,
-                    liquidityThreshold: formData.liquidityThreshold,
-                    capexThreshold: formData.capexThreshold,
-                  }}
-                  onChange={updateFormData}
+                  onChange={(data) => updateFormData({
+                    senior_secured_loan_type: data.seniorSecuredLoanType || formData.senior_secured_loan_type,
+                    additional_loan_senior_secured: data.additionalLoanSeniorSecured || formData.additional_loan_senior_secured,
+                    bank_base_rate_senior_secured: data.bankBaseRateSeniorSecured || formData.bank_base_rate_senior_secured,
+                    liquidity_premiums_senior_secured: data.liquidityPremiumsSeniorSecured || formData.liquidity_premiums_senior_secured,
+                    credit_risk_premiums_senior_secured: data.creditRiskPremiumsSeniorSecured || formData.credit_risk_premiums_senior_secured,
+                    maturity_y_senior_secured: data.maturityYearsSeniorSecured || formData.maturity_y_senior_secured,
+                    amortization_y_senior_secured: data.amortizationYearsSeniorSecured || formData.amortization_y_senior_secured,
+                    short_term_loan_type: data.shortTermLoanType || formData.short_term_loan_type,
+                    additional_loan_short_term: data.additionalLoanShortTerm || formData.additional_loan_short_term,
+                    bank_base_rate_short_term: data.bankBaseRateShortTerm || formData.bank_base_rate_short_term,
+                    liquidity_premiums_short_term: data.liquidityPremiumsShortTerm || formData.liquidity_premiums_short_term,
+                    credit_risk_premiums_short_term: data.creditRiskPremiumsShortTerm || formData.credit_risk_premiums_short_term,
+                    maturity_y_short_term: data.maturityYearsShortTerm || formData.maturity_y_short_term,
+                    amortization_y_short_term: data.amortizationYearsShortTerm || formData.amortization_y_short_term,
+                  })}
                 />
               </TabsContent>
             </Tabs>
@@ -395,7 +395,7 @@ export default function DataEntry() {
               <Button 
                 variant="outline"
                 onClick={() => {
-                  const steps = ["company-info", "financial-data", "growth-projections", "seasonality", "debt-structure", "covenants"];
+                  const steps = ["company-info", "financial-data", "seasonality", "debt-structure"];
                   const currentIndex = steps.indexOf(currentStep);
                   if (currentIndex > 0) {
                     setCurrentStep(steps[currentIndex - 1]);
@@ -407,13 +407,13 @@ export default function DataEntry() {
               </Button>
               <Button
                 onClick={() => {
-                  const steps = ["company-info", "financial-data", "growth-projections", "seasonality", "debt-structure", "covenants"];
+                  const steps = ["company-info", "financial-data", "seasonality", "debt-structure"];
                   const currentIndex = steps.indexOf(currentStep);
                   if (currentIndex < steps.length - 1) {
                     setCurrentStep(steps[currentIndex + 1]);
                   }
                 }}
-                disabled={currentStep === "covenants"}
+                disabled={currentStep === "debt-structure"}
               >
                 Next
               </Button>
