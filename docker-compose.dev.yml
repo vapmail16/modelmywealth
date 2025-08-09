@@ -38,7 +38,7 @@ services:
       - ./api-server:/app
       - /app/node_modules
     restart: unless-stopped
-    command: npm run dev
+    command: npm start
 
   # Frontend React Application (Development)
   frontend:
