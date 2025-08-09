@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: modelmywealth-postgres
+    environment:
+      POSTGRES_DB: modelmywealth
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./api-server/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - modelmywealth-network
+
+  # Backend API Server
+  api-server:
+    build:
+      context: ./api-server
+      dockerfile: Dockerfile
+    container_name: modelmywealth-api
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/modelmywealth
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      PORT: 3001
+      NODE_ENV: production
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    networks:
+      - modelmywealth-network
+    restart: unless-stopped
+
+  # Frontend React Application
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: modelmywealth-frontend
+    environment:
+      VITE_API_BASE_URL: http://localhost:3001/api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - api-server
+    networks:
+      - modelmywealth-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  modelmywealth-network:
+    driver: bridge 

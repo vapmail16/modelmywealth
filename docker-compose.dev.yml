@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: modelmywealth-postgres-dev
+    environment:
+      POSTGRES_DB: modelmywealth
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ./api-server/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - modelmywealth-network-dev
+
+  # Backend API Server (Development)
+  api-server:
+    build:
+      context: ./api-server
+      dockerfile: Dockerfile.dev
+    container_name: modelmywealth-api-dev
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/modelmywealth
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      PORT: 3001
+      NODE_ENV: development
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    networks:
+      - modelmywealth-network-dev
+    volumes:
+      - ./api-server:/app
+      - /app/node_modules
+    restart: unless-stopped
+    command: npm run dev
+
+  # Frontend React Application (Development)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: modelmywealth-frontend-dev
+    environment:
+      VITE_API_BASE_URL: http://localhost:3001/api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - api-server
+    networks:
+      - modelmywealth-network-dev
+    volumes:
+      - ./src:/app/src
+      - /app/node_modules
+    restart: unless-stopped
+    command: npm run dev
+
+volumes:
+  postgres_data_dev:
+
+networks:
+  modelmywealth-network-dev:
+    driver: bridge 
