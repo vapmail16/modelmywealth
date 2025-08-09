@@ -17,6 +17,7 @@ interface WorkingCapitalFormProps {
 }
 
 export default function WorkingCapitalForm({ data, onChange }: WorkingCapitalFormProps) {
+  console.log('WorkingCapitalForm: Received data:', data);
   return (
     <Card>
       <CardHeader>

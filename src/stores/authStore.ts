@@ -38,10 +38,10 @@ export const useAuthStore = create<AuthState>()(
       login: async (credentials: LoginCredentials) => {
         set({ isLoggingIn: true });
         try {
-          const response = await authService.login(credentials);
+          const response = await authService.login(credentials.email, credentials.password);
           
           set({
-            user: response.user,
+            user: response,
             isAuthenticated: true,
             isLoggingIn: false,
           });
@@ -54,10 +54,15 @@ export const useAuthStore = create<AuthState>()(
       register: async (credentials: RegisterCredentials) => {
         set({ isRegistering: true });
         try {
-          const response = await authService.register(credentials);
+          const response = await authService.register(
+            credentials.email, 
+            credentials.password, 
+            credentials.full_name, 
+            credentials.user_type
+          );
           
           set({
-            user: response.user,
+            user: response,
             isAuthenticated: true,
             isRegistering: false,
           });
@@ -99,6 +104,14 @@ export const useAuthStore = create<AuthState>()(
       hasCapability: (capability: Capability) => {
         const { user } = get();
         return user?.capabilities?.includes(capability) || false;
+      },
+
+      forgotPassword: async (email: string) => {
+        try {
+          await authService.forgotPassword(email);
+        } catch (error) {
+          throw error;
+        }
       },
 
       // Initialization

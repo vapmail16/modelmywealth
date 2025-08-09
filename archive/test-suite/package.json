@@ -1,0 +1,28 @@
+{
+  "name": "refi-wizard-test-suite",
+  "version": "1.0.0",
+  "description": "Comprehensive test suite for Refi Wizard application",
+  "main": "test-runner.js",
+  "scripts": {
+    "test": "node test-runner.js",
+    "test:verbose": "node test-runner.js --verbose",
+    "test:stop-on-failure": "node test-runner.js --stop-on-failure",
+    "test:full": "node test-runner.js --verbose --stop-on-failure",
+    "test:frontend": "node test-frontend.js",
+    "test:frontend:verbose": "node test-frontend.js --verbose"
+  },
+  "keywords": [
+    "testing",
+    "api",
+    "integration",
+    "performance",
+    "security"
+  ],
+  "author": "Refi Wizard Team",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
+} 

@@ -38,7 +38,7 @@ class ConfigService {
         anonKey: supabaseAnonKey,
       },
       api: {
-        baseURL: `${supabaseUrl}/functions/v1`,
+        baseURL: 'http://localhost:3001/api',
         timeout: 30000,
         retryAttempts: 3,
         enableCache: true,
@@ -85,3 +85,4 @@ class ConfigService {
 }
 
 export const configService = new ConfigService();
+export { ConfigService };

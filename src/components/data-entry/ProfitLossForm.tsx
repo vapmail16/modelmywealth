@@ -25,6 +25,69 @@ interface ProfitLossFormProps {
 }
 
 export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) {
+  console.log('ProfitLossForm: Received data:', data);
+  // Calculate derived values
+  const calculateGrossProfit = () => {
+    const revenue = parseFloat(data.revenue) || 0;
+    const cogs = parseFloat(data.cogs) || 0;
+    return (revenue + cogs).toFixed(2); // COGS is typically negative
+  };
+
+  const calculateEBITDA = () => {
+    const grossProfit = parseFloat(calculateGrossProfit()) || 0;
+    const operatingExpenses = parseFloat(data.operating_expenses) || 0;
+    return (grossProfit + operatingExpenses).toFixed(2); // Operating expenses are typically negative
+  };
+
+  const calculateEBIT = () => {
+    const ebitda = parseFloat(calculateEBITDA()) || 0;
+    const depreciation = parseFloat(data.depreciation) || 0;
+    return (ebitda + depreciation).toFixed(2); // Depreciation is typically negative
+  };
+
+  const calculatePretaxIncome = () => {
+    const ebit = parseFloat(calculateEBIT()) || 0;
+    const interestExpense = parseFloat(data.interest_expense) || 0;
+    return (ebit + interestExpense).toFixed(2); // Interest expense is typically negative
+  };
+
+  const calculateTaxes = () => {
+    const pretaxIncome = parseFloat(calculatePretaxIncome()) || 0;
+    const taxRate = parseFloat(data.tax_rates) || 0;
+    return (pretaxIncome * (taxRate / 100)).toFixed(2);
+  };
+
+  const calculateNetIncome = () => {
+    const pretaxIncome = parseFloat(calculatePretaxIncome()) || 0;
+    const taxes = parseFloat(calculateTaxes()) || 0;
+    return (pretaxIncome - taxes).toFixed(2);
+  };
+
+  // Update calculated fields when input changes
+  const handleInputChange = (field: keyof ProfitLossData, value: string) => {
+    const updates: Partial<ProfitLossData> = { [field]: value };
+    
+    // Auto-calculate dependent fields
+    if (field === 'revenue' || field === 'cogs') {
+      updates.gross_profit = calculateGrossProfit();
+    }
+    if (field === 'revenue' || field === 'cogs' || field === 'operating_expenses') {
+      updates.ebitda = calculateEBITDA();
+    }
+    if (field === 'revenue' || field === 'cogs' || field === 'operating_expenses' || field === 'depreciation') {
+      updates.ebit = calculateEBIT();
+    }
+    if (field === 'revenue' || field === 'cogs' || field === 'operating_expenses' || field === 'depreciation' || field === 'interest_expense') {
+      updates.pretax_income = calculatePretaxIncome();
+    }
+    if (field === 'revenue' || field === 'cogs' || field === 'operating_expenses' || field === 'depreciation' || field === 'interest_expense' || field === 'tax_rates') {
+      updates.taxes = calculateTaxes();
+      updates.net_income = calculateNetIncome();
+    }
+    
+    onChange(updates);
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -47,7 +110,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               min="0"
               required
               value={data.revenue}
-              onChange={(e) => onChange({ revenue: e.target.value })}
+              onChange={(e) => handleInputChange('revenue', e.target.value)}
               placeholder="Revenue in millions"
             />
           </div>
@@ -61,7 +124,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               min="0"
               required
               value={data.cogs}
-              onChange={(e) => onChange({ cogs: e.target.value })}
+              onChange={(e) => handleInputChange('cogs', e.target.value)}
               placeholder="COGS in millions"
             />
           </div>
@@ -73,8 +136,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               type="number"
               step="0.01"
               min="0"
-              value={data.gross_profit}
-              onChange={(e) => onChange({ gross_profit: e.target.value })}
+              value={calculateGrossProfit()}
               placeholder="Auto-calculated: Revenue - COGS"
               disabled
             />
@@ -89,7 +151,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               min="0"
               required
               value={data.operating_expenses}
-              onChange={(e) => onChange({ operating_expenses: e.target.value })}
+              onChange={(e) => handleInputChange('operating_expenses', e.target.value)}
               placeholder="Operating expenses in millions"
             />
           </div>
@@ -100,8 +162,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               id="ebitda"
               type="number"
               step="0.01"
-              value={data.ebitda}
-              onChange={(e) => onChange({ ebitda: e.target.value })}
+              value={calculateEBITDA()}
               placeholder="Auto-calculated: Gross Profit - Operating Expenses"
               disabled
             />
@@ -115,7 +176,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               step="0.01"
               min="0"
               value={data.depreciation}
-              onChange={(e) => onChange({ depreciation: e.target.value })}
+              onChange={(e) => handleInputChange('depreciation', e.target.value)}
               placeholder="Depreciation in millions"
             />
           </div>
@@ -126,8 +187,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               id="ebit"
               type="number"
               step="0.01"
-              value={data.ebit}
-              onChange={(e) => onChange({ ebit: e.target.value })}
+              value={calculateEBIT()}
               placeholder="Auto-calculated: EBITDA - Depreciation"
               disabled
             />
@@ -141,7 +201,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               step="0.01"
               min="0"
               value={data.interest_expense}
-              onChange={(e) => onChange({ interest_expense: e.target.value })}
+              onChange={(e) => handleInputChange('interest_expense', e.target.value)}
               placeholder="Interest expense in millions"
             />
           </div>
@@ -152,8 +212,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               id="pretax_income"
               type="number"
               step="0.01"
-              value={data.pretax_income}
-              onChange={(e) => onChange({ pretax_income: e.target.value })}
+              value={calculatePretaxIncome()}
               placeholder="Auto-calculated: EBIT - Interest Expense"
               disabled
             />
@@ -169,7 +228,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               max="100"
               required
               value={data.tax_rates}
-              onChange={(e) => onChange({ tax_rates: e.target.value })}
+              onChange={(e) => handleInputChange('tax_rates', e.target.value)}
               placeholder="Tax rate percentage (0-100)"
             />
           </div>
@@ -181,8 +240,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               type="number"
               step="0.01"
               min="0"
-              value={data.taxes}
-              onChange={(e) => onChange({ taxes: e.target.value })}
+              value={calculateTaxes()}
               placeholder="Auto-calculated: Pre-tax Income × Tax Rate"
               disabled
             />
@@ -194,8 +252,7 @@ export default function ProfitLossForm({ data, onChange }: ProfitLossFormProps) 
               id="net_income"
               type="number"
               step="0.01"
-              value={data.net_income}
-              onChange={(e) => onChange({ net_income: e.target.value })}
+              value={calculateNetIncome()}
               placeholder="Auto-calculated: Pre-tax Income - Taxes"
               disabled
             />

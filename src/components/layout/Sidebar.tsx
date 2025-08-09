@@ -48,7 +48,8 @@ import { useToast } from "@/hooks/use-toast";
 const mainNavigation = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Data Entry", url: "/dashboard/data-entry", icon: Calculator },
-  { title: "Calculation Engine", url: "/dashboard/calculation-engine", icon: Calculator },
+  { title: "Calculation Engine", url: "/dashboard/calculation-engine-new", icon: Calculator },
+  { title: "Charts", url: "/dashboard/charts", icon: LineChart },
   { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
   { title: "Reports", url: "/dashboard/reports", icon: FileText },
 ];

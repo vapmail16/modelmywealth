@@ -28,6 +28,7 @@ interface SeasonalityFormProps {
 }
 
 export default function SeasonalityForm({ data, onChange }: SeasonalityFormProps) {
+  console.log('SeasonalityForm: Received data:', data);
   const months = [
     { key: 'january', label: 'January' },
     { key: 'february', label: 'February' },

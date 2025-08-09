@@ -29,6 +29,7 @@ interface DebtStructureFormProps {
 }
 
 export default function DebtStructureForm({ data, onChange }: DebtStructureFormProps) {
+  console.log('DebtStructureForm: Received data:', data);
   const renderLoanSection = (
     title: string,
     prefix: string,

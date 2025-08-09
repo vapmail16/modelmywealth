@@ -1,0 +1,479 @@
+const debtCalculationRepository = require('../repositories/debtCalculationRepository');
+const debtStructureRepository = require('../repositories/debtStructureRepository');
+const balanceSheetRepository = require('../repositories/balanceSheetRepository');
+const auditService = require('./auditService');
+const loggerService = require('./logger');
+const logger = loggerService.logger;
+
+class DebtCalculationService {
+
+  async validateRequiredData(projectId) {
+    try {
+      // Check if debt structure data exists
+      const debtStructureData = await debtStructureRepository.getByProjectId(projectId);
+      if (!debtStructureData) {
+        throw new Error('Debt structure data not found. Please complete the Debt Structure section first.');
+      }
+
+      // Check if balance sheet data exists
+      const balanceSheetData = await balanceSheetRepository.getByProjectId(projectId);
+      if (!balanceSheetData) {
+        throw new Error('Balance sheet data not found. Please complete the Balance Sheet section first.');
+      }
+
+      // Validate required fields for Senior Secured
+      const requiredSeniorSecuredFields = [
+        'senior_secured_loan_type',
+        'additional_loan_senior_secured',
+        'bank_base_rate_senior_secured',
+        'liquidity_premiums_senior_secured',
+        'credit_risk_premiums_senior_secured',
+        'maturity_y_senior_secured',
+        'amortization_y_senior_secured'
+      ];
+
+      for (const field of requiredSeniorSecuredFields) {
+        if (debtStructureData[field] === null || debtStructureData[field] === undefined) {
+          throw new Error(`Missing required field: ${field} in Debt Structure section`);
+        }
+      }
+
+      // Validate required fields for Short Term
+      const requiredShortTermFields = [
+        'short_term_loan_type',
+        'additional_loan_short_term',
+        'bank_base_rate_short_term',
+        'liquidity_premiums_short_term',
+        'credit_risk_premiums_short_term',
+        'maturity_y_short_term',
+        'amortization_y_short_term'
+      ];
+
+      for (const field of requiredShortTermFields) {
+        if (debtStructureData[field] === null || debtStructureData[field] === undefined) {
+          throw new Error(`Missing required field: ${field} in Debt Structure section`);
+        }
+      }
+
+      // Validate balance sheet fields
+      if (balanceSheetData.senior_secured === null || balanceSheetData.senior_secured === undefined) {
+        throw new Error('Missing Senior Secured amount in Balance Sheet section');
+      }
+
+      if (balanceSheetData.debt_tranche1 === null || balanceSheetData.debt_tranche1 === undefined) {
+        throw new Error('Missing Debt Tranche 1 amount in Balance Sheet section');
+      }
+
+      return { debtStructureData, balanceSheetData };
+    } catch (error) {
+      throw new Error(`Validation failed: ${error.message}`);
+    }
+  }
+
+  calculateDebtSchedule(debtStructureData, balanceSheetData) {
+    try {
+      // Extract Senior Secured parameters
+      const seniorSecured = {
+        loanType: debtStructureData.senior_secured_loan_type,
+        initialAmount: parseFloat(balanceSheetData.senior_secured || 0),
+        additionalLoan: parseFloat(debtStructureData.additional_loan_senior_secured || 0),
+        bankBaseRate: parseFloat(debtStructureData.bank_base_rate_senior_secured || 0) / 100,
+        liquidityPremiums: parseFloat(debtStructureData.liquidity_premiums_senior_secured || 0) / 100,
+        creditRiskPremiums: parseFloat(debtStructureData.credit_risk_premiums_senior_secured || 0) / 100,
+        maturityYears: parseInt(debtStructureData.maturity_y_senior_secured || 0),
+        amortizationYears: parseInt(debtStructureData.amortization_y_senior_secured || 0)
+      };
+
+      // Extract Short Term parameters
+      const shortTerm = {
+        loanType: debtStructureData.short_term_loan_type,
+        initialAmount: parseFloat(balanceSheetData.debt_tranche1 || 0),
+        additionalLoan: parseFloat(debtStructureData.additional_loan_short_term || 0),
+        bankBaseRate: parseFloat(debtStructureData.bank_base_rate_short_term || 0) / 100,
+        liquidityPremiums: parseFloat(debtStructureData.liquidity_premiums_short_term || 0) / 100,
+        creditRiskPremiums: parseFloat(debtStructureData.credit_risk_premiums_short_term || 0) / 100,
+        maturityYears: parseInt(debtStructureData.maturity_y_short_term || 0),
+        amortizationYears: parseInt(debtStructureData.amortization_y_short_term || 0)
+      };
+
+      // Calculate interest rates
+      seniorSecured.interestRatePerAnnum = seniorSecured.bankBaseRate + seniorSecured.liquidityPremiums + seniorSecured.creditRiskPremiums;
+      seniorSecured.interestRatePerMonth = seniorSecured.interestRatePerAnnum / 12;
+      seniorSecured.maturityMonths = seniorSecured.maturityYears * 12;
+      seniorSecured.amortizationMonths = seniorSecured.amortizationYears * 12;
+      seniorSecured.repaymentOverMonths = seniorSecured.maturityMonths - seniorSecured.amortizationMonths;
+
+      shortTerm.interestRatePerAnnum = shortTerm.bankBaseRate + shortTerm.liquidityPremiums + shortTerm.creditRiskPremiums;
+      shortTerm.interestRatePerMonth = shortTerm.interestRatePerAnnum / 12;
+      shortTerm.maturityMonths = shortTerm.maturityYears * 12;
+      shortTerm.amortizationMonths = shortTerm.amortizationYears * 12;
+      shortTerm.repaymentOverMonths = shortTerm.maturityMonths - shortTerm.amortizationMonths;
+
+      // Initialize combined state
+      this.combinedState = {
+        previousClosingBalance: 0,
+        previousRepayment: 0,
+        repaymentInit: 0,
+        outAftAmortization: (seniorSecured.initialAmount + seniorSecured.additionalLoan) + (shortTerm.initialAmount + shortTerm.additionalLoan),
+        flgAmort: 0
+      };
+
+      // Generate 120-month schedule
+      const schedule = [];
+      let cumulativeInterest = 0;
+
+      for (let month = 1; month <= 120; month++) {
+        const year = Math.ceil(month / 12);
+        
+        // Calculate combined debt for this month
+        const combinedResult = this.calculateCombinedMonthlyDebt(seniorSecured, shortTerm, month);
+        
+        cumulativeInterest += combinedResult.interest;
+
+        schedule.push({
+          project_id: balanceSheetData.project_id,
+          month: month,
+          year: year,
+          opening_balance: combinedResult.openingBalance,
+          payment: combinedResult.repayment,
+          interest_payment: combinedResult.interest,
+          principal_payment: combinedResult.repayment,
+          closing_balance: combinedResult.closingBalance,
+          cumulative_interest: cumulativeInterest
+        });
+      }
+
+      return schedule;
+    } catch (error) {
+      throw new Error(`Calculation failed: ${error.message}`);
+    }
+  }
+
+  calculateCombinedMonthlyDebt(seniorSecured, shortTerm, month) {
+    let openingBalance, additionalLoan, interest, repayment, closingBalance;
+    
+    if (month === 1) {
+      // First month - combine both debt types
+      openingBalance = seniorSecured.initialAmount + shortTerm.initialAmount;
+      additionalLoan = seniorSecured.additionalLoan + shortTerm.additionalLoan;
+    } else {
+      // Subsequent months - use previous combined closing balance
+      openingBalance = this.combinedState.previousClosingBalance;
+      additionalLoan = 0;
+    }
+
+    // Calculate interest for both debt types
+    let seniorSecuredInterest = 0;
+    let shortTermInterest = 0;
+
+    // Senior Secured interest
+    if (month <= seniorSecured.maturityMonths) {
+      if (month <= seniorSecured.amortizationMonths) {
+        // During amortization period (interest-only)
+        seniorSecuredInterest = (seniorSecured.initialAmount + seniorSecured.additionalLoan) * seniorSecured.interestRatePerMonth;
+      } else {
+        // After amortization period
+        seniorSecuredInterest = seniorSecured.initialAmount * seniorSecured.interestRatePerMonth;
+      }
+    }
+
+    // Short Term interest
+    if (month <= shortTerm.maturityMonths) {
+      if (month <= shortTerm.amortizationMonths) {
+        // During amortization period (interest-only)
+        shortTermInterest = (shortTerm.initialAmount + shortTerm.additionalLoan) * shortTerm.interestRatePerMonth;
+      } else {
+        // After amortization period
+        shortTermInterest = shortTerm.initialAmount * shortTerm.interestRatePerMonth;
+      }
+    }
+
+    interest = seniorSecuredInterest + shortTermInterest;
+
+    // Calculate repayment for both debt types
+    let seniorSecuredRepayment = 0;
+    let shortTermRepayment = 0;
+
+    // Senior Secured repayment
+    if (seniorSecured.amortizationMonths !== 0) {
+      // Interest-only period exists
+      seniorSecuredRepayment = 0;
+    } else {
+      // No interest-only period
+      if (month > seniorSecured.amortizationMonths && this.combinedState.repaymentInit === 0) {
+        const outAftAmortization = seniorSecured.initialAmount + seniorSecured.additionalLoan;
+        seniorSecuredRepayment = this.calculatePMT(seniorSecured.interestRatePerMonth, seniorSecured.repaymentOverMonths, outAftAmortization);
+      }
+    }
+
+    // Short Term repayment
+    if (shortTerm.amortizationMonths !== 0) {
+      // Interest-only period exists
+      shortTermRepayment = 0;
+    } else {
+      // No interest-only period
+      if (month > shortTerm.amortizationMonths && this.combinedState.repaymentInit === 0) {
+        const outAftAmortization = shortTerm.initialAmount + shortTerm.additionalLoan;
+        shortTermRepayment = this.calculatePMT(shortTerm.interestRatePerMonth, shortTerm.repaymentOverMonths, outAftAmortization);
+      }
+    }
+
+    repayment = seniorSecuredRepayment + shortTermRepayment;
+
+    closingBalance = openingBalance + additionalLoan + interest + repayment;
+    
+    // Round to 2 decimal places and handle small values
+    if (Math.abs(closingBalance) < 1) {
+      closingBalance = 0;
+    }
+
+    // Store for next iteration
+    this.combinedState.previousClosingBalance = closingBalance;
+    this.combinedState.previousRepayment = repayment;
+
+    return {
+      openingBalance,
+      additionalLoan,
+      interest,
+      repayment,
+      closingBalance
+    };
+  }
+
+  calculateMonthlyDebt(debtParams, month) {
+    // Initialize state variables for this debt type
+    if (!this.debtState) {
+      this.debtState = {};
+    }
+    
+    const debtKey = debtParams.loanType || 'default';
+    if (!this.debtState[debtKey]) {
+      this.debtState[debtKey] = {
+        previousClosingBalance: 0,
+        previousRepayment: 0,
+        repaymentInit: 0,
+        outAftAmortization: debtParams.initialAmount + debtParams.additionalLoan,
+        flgAmort: 0
+      };
+    }
+    
+    const state = this.debtState[debtKey];
+    let openingBalance, additionalLoan, amortization, interest, repayment, closingBalance;
+    
+    if (month === 1) {
+      // First month
+      if (debtParams.loanType !== 'Consolidated') {
+        openingBalance = debtParams.initialAmount;
+        additionalLoan = debtParams.additionalLoan;
+      } else {
+        openingBalance = 0;
+        additionalLoan = 0;
+      }
+    } else {
+      // Subsequent months
+      openingBalance = state.previousClosingBalance;
+      additionalLoan = 0;
+    }
+
+    // Amortization (interest-only period)
+    if (month <= debtParams.amortizationMonths) {
+      amortization = openingBalance * debtParams.interestRatePerMonth;
+    } else {
+      amortization = 0;
+    }
+
+    // Interest calculation
+    if (month <= debtParams.maturityMonths) {
+      if (month <= debtParams.amortizationMonths) {
+        // During amortization period (interest-only)
+        interest = (openingBalance + additionalLoan) * debtParams.interestRatePerMonth;
+      } else {
+        // After amortization period
+        interest = openingBalance * debtParams.interestRatePerMonth;
+      }
+    } else {
+      interest = 0;
+    }
+
+    // Repayment calculation
+    if (debtParams.amortizationMonths !== 0) {
+      // Interest-only period exists
+      repayment = 0;
+    } else {
+      // No interest-only period
+      if (month > debtParams.amortizationMonths && state.repaymentInit === 0) {
+        const outAftAmortization = openingBalance + additionalLoan;
+        repayment = this.calculatePMT(debtParams.interestRatePerMonth, debtParams.repaymentOverMonths, outAftAmortization);
+      } else {
+        repayment = state.repaymentInit;
+      }
+    }
+
+    // For subsequent months after amortization
+    if (month > 1) {
+      if (state.previousClosingBalance < 1) {
+        repayment = 0;
+      } else {
+        if (month > debtParams.amortizationMonths && state.previousRepayment === 0) {
+          if (state.flgAmort === 0) {
+            state.outAftAmortization = state.previousClosingBalance;
+            state.flgAmort = 1;
+          }
+          repayment = this.calculatePMT(debtParams.interestRatePerMonth, debtParams.repaymentOverMonths, state.outAftAmortization);
+        } else {
+          repayment = state.previousRepayment;
+        }
+      }
+    }
+
+    closingBalance = openingBalance + additionalLoan + amortization + interest + repayment;
+    
+    // Round to 2 decimal places and handle small values
+    if (Math.abs(closingBalance) < 1) {
+      closingBalance = 0;
+    }
+
+    // Store for next iteration
+    state.previousClosingBalance = closingBalance;
+    state.previousRepayment = repayment;
+
+    return {
+      openingBalance,
+      additionalLoan,
+      amortization,
+      interest,
+      repayment,
+      closingBalance
+    };
+  }
+
+  calculatePMT(rate, nper, pv) {
+    // PMT calculation matching numpy_financial.pmt
+    if (rate === 0) return -pv / nper;
+    
+    const pmt = -pv * (rate * Math.pow(1 + rate, nper)) / (Math.pow(1 + rate, nper) - 1);
+    return pmt;
+  }
+
+  async performDebtCalculation(projectId, userId, changeReason = 'Debt calculation performed') {
+    try {
+      const startTime = Date.now();
+      
+      // Validate required data
+      const { debtStructureData, balanceSheetData } = await this.validateRequiredData(projectId);
+
+      // Create calculation run record
+      const calculationRun = await debtCalculationRepository.createCalculationRun({
+        project_id: projectId,
+        run_name: `Debt Calculation ${new Date().toISOString()}`,
+        calculation_type: 'debt_calculation',
+        input_data: { debtStructureData, balanceSheetData },
+        output_data: {},
+        status: 'running',
+        created_by: userId
+      });
+
+      // Call Python script for calculation
+      const { exec } = require('child_process');
+      const util = require('util');
+      const execAsync = util.promisify(exec);
+      
+      try {
+        const { stdout, stderr } = await execAsync(`python3 scripts/calculate_debt_schedule.py ${projectId}`);
+        const result = JSON.parse(stdout);
+        
+        if (!result.success) {
+          throw new Error(result.error || 'Python calculation failed');
+        }
+
+        // Get the calculated results from database
+        const calculationResults = await debtCalculationRepository.getByProjectId(projectId);
+        
+        // Update calculation run with results
+        const executionTime = Date.now() - startTime;
+        await debtCalculationRepository.updateCalculationRun(calculationRun.id, {
+          output_data: { 
+            total_months: result.total_months,
+            summary: {
+              total_principal: result.total_principal,
+              total_interest: result.total_interest,
+              final_balance: result.final_balance
+            }
+          },
+          status: 'completed',
+          completed_at: new Date(),
+          execution_time_ms: executionTime
+        });
+
+      // Update calculation run with results
+      const executionTime = Date.now() - startTime;
+      await debtCalculationRepository.updateCalculationRun(calculationRun.id, {
+        output_data: { 
+          total_months: schedule.length,
+          summary: {
+            total_principal: schedule[0].opening_balance,
+            total_interest: schedule[schedule.length - 1].cumulative_interest,
+            final_balance: schedule[schedule.length - 1].closing_balance
+          }
+        },
+        status: 'completed',
+        completed_at: new Date(),
+        execution_time_ms: executionTime
+      });
+
+      // Log audit entry
+      await auditService.logChange({
+        table_name: 'debt_calculations',
+        record_id: calculationRun.id,
+        action: 'INSERT',
+        old_values: {},
+        new_values: { 
+          project_id: projectId,
+          calculation_run_id: calculationRun.id,
+          total_records: calculationResults.length
+        },
+        changed_fields: ['calculation_performed'],
+        change_reason: changeReason,
+        user_id: userId,
+        ip_address: null
+      });
+
+      return {
+        success: true,
+        calculationRun,
+        results: calculationResults,
+        summary: {
+          total_months: schedule.length,
+          total_principal: schedule[0].opening_balance,
+          total_interest: schedule[schedule.length - 1].cumulative_interest,
+          final_balance: schedule[schedule.length - 1].closing_balance,
+          execution_time_ms: executionTime
+        }
+      };
+
+    } catch (error) {
+      this.logger.error(`Debt calculation failed: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async getDebtCalculations(projectId) {
+    try {
+      const calculations = await debtCalculationRepository.getByProjectId(projectId);
+      return calculations;
+    } catch (error) {
+      throw new Error(`Failed to get debt calculations: ${error.message}`);
+    }
+  }
+
+  async getCalculationHistory(projectId) {
+    try {
+      const history = await debtCalculationRepository.getCalculationHistory(projectId);
+      return history;
+    } catch (error) {
+      throw new Error(`Failed to get calculation history: ${error.message}`);
+    }
+  }
+}
+
+module.exports = new DebtCalculationService(); 

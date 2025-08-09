@@ -1,266 +1,370 @@
-import { supabase } from '@/integrations/supabase/client';
-import { databaseAdapter } from '../database/DatabaseAdapter';
-import { httpClient } from '../index';
-import { logger } from '../logging/LoggingService';
-import { browserService } from '../browser/BrowserService';
-import type { 
-  LoginCredentials, 
-  RegisterCredentials, 
-  AuthResponse, 
-  AuthUser,
-  UserProfile,
-  UserRole,
-  Capability
-} from '@/types/auth';
+// AuthService class definition
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  user_type: string;
+  role: string;
+  email_verified: boolean;
+}
 
-class AuthService {
-  async login(credentials: LoginCredentials): Promise<AuthResponse> {
+export interface AuthResponse {
+  user: User;
+  session: {
+    access_token: string;
+    refresh_token: string;
+    expires_at: string;
+  };
+}
+
+export interface TokenResponse {
+  access_token: string;
+  expires_at: string;
+}
+
+export class AuthService {
+  private baseUrl = 'http://localhost:3001/api';
+
+  // Token management
+  private getAccessToken(): string | null {
+    return localStorage.getItem('access_token');
+  }
+
+  private setAccessToken(token: string): void {
+    localStorage.setItem('access_token', token);
+  }
+
+  private getRefreshToken(): string | null {
+    return localStorage.getItem('refresh_token');
+  }
+
+  private setRefreshToken(token: string): void {
+    localStorage.setItem('refresh_token', token);
+  }
+
+  private clearTokens(): void {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+  }
+
+  // User management
+  getCurrentUser(): User | null {
+    const userStr = localStorage.getItem("currentUser");
+    if (userStr) {
+      try {
+        return JSON.parse(userStr);
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  setCurrentUser(user: User): void {
+    localStorage.setItem("currentUser", JSON.stringify(user));
+  }
+
+  clearCurrentUser(): void {
+    localStorage.removeItem("currentUser");
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.getAccessToken() && !!this.getCurrentUser();
+  }
+
+  getUserId(): string | null {
+    const user = this.getCurrentUser();
+    return user?.id || null;
+  }
+
+  // API request helper with token refresh
+  private async makeAuthenticatedRequest(url: string, options: RequestInit = {}): Promise<Response> {
+    const token = this.getAccessToken();
+    
+    if (!token) {
+      throw new Error('No access token available');
+    }
+
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        ...options.headers,
+      },
+    });
+
+    // If token expired, try to refresh
+    if (response.status === 401) {
+      const refreshed = await this.refreshToken();
+      if (refreshed) {
+        const newToken = this.getAccessToken();
+        return fetch(url, {
+          ...options,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${newToken}`,
+            ...options.headers,
+          },
+        });
+      } else {
+        // Refresh failed, logout user
+        this.logout();
+        throw new Error('Authentication failed');
+      }
+    }
+
+    return response;
+  }
+
+  // Token refresh
+  private async refreshToken(): Promise<boolean> {
     try {
-      const response = await httpClient.post('/auth', credentials);
-      
-      console.log('AuthService: Raw response from Edge Function:', response);
-      
-      // The Edge Function returns { success: true, data: { user, session } }
-      if (!response.success || !response.data) {
-        console.log('AuthService: Login failed - response structure:', { success: response.success, hasData: !!response.data, error: response.error });
-        throw new Error(response.error?.message || 'Login failed');
+      const refreshToken = this.getRefreshToken();
+      if (!refreshToken) {
+        return false;
       }
 
-      const { user, session } = response.data;
-      logger.info('User logged in successfully', { userId: user.id }, 'AuthService');
-      
-      // Store the session token in localStorage for the HTTP client
-      if (session?.access_token) {
-        const tokenData = {
-          access_token: session.access_token,
-          refresh_token: session.refresh_token,
-          expires_at: session.expires_at,
-        };
-        localStorage.setItem('sb-vmrvugezqpydlfjcoldl-auth-token', JSON.stringify(tokenData));
+      const response = await fetch(`${this.baseUrl}/auth/refresh`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      });
+
+      if (response.ok) {
+        const data: TokenResponse = await response.json();
+        this.setAccessToken(data.data.access_token);
+        return true;
+      } else {
+        return false;
       }
+    } catch (error) {
+      console.error('Token refresh failed:', error);
+      return false;
+    }
+  }
+
+  // Authentication methods
+  async login(email: string, password: string): Promise<User> {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Login failed');
+      }
+
+      const responseData = await response.json();
       
-      return { user, session };
-    } catch (error: any) {
-      logger.error('Login failed', { error: error.message }, 'AuthService');
+      // Handle the actual backend response structure
+      const data = responseData.data;
+      
+      // Store tokens and user
+      this.setAccessToken(data.session.access_token);
+      this.setRefreshToken(data.session.refresh_token);
+      this.setCurrentUser(data.user);
+
+      return data.user;
+    } catch (error) {
+      console.error('Login error:', error);
       throw error;
     }
   }
 
-  async register(credentials: RegisterCredentials): Promise<AuthResponse> {
-    const redirectUrl = `${browserService.window.location.origin}/`;
-    
-    const { data, error } = await supabase.auth.signUp({
-      email: credentials.email,
-      password: credentials.password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          full_name: credentials.full_name,
-          user_type: credentials.user_type,
+  async logout(): Promise<boolean> {
+    try {
+      const refreshToken = this.getRefreshToken();
+      
+      if (refreshToken) {
+        // Call logout endpoint to invalidate refresh token
+        await fetch(`${this.baseUrl}/auth/logout`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.getAccessToken()}`,
+          },
+          body: JSON.stringify({ refresh_token: refreshToken }),
+        });
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      // Clear all auth data
+      this.clearTokens();
+      this.clearCurrentUser();
+    }
+
+    return true;
+  }
+
+  async register(email: string, password: string, full_name: string, user_type: string): Promise<User> {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      },
-    });
+        body: JSON.stringify({ 
+          email, 
+          password, 
+          full_name, 
+          user_type 
+        }),
+      });
 
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    if (!data.user) {
-      throw new Error('Registration failed');
-    }
-
-    // Check if email confirmation is required
-    if (!data.session) {
-      throw new Error('Please check your email and click the confirmation link to complete your registration.');
-    }
-
-    // Create profile synchronously during registration
-    await this.ensureUserProfile(data.user, credentials);
-
-    const user = await this.getUserWithProfile(data.user.id);
-    
-    return {
-      user,
-      session: data.session,
-    };
-  }
-
-  private async ensureUserProfile(authUser: any, credentials?: RegisterCredentials): Promise<void> {
-    const profileData = {
-      user_id: authUser.id,
-      email: authUser.email,
-      full_name: credentials?.full_name || authUser.user_metadata?.full_name || authUser.email,
-      user_type: credentials?.user_type || authUser.user_metadata?.user_type || 'business',
-    };
-
-    // Use edge function for profile creation
-    const { error } = await supabase.functions.invoke('user-profile-creation', {
-      body: profileData,
-    });
-
-    if (error) {
-      logger.error('Profile creation error', { error }, 'AuthService');
-      // Don't throw error - registration should still succeed
-    }
-  }
-
-  async logout(): Promise<void> {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      throw new Error(error.message);
-    }
-    
-    // Clear the stored token
-    localStorage.removeItem('sb-vmrvugezqpydlfjcoldl-auth-token');
-  }
-
-  async getCurrentUser(): Promise<AuthUser | null> {
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      return null;
-    }
-
-    try {
-      return this.getUserWithProfile(user.id);
-    } catch (error) {
-      logger.error('Failed to get user profile', { error }, 'AuthService');
-      return null;
-    }
-  }
-
-  async getUserProfile(userId: string): Promise<UserProfile | null> {
-    try {
-      const response = await httpClient.get(`/user-management/users/${userId}`);
-      return response.data?.data || null;
-    } catch (error) {
-      logger.error('Error fetching user profile', { error }, 'AuthService');
-      return null;
-    }
-  }
-
-  private async getUserWithProfile(userId: string, retryCount = 0): Promise<AuthUser> {
-    const maxRetries = 2;
-    
-    try {
-      // Use API endpoint instead of direct database access
-      const profileResponse = await httpClient.get(`/user-management/users/${userId}`);
-      const profile = profileResponse.data?.data;
-      
-      if (!profile) {
-        throw new Error('User profile not found');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Registration failed');
       }
 
-      // Get user roles via API
-      const rolesResponse = await httpClient.get(`/user-management/roles?user_id=${userId}`);
-      const roles = rolesResponse.data?.data || [];
-
-      // Get role capabilities via API
-      const capabilitiesResponse = await httpClient.get(`/user-management/role-capabilities`);
-      const allCapabilities = capabilitiesResponse.data?.data || [];
+      const responseData = await response.json();
       
-      const userCapabilities = this.extractUserCapabilities(roles, allCapabilities);
-
-      return {
-        id: userId,
-        email: profile.email,
-        profile,
-        roles,
-        capabilities: userCapabilities,
-      };
+      // Handle the actual backend response structure
+      const data = responseData.data;
+      
+      // Note: User is not automatically logged in after registration
+      // They need to verify their email first
+      return data.user;
     } catch (error) {
-      // Retry logic for transient failures
-      if (retryCount < maxRetries && this.isRetryableError(error)) {
-        logger.info('Retrying getUserWithProfile', { retryCount: retryCount + 1, maxRetries }, 'AuthService');
-        await this.delay(1000 * (retryCount + 1)); // Exponential backoff
-        return this.getUserWithProfile(userId, retryCount + 1);
+      console.error('Registration error:', error);
+      throw error;
+    }
+  }
+
+  async verifyEmail(token: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/verify-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Email verification failed');
       }
+
+      return true;
+    } catch (error) {
+      console.error('Email verification error:', error);
+      throw error;
+    }
+  }
+
+  async forgotPassword(email: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Password reset request failed');
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      throw error;
+    }
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/reset-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token, new_password: newPassword }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Password reset failed');
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Password reset error:', error);
+      throw error;
+    }
+  }
+
+  async getUserProfile(): Promise<User> {
+    try {
+      const response = await this.makeAuthenticatedRequest(`${this.baseUrl}/auth/profile`);
       
-      // Fallback to direct database access if API fails
-      return this.getUserWithProfileDirect(userId);
-    }
-  }
-
-  private isRetryableError(error: any): boolean {
-    if (!error) return false;
-    
-    // Network errors and temporary server errors
-    const retryableErrors = ['NETWORK_ERROR', 'TIMEOUT', 'ECONNRESET'];
-    const retryableStatuses = [408, 429, 500, 502, 503, 504];
-    
-    return retryableErrors.includes(error.code) || 
-           retryableStatuses.includes(error.status) ||
-           error.message?.includes('network') ||
-           error.message?.includes('timeout');
-  }
-
-  private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  private async getUserWithProfileDirect(userId: string): Promise<AuthUser> {
-    // Direct database access as fallback
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', userId)
-      .maybeSingle();
-
-    if (profileError || !profile) {
-      throw new Error('User profile not found');
-    }
-
-    const { data: roles } = await supabase
-      .from('user_roles')
-      .select('*')
-      .eq('user_id', userId);
-
-    const { data: allCapabilities } = await supabase
-      .from('role_capabilities')
-      .select('*');
-    
-    const userCapabilities = this.extractUserCapabilities(roles || [], allCapabilities || []);
-
-    return {
-      id: userId,
-      email: profile.email,
-      profile,
-      roles: roles || [],
-      capabilities: userCapabilities,
-    };
-  }
-
-  private extractUserCapabilities(roles: UserRole[], allCapabilities: any[]): Capability[] {
-    const userCapabilities = new Set<Capability>();
-    
-    roles.forEach(role => {
-      const roleCapabilities = allCapabilities.filter(
-        cap => cap.role === role.role && cap.user_type === role.user_type
-      );
-      roleCapabilities.forEach(cap => userCapabilities.add(cap.capability));
-    });
-    
-    return Array.from(userCapabilities);
-  }
-
-  onAuthStateChange(callback: (user: AuthUser | null) => void) {
-    return supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        try {
-          // Ensure profile exists
-          await this.ensureUserProfile(session.user);
-          const user = await this.getUserWithProfile(session.user.id);
-          callback(user);
-        } catch (error) {
-          logger.error('Error fetching user profile', { error }, 'AuthService');
-          callback(null);
-        }
-      } else {
-        callback(null);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to fetch user profile');
       }
-    });
+
+      const responseData = await response.json();
+      const user = responseData.data;
+      
+      // Update stored user data
+      this.setCurrentUser(user);
+      
+      return user;
+    } catch (error) {
+      console.error('Get user profile error:', error);
+      throw error;
+    }
+  }
+
+  async updateUserProfile(profileData: Partial<User>): Promise<User> {
+    try {
+      const response = await this.makeAuthenticatedRequest(`${this.baseUrl}/auth/profile`, {
+        method: 'PUT',
+        body: JSON.stringify(profileData),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update user profile');
+      }
+
+      const responseData = await response.json();
+      const user = responseData.data;
+      
+      // Update stored user data
+      this.setCurrentUser(user);
+      
+      return user;
+    } catch (error) {
+      console.error('Update user profile error:', error);
+      throw error;
+    }
+  }
+
+  // Auth state change listener (simplified version for JWT-based auth)
+  onAuthStateChange(callback: (user: User | null) => void): () => void {
+    // For JWT-based auth, we don't have real-time auth state changes
+    // This is a simplified implementation that just calls the callback with current user
+    const currentUser = this.getCurrentUser();
+    callback(currentUser);
+    
+    // Return a cleanup function (no-op for JWT auth)
+    return () => {
+      // No cleanup needed for JWT auth
+    };
   }
 }
 
+// Default auth service instance
 export const authService = new AuthService();
-export { AuthService };

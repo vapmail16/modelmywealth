@@ -105,6 +105,13 @@ class HttpClient {
   }
 
   private getAuthToken(): string | null {
+    // Check for JWT access token in localStorage
+    const accessToken = browserService.localStorage.getItem('access_token');
+    if (accessToken && accessToken.startsWith('eyJ')) {
+      return accessToken;
+    }
+    
+    // Fallback to old token sources for backward compatibility
     const tokenSources = [
       'sb-vmrvugezqpydlfjcoldl-auth-token',
       'supabase.auth.token',
@@ -217,7 +224,11 @@ class HttpClient {
   }
 
   private async handleUnauthorized(): Promise<void> {
-    browserService.window.location.href = '/auth';
+    // Clear auth data and redirect to login
+    browserService.localStorage.removeItem('access_token');
+    browserService.localStorage.removeItem('refresh_token');
+    browserService.localStorage.removeItem('currentUser');
+    browserService.window.location.href = '/login';
   }
 
 

@@ -14,11 +14,15 @@ export function Auth() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { login, register, isLoggingIn, isRegistering } = useAuthStore();
+  const { forgotPassword } = useAuthStore();
   
   const [loginForm, setLoginForm] = useState({
     email: '',
     password: '',
   });
+  
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   
   const [registerForm, setRegisterForm] = useState({
     email: '',
@@ -41,6 +45,25 @@ export function Auth() {
       toast({
         title: "Login failed",
         description: error instanceof Error ? error.message : 'Please check your credentials',
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await forgotPassword(forgotPasswordEmail);
+      toast({
+        title: "Password reset sent!",
+        description: "If an account with this email exists, a password reset link has been sent.",
+      });
+      setShowForgotPassword(false);
+      setForgotPasswordEmail('');
+    } catch (error) {
+      toast({
+        title: "Password reset failed",
+        description: error instanceof Error ? error.message : 'Please try again',
         variant: "destructive",
       });
     }
@@ -129,6 +152,15 @@ export function Auth() {
                       required
                     />
                   </div>
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setShowForgotPassword(true)}
+                      className="text-sm text-primary hover:underline"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
                   <Button 
                     type="submit" 
                     className="w-full" 
@@ -140,6 +172,43 @@ export function Auth() {
               </CardContent>
             </Card>
           </TabsContent>
+          
+          {/* Forgot Password Dialog */}
+          {showForgotPassword && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                <h3 className="text-lg font-semibold mb-4">Reset Password</h3>
+                <form onSubmit={handleForgotPassword} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="forgot-email">Email</Label>
+                    <Input
+                      id="forgot-email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={forgotPasswordEmail}
+                      onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button 
+                      type="submit" 
+                      className="flex-1"
+                    >
+                      Send Reset Link
+                    </Button>
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      onClick={() => setShowForgotPassword(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
           
           <TabsContent value="register">
             <Card>

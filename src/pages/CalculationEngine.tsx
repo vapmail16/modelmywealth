@@ -7,10 +7,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Calculator, TrendingUp, BarChart3, Save, Download, Calendar, PieChart, Target } from "lucide-react";
+import { Calculator, TrendingUp, BarChart3, Save, Download, Calendar, PieChart, Target, Clock, CheckCircle, AlertCircle, History } from "lucide-react";
 import { DebtCalculationEngine, DebtCalculationInput, DebtScheduleRow } from "@/services/calculations/DebtCalculationEngine";
 import { DepreciationCalculationEngine, DepreciationCalculationInput, DepreciationScheduleRow } from "@/services/calculations/DepreciationCalculationEngine";
-import { SupabaseDataService } from "@/services/api/SupabaseDataService";
+import { DataService } from "@/services/api/DataService";
+import { useCalculationPersistence } from "@/hooks/useCalculationPersistence";
+import { DebtCalculationForm } from "@/components/forms/DebtCalculationForm";
 
 interface CalculationEngineProps {
   projectId?: string;
@@ -20,6 +22,29 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("debt");
   const [isCalculating, setIsCalculating] = useState(false);
+
+  // Calculation persistence
+  const calculationPersistence = useCalculationPersistence(projectId, {
+    onRunCreated: (runId) => {
+      console.log('Calculation run created:', runId);
+    },
+    onRunCompleted: (runId) => {
+      console.log('Calculation run completed:', runId);
+      toast({
+        title: "Calculation completed",
+        description: "Your calculation has been saved successfully.",
+        variant: "default"
+      });
+    },
+    onRunFailed: (runId, error) => {
+      console.error('Calculation run failed:', runId, error);
+      toast({
+        title: "Calculation failed",
+        description: error,
+        variant: "destructive"
+      });
+    }
+  });
 
   // Debt calculation state
   const [debtInput, setDebtInput] = useState<DebtCalculationInput>({
@@ -67,7 +92,7 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
       console.log('CalculationEngine: Loading Data Entry values for project:', projectId);
       
       // Load debt structure data from Data Entry
-      const debtStructureData = await SupabaseDataService.loadDebtStructureData(projectId);
+      const debtStructureData = await DataService.loadDebtStructureData(projectId);
       console.log('CalculationEngine: Debt structure data loaded:', debtStructureData);
       
       if (debtStructureData) {
@@ -85,8 +110,8 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
           creditRiskPremium, maturityYears, amortizationYears
         });
         
-        setDebtInput(prev => ({
-          ...prev,
+        const updatedDebtInput = {
+          ...debtInput,
           principal,
           additionalLoan,
           bankBaseRate,
@@ -94,11 +119,15 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
           creditRiskPremium,
           maturityYears,
           amortizationYears,
-        }));
+        };
+        console.log('CalculationEngine: Setting debt input to:', updatedDebtInput);
+        setDebtInput(updatedDebtInput);
+      } else {
+        console.log('CalculationEngine: No debt structure data found');
       }
 
       // Load balance sheet data for depreciation inputs
-      const balanceSheetData = await SupabaseDataService.loadBalanceSheetData(projectId);
+      const balanceSheetData = await DataService.loadBalanceSheetData(projectId);
       console.log('CalculationEngine: Balance sheet data loaded:', balanceSheetData);
       
       if (balanceSheetData) {
@@ -112,15 +141,19 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
           openingBalance, monthlyCapex, depreciationRate
         });
         
-        setDepreciationInput(prev => ({
-          ...prev,
+        const updatedDepreciationInput = {
+          ...depreciationInput,
           openingBalance,
           monthlyCapex,
           depreciationRate,
-        }));
+        };
+        console.log('CalculationEngine: Setting depreciation input to:', updatedDepreciationInput);
+        setDepreciationInput(updatedDepreciationInput);
+      } else {
+        console.log('CalculationEngine: No balance sheet data found');
       }
     } catch (error) {
-      console.log('CalculationEngine: No Data Entry values found, using defaults:', error);
+      console.error('CalculationEngine: Error loading Data Entry values:', error);
     }
   };
 
@@ -154,6 +187,14 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
         throw new Error('Please enter a valid principal amount or additional loan amount');
       }
 
+      // Create calculation run
+      const runId = await calculationPersistence.createCalculationRun(
+        'debt',
+        debtInput,
+        `Debt Calculation - ${debtInput.debtType}`
+      );
+
+      const startTime = Date.now();
       const schedule = DebtCalculationEngine.calculateDebtSchedule(debtInput);
       
       if (!schedule || schedule.length === 0) {
@@ -161,11 +202,31 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
       }
 
       const summary = DebtCalculationEngine.calculateSummary(schedule);
+      const executionTime = Date.now() - startTime;
       
       setDebtSchedule(schedule);
       setDebtSummary(summary);
 
-      // Save to Supabase (don't fail if save fails)
+      // Complete calculation run
+      await calculationPersistence.completeCalculationRun(
+        runId,
+        {
+          schedule,
+          summary,
+          input: debtInput
+        },
+        executionTime
+      );
+
+      // Save schedules
+      await calculationPersistence.saveSchedules(runId, [
+        {
+          type: 'debt_schedule',
+          data: schedule
+        }
+      ]);
+
+      // Legacy save to Supabase (don't fail if save fails)
       try {
         console.log('CalculationEngine: Attempting to save debt calculations...');
         await DebtCalculationEngine.saveDebtCalculations(projectId, debtInput.debtType, schedule);
@@ -175,12 +236,17 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
         // Don't throw - the calculation worked, just the save failed
       }
 
-      toast({
-        title: "Debt Calculation Complete",
-        description: `Calculated ${schedule.length} months of debt schedule`,
-      });
     } catch (error) {
       console.error('Debt calculation error:', error);
+      
+      // Mark calculation as failed if we have a run ID
+      if (calculationPersistence.currentRunId) {
+        await calculationPersistence.failCalculationRun(
+          calculationPersistence.currentRunId,
+          error instanceof Error ? error.message : 'Unknown error'
+        );
+      }
+      
       toast({
         title: "Calculation Error",
         description: error instanceof Error ? error.message : "Failed to calculate debt schedule",
@@ -199,6 +265,14 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
         throw new Error('Invalid input values');
       }
 
+      // Create calculation run
+      const runId = await calculationPersistence.createCalculationRun(
+        'depreciation',
+        depreciationInput,
+        `Depreciation Calculation - ${depreciationInput.depreciationMethod}`
+      );
+
+      const startTime = Date.now();
       const schedule = DepreciationCalculationEngine.calculateDepreciationSchedule(depreciationInput);
       
       if (!schedule || schedule.length === 0) {
@@ -206,11 +280,31 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
       }
 
       const summary = DepreciationCalculationEngine.calculateSummary(schedule);
+      const executionTime = Date.now() - startTime;
       
       setDepreciationSchedule(schedule);
       setDepreciationSummary(summary);
 
-      // Save to Supabase (don't fail if save fails)
+      // Complete calculation run
+      await calculationPersistence.completeCalculationRun(
+        runId,
+        {
+          schedule,
+          summary,
+          input: depreciationInput
+        },
+        executionTime
+      );
+
+      // Save schedules
+      await calculationPersistence.saveSchedules(runId, [
+        {
+          type: 'depreciation_schedule',
+          data: schedule
+        }
+      ]);
+
+      // Legacy save to Supabase (don't fail if save fails)
       try {
         console.log('CalculationEngine: Attempting to save depreciation schedule...');
         await DepreciationCalculationEngine.saveDepreciationSchedule(projectId, schedule);
@@ -220,12 +314,17 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
         // Don't throw - the calculation worked, just the save failed
       }
 
-      toast({
-        title: "Depreciation Calculation Complete",
-        description: `Calculated ${schedule.length} months of depreciation schedule`,
-      });
     } catch (error) {
       console.error('Depreciation calculation error:', error);
+      
+      // Mark calculation as failed if we have a run ID
+      if (calculationPersistence.currentRunId) {
+        await calculationPersistence.failCalculationRun(
+          calculationPersistence.currentRunId,
+          error instanceof Error ? error.message : 'Unknown error'
+        );
+      }
+      
       toast({
         title: "Calculation Error",
         description: error instanceof Error ? error.message : "Failed to calculate depreciation schedule",
@@ -254,6 +353,71 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
     window.URL.revokeObjectURL(url);
   };
 
+  // Calculation History Component
+  const CalculationHistory = () => {
+    const [showHistory, setShowHistory] = useState(false);
+
+    useEffect(() => {
+      if (showHistory) {
+        calculationPersistence.getCalculationHistory();
+      }
+    }, [showHistory]);
+
+    return (
+      <div className="space-y-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowHistory(!showHistory)}
+          className="w-full justify-start gap-2"
+        >
+          <History className="h-4 w-4" />
+          Calculation History
+        </Button>
+        
+        {showHistory && (
+          <div className="bg-card border rounded-lg p-4 space-y-3">
+            <h4 className="font-semibold">Recent Calculations</h4>
+            {calculationPersistence.loading ? (
+              <div className="text-center py-4">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>
+                <p className="text-sm text-muted-foreground mt-2">Loading history...</p>
+              </div>
+            ) : calculationPersistence.runs.length > 0 ? (
+              <div className="space-y-2">
+                {calculationPersistence.runs.slice(0, 5).map((run) => (
+                  <div key={run.id} className="flex items-center justify-between p-2 bg-muted rounded">
+                    <div className="flex-1">
+                      <div className="font-medium text-sm">{run.runName}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {run.calculationType} • {new Date(run.createdAt).toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      {run.status === 'completed' && (
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                      )}
+                      {run.status === 'failed' && (
+                        <AlertCircle className="h-4 w-4 text-red-600" />
+                      )}
+                      {run.status === 'running' && (
+                        <Clock className="h-4 w-4 text-blue-600 animate-spin" />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-4">
+                No calculation history found
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   // Consolidation functions
   const generateMonthlyConsolidatedData = async () => {
     try {
@@ -270,12 +434,12 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
         growthAssumptionsData,
         seasonalityData
       ] = await Promise.all([
-        SupabaseDataService.loadProfitLossData(projectId),
-        SupabaseDataService.loadBalanceSheetData(projectId),
-        SupabaseDataService.loadDebtStructureData(projectId),
-        SupabaseDataService.loadWorkingCapitalData(projectId),
-        SupabaseDataService.loadGrowthAssumptionsData(projectId),
-        SupabaseDataService.loadSeasonalityData(projectId)
+        DataService.loadProfitLossData(projectId),
+        DataService.loadBalanceSheetData(projectId),
+        DataService.loadDebtStructureData(projectId),
+        DataService.loadWorkingCapitalData(projectId),
+        DataService.loadGrowthAssumptionsData(projectId),
+        DataService.loadSeasonalityData(projectId)
       ]);
 
       console.log('Loaded data:', {
@@ -303,10 +467,19 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
 
       // Calculate debt schedules
       console.log('Calculating debt schedules...');
+      console.log('Balance sheet data for debt calculation:', {
+        long_term_debt: balanceSheetData.long_term_debt,
+        short_term_debt: balanceSheetData.short_term_debt
+      });
+      console.log('Debt structure data for debt calculation:', {
+        additional_loan_senior_secured: debtStructureData.additional_loan_senior_secured,
+        bank_base_rate_senior_secured: debtStructureData.bank_base_rate_senior_secured,
+        maturity_y_senior_secured: debtStructureData.maturity_y_senior_secured
+      });
       const seniorSecuredSchedule = DebtCalculationEngine.calculateDebtSchedule({
         projectId,
         debtType: 'senior_secured',
-        principal: balanceSheetData.senior_secured || 0,
+        principal: balanceSheetData.long_term_debt || 0, // Use long_term_debt as senior secured
         additionalLoan: debtStructureData.additional_loan_senior_secured || 0,
         bankBaseRate: debtStructureData.bank_base_rate_senior_secured || 0,
         liquidityPremium: debtStructureData.liquidity_premiums_senior_secured || 0,
@@ -319,7 +492,7 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
       const shortTermSchedule = DebtCalculationEngine.calculateDebtSchedule({
         projectId,
         debtType: 'short_term',
-        principal: balanceSheetData.debt_tranche1 || 0,
+        principal: balanceSheetData.short_term_debt || 0, // Use short_term_debt as debt tranche 1
         additionalLoan: debtStructureData.additional_loan_short_term || 0,
         bankBaseRate: debtStructureData.bank_base_rate_short_term || 0,
         liquidityPremium: debtStructureData.liquidity_premiums_short_term || 0,
@@ -331,6 +504,11 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
 
       // Calculate depreciation schedule
       console.log('Calculating depreciation schedule...');
+      console.log('Balance sheet data for depreciation:', {
+        ppe: balanceSheetData.ppe,
+        capital_expenditure_additions: balanceSheetData.capital_expenditure_additions,
+        asset_depreciated_over_years: balanceSheetData.asset_depreciated_over_years
+      });
       const depreciationSchedule = DepreciationCalculationEngine.calculateDepreciationSchedule({
         projectId,
         openingBalance: balanceSheetData.ppe || 0,
@@ -341,6 +519,16 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
 
       // Generate monthly consolidated data
       console.log('Generating monthly consolidated data...');
+      console.log('Data passed to generateMonthlyData:', {
+        profitLossData: !!profitLossData,
+        balanceSheetData: !!balanceSheetData,
+        seniorSecuredSchedule: seniorSecuredSchedule.length,
+        shortTermSchedule: shortTermSchedule.length,
+        depreciationSchedule: depreciationSchedule.length,
+        growthAssumptionsData: !!growthAssumptionsData,
+        seasonalityData: !!seasonalityData,
+        workingCapitalData: !!workingCapitalData
+      });
       const monthlyConsolidated = generateMonthlyData(
         profitLossData,
         balanceSheetData,
@@ -488,25 +676,25 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
       // P&L Calculations
       const grossProfit = revenue + costOfGoodsSold;
       const ebitda = grossProfit + operatingExpenses;
-      const depreciation = -depreciationData.depreciation;
+      const depreciation = -(depreciationData.depreciation || 0);
       const ebit = ebitda + depreciation;
-      const interestExpense = -(seniorSecuredData.interest + shortTermData.interest + seniorSecuredData.amortisation + shortTermData.amortisation);
+      const interestExpense = -((seniorSecuredData.interest || 0) + (shortTermData.interest || 0) + (seniorSecuredData.amortisation || 0) + (shortTermData.amortisation || 0));
       const netIncomeBeforeTax = ebit + interestExpense;
       const taxExpense = -(netIncomeBeforeTax * 0.3); // 30% tax rate
       const netIncome = netIncomeBeforeTax + taxExpense;
       
       // Balance Sheet Calculations (use base values for first month, then calculate changes)
-      const baseCash = balanceSheetData.cash || 0;
-      const baseAccountsReceivable = balanceSheetData.accounts_receivable || 0;
-      const baseInventory = balanceSheetData.inventory || 0;
-      const baseOtherCurrentAssets = balanceSheetData.other_current_assets || 0;
-      const baseAccountsPayable = balanceSheetData.accounts_payable_provisions || 0;
+      const baseCash = parseFloat(balanceSheetData.cash || '0');
+      const baseAccountsReceivable = parseFloat(balanceSheetData.accounts_receivable || '0');
+      const baseInventory = parseFloat(balanceSheetData.inventory || '0');
+      const baseOtherCurrentAssets = parseFloat(balanceSheetData.other_current_assets || '0');
+      const baseAccountsPayable = parseFloat(balanceSheetData.accounts_payable || '0');
       
       // Calculate working capital as monthly changes
-      const accountsReceivableChange = revenue * (workingCapitalData.account_receivable_percent || 0.176) / 12; // Monthly change
-      const inventoryChange = Math.abs(costOfGoodsSold) * (workingCapitalData.inventory_percent || 0.264) / 12; // Monthly change
-      const otherCurrentAssetsChange = revenue * (workingCapitalData.other_current_assets_percent || 0.044) / 12; // Monthly change
-      const accountsPayableChange = (Math.abs(costOfGoodsSold) + Math.abs(operatingExpenses)) * (workingCapitalData.accounts_payable_percent || 0.132) / 12; // Monthly change
+      const accountsReceivableChange = revenue * (parseFloat(workingCapitalData?.account_receivable_percent || '0.176') / 100) / 12; // Monthly change
+      const inventoryChange = Math.abs(costOfGoodsSold) * (parseFloat(workingCapitalData?.inventory_percent || '0.264') / 100) / 12; // Monthly change
+      const otherCurrentAssetsChange = revenue * (parseFloat(workingCapitalData?.other_current_assets_percent || '0.044') / 100) / 12; // Monthly change
+      const accountsPayableChange = (Math.abs(costOfGoodsSold) + Math.abs(operatingExpenses)) * (parseFloat(workingCapitalData?.accounts_payable_percent || '0.132') / 100) / 12; // Monthly change
       
       // Calculate current month values
       const accountsReceivable = monthCum === 1 ? baseAccountsReceivable : 
@@ -519,39 +707,48 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
         (monthlyData[monthCum - 2]?.accountsPayable || baseAccountsPayable) + accountsPayableChange;
       
       // Cash Flow Calculations (use changes in working capital)
-      const previousAccountsReceivable = monthCum === 1 ? (balanceSheetData.accounts_receivable || 0) : 
-        (monthlyData[monthCum - 2]?.accountsReceivable || balanceSheetData.accounts_receivable || 0);
-      const previousInventory = monthCum === 1 ? (balanceSheetData.inventory || 0) : 
-        (monthlyData[monthCum - 2]?.inventory || balanceSheetData.inventory || 0);
-      const previousOtherCurrentAssets = monthCum === 1 ? (balanceSheetData.other_current_assets || 0) : 
-        (monthlyData[monthCum - 2]?.otherCurrentAssets || balanceSheetData.other_current_assets || 0);
-      const previousAccountsPayable = monthCum === 1 ? (balanceSheetData.accounts_payable_provisions || 0) : 
-        (monthlyData[monthCum - 2]?.accountsPayable || balanceSheetData.accounts_payable_provisions || 0);
+      const previousAccountsReceivable = monthCum === 1 ? parseFloat(balanceSheetData.accounts_receivable || '0') : 
+        (monthlyData[monthCum - 2]?.accountsReceivable || parseFloat(balanceSheetData.accounts_receivable || '0'));
+      const previousInventory = monthCum === 1 ? parseFloat(balanceSheetData.inventory || '0') : 
+        (monthlyData[monthCum - 2]?.inventory || parseFloat(balanceSheetData.inventory || '0'));
+      const previousOtherCurrentAssets = monthCum === 1 ? parseFloat(balanceSheetData.other_current_assets || '0') : 
+        (monthlyData[monthCum - 2]?.otherCurrentAssets || parseFloat(balanceSheetData.other_current_assets || '0'));
+      const previousAccountsPayable = monthCum === 1 ? parseFloat(balanceSheetData.accounts_payable || '0') : 
+        (monthlyData[monthCum - 2]?.accountsPayable || parseFloat(balanceSheetData.accounts_payable || '0'));
       
       const operatingCashFlow = netIncome + depreciation + 
         (accountsReceivable - previousAccountsReceivable) + 
         (inventory - previousInventory) + 
         (otherCurrentAssets - previousOtherCurrentAssets) - 
         (accountsPayable - previousAccountsPayable);
-      const investingCashFlow = -depreciationData.capexAddition;
-      const financingCashFlow = seniorSecuredData.additionalLoan + shortTermData.additionalLoan - seniorSecuredData.repayment - shortTermData.repayment;
+      const investingCashFlow = -(depreciationData.capexAddition || 0);
+      const financingCashFlow = (seniorSecuredData.additionalLoan || 0) + (shortTermData.additionalLoan || 0) - (seniorSecuredData.repayment || 0) - (shortTermData.repayment || 0);
       const netCashFlow = operatingCashFlow + investingCashFlow + financingCashFlow;
       
       const openingCash = monthCum === 1 ? baseCash : monthlyData[monthCum - 2]?.closingCash || baseCash;
       const closingCash = openingCash + netCashFlow;
       
+      // Validate all values are numbers
+      const validateNumber = (value: any, name: string) => {
+        if (isNaN(value) || !isFinite(value)) {
+          console.warn(`Invalid ${name}:`, value);
+          return 0;
+        }
+        return value;
+      };
+      
       // Balance Sheet Calculations (after cash is calculated)
-      const ppe = depreciationData.closingBalance;
-      const otherAssets = balanceSheetData.other_assets || 0;
+      const ppe = depreciationData.closingBalance || 0;
+      const otherAssets = parseFloat(balanceSheetData.other_assets || '0');
       const totalAssets = closingCash + accountsReceivable + inventory + otherCurrentAssets + ppe + otherAssets;
       
-      const shortTermDebt = shortTermData.closingBalance;
+      const shortTermDebt = shortTermData.closingBalance || 0;
       const longTermDebt = 0; // Additional long-term debt if any
-      const seniorSecured = seniorSecuredData.closingBalance;
-      const debtTranche1 = balanceSheetData.debt_tranche1 || 0;
-      const equity = balanceSheetData.equity || 0;
-      const retainedEarnings = monthCum === 1 ? (balanceSheetData.retained_earnings || 0) : 
-        (monthlyData[monthCum - 2]?.retainedEarnings || balanceSheetData.retained_earnings || 0) + netIncome;
+      const seniorSecured = seniorSecuredData.closingBalance || 0;
+      const debtTranche1 = parseFloat(balanceSheetData.short_term_debt || '0'); // Use short_term_debt as debt_tranche1
+      const equity = parseFloat(balanceSheetData.common_stock || '0'); // Use common_stock as equity
+      const retainedEarnings = monthCum === 1 ? parseFloat(balanceSheetData.retained_earnings || '0') : 
+        (monthlyData[monthCum - 2]?.retainedEarnings || parseFloat(balanceSheetData.retained_earnings || '0')) + netIncome;
       const totalLiabilitiesAndEquity = accountsPayable + shortTermDebt + longTermDebt + seniorSecured + debtTranche1 + equity + retainedEarnings;
       
       // Debug logging for first few months and last few months
@@ -573,37 +770,37 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
         monthCum,
         year,
         month: monthName,
-        revenue,
-        costOfGoodsSold,
-        grossProfit,
-        operatingExpenses,
-        ebitda,
-        depreciation,
-        ebit,
-        interestExpense,
-        netIncomeBeforeTax,
-        taxExpense,
-        netIncome,
-        openingCash,
-        closingCash,
-        accountsReceivable,
-        inventory,
-        otherCurrentAssets,
-        ppe,
-        otherAssets,
-        totalAssets,
-        accountsPayable,
-        shortTermDebt,
-        longTermDebt,
-        seniorSecured,
-        debtTranche1,
-        equity,
-        retainedEarnings,
-        totalLiabilitiesAndEquity,
-        operatingCashFlow,
-        investingCashFlow,
-        financingCashFlow,
-        netCashFlow
+        revenue: validateNumber(revenue, 'revenue'),
+        costOfGoodsSold: validateNumber(costOfGoodsSold, 'costOfGoodsSold'),
+        grossProfit: validateNumber(grossProfit, 'grossProfit'),
+        operatingExpenses: validateNumber(operatingExpenses, 'operatingExpenses'),
+        ebitda: validateNumber(ebitda, 'ebitda'),
+        depreciation: validateNumber(depreciation, 'depreciation'),
+        ebit: validateNumber(ebit, 'ebit'),
+        interestExpense: validateNumber(interestExpense, 'interestExpense'),
+        netIncomeBeforeTax: validateNumber(netIncomeBeforeTax, 'netIncomeBeforeTax'),
+        taxExpense: validateNumber(taxExpense, 'taxExpense'),
+        netIncome: validateNumber(netIncome, 'netIncome'),
+        openingCash: validateNumber(openingCash, 'openingCash'),
+        closingCash: validateNumber(closingCash, 'closingCash'),
+        accountsReceivable: validateNumber(accountsReceivable, 'accountsReceivable'),
+        inventory: validateNumber(inventory, 'inventory'),
+        otherCurrentAssets: validateNumber(otherCurrentAssets, 'otherCurrentAssets'),
+        ppe: validateNumber(ppe, 'ppe'),
+        otherAssets: validateNumber(otherAssets, 'otherAssets'),
+        totalAssets: validateNumber(totalAssets, 'totalAssets'),
+        accountsPayable: validateNumber(accountsPayable, 'accountsPayable'),
+        shortTermDebt: validateNumber(shortTermDebt, 'shortTermDebt'),
+        longTermDebt: validateNumber(longTermDebt, 'longTermDebt'),
+        seniorSecured: validateNumber(seniorSecured, 'seniorSecured'),
+        debtTranche1: validateNumber(debtTranche1, 'debtTranche1'),
+        equity: validateNumber(equity, 'equity'),
+        retainedEarnings: validateNumber(retainedEarnings, 'retainedEarnings'),
+        totalLiabilitiesAndEquity: validateNumber(totalLiabilitiesAndEquity, 'totalLiabilitiesAndEquity'),
+        operatingCashFlow: validateNumber(operatingCashFlow, 'operatingCashFlow'),
+        investingCashFlow: validateNumber(investingCashFlow, 'investingCashFlow'),
+        financingCashFlow: validateNumber(financingCashFlow, 'financingCashFlow'),
+        netCashFlow: validateNumber(netCashFlow, 'netCashFlow')
       });
     }
     
@@ -827,23 +1024,32 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
     const lastQuarter = quarterlyData[quarterlyData.length - 1];
     const lastYear = annualData[annualData.length - 1];
     
+    // Helper function to validate numbers
+    const validateSummaryNumber = (value: any, name: string) => {
+      if (isNaN(value) || !isFinite(value)) {
+        console.warn(`Invalid summary ${name}:`, value);
+        return 0;
+      }
+      return value;
+    };
+    
     return {
       // Sum totals (correct - these accumulate over time)
-      totalRevenue: monthlyData.reduce((sum, d) => sum + d.revenue, 0),
-      totalNetIncome: monthlyData.reduce((sum, d) => sum + d.netIncome, 0),
-      totalInterest: monthlyData.reduce((sum, d) => sum + Math.abs(d.interestExpense), 0),
-      totalDepreciation: monthlyData.reduce((sum, d) => sum + Math.abs(d.depreciation), 0),
+      totalRevenue: validateSummaryNumber(monthlyData.reduce((sum, d) => sum + (d.revenue || 0), 0), 'totalRevenue'),
+      totalNetIncome: validateSummaryNumber(monthlyData.reduce((sum, d) => sum + (d.netIncome || 0), 0), 'totalNetIncome'),
+      totalInterest: validateSummaryNumber(monthlyData.reduce((sum, d) => sum + Math.abs(d.interestExpense || 0), 0), 'totalInterest'),
+      totalDepreciation: validateSummaryNumber(monthlyData.reduce((sum, d) => sum + Math.abs(d.depreciation || 0), 0), 'totalDepreciation'),
       
       // Final period values (correct - these are end-of-period balances)
-      finalCash: lastMonth?.closingCash || 0,
-      finalDebt: (lastMonth?.seniorSecured || 0) + (lastMonth?.shortTermDebt || 0),
+      finalCash: validateSummaryNumber(lastMonth?.closingCash || 0, 'finalCash'),
+      finalDebt: validateSummaryNumber((lastMonth?.seniorSecured || 0) + (lastMonth?.shortTermDebt || 0), 'finalDebt'),
       
       // Averages (correct)
-      averageEBITDA: monthlyData.reduce((sum, d) => sum + d.ebitda, 0) / monthlyData.length,
-      averageEBITDAMargin: quarterlyData.reduce((sum, d) => sum + d.ebitdaMargin, 0) / quarterlyData.length,
-      averageNetIncomeMargin: quarterlyData.reduce((sum, d) => sum + d.netIncomeMargin, 0) / quarterlyData.length,
-      averageROE: annualData.reduce((sum, d) => sum + d.returnOnEquity, 0) / annualData.length,
-      averageROA: annualData.reduce((sum, d) => sum + d.returnOnAssets, 0) / annualData.length
+      averageEBITDA: validateSummaryNumber(monthlyData.reduce((sum, d) => sum + (d.ebitda || 0), 0) / monthlyData.length, 'averageEBITDA'),
+      averageEBITDAMargin: validateSummaryNumber(quarterlyData.reduce((sum, d) => sum + (d.ebitdaMargin || 0), 0) / quarterlyData.length, 'averageEBITDAMargin'),
+      averageNetIncomeMargin: validateSummaryNumber(quarterlyData.reduce((sum, d) => sum + (d.netIncomeMargin || 0), 0) / quarterlyData.length, 'averageNetIncomeMargin'),
+      averageROE: validateSummaryNumber(annualData.reduce((sum, d) => sum + (d.returnOnEquity || 0), 0) / annualData.length, 'averageROE'),
+      averageROA: validateSummaryNumber(annualData.reduce((sum, d) => sum + (d.returnOnAssets || 0), 0) / annualData.length, 'averageROA')
     };
   };
 
@@ -878,6 +1084,10 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
           </Button>
         </div>
       </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Main Content */}
+        <div className="lg:col-span-3">
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-5">
@@ -949,6 +1159,7 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
                       value={debtInput.principal}
                       onChange={(e) => setDebtInput(prev => ({ ...prev, principal: parseFloat(e.target.value) || 0 }))}
                     />
+                    <div className="text-xs text-muted-foreground">Current: {debtInput.principal}</div>
                   </div>
 
                   <div className="space-y-2">
@@ -959,6 +1170,7 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
                       value={debtInput.additionalLoan}
                       onChange={(e) => setDebtInput(prev => ({ ...prev, additionalLoan: parseFloat(e.target.value) || 0 }))}
                     />
+                    <div className="text-xs text-muted-foreground">Current: {debtInput.additionalLoan}</div>
                   </div>
                 </div>
 
@@ -1136,6 +1348,7 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
                       value={depreciationInput.openingBalance}
                       onChange={(e) => setDepreciationInput(prev => ({ ...prev, openingBalance: parseFloat(e.target.value) || 0 }))}
                     />
+                    <div className="text-xs text-muted-foreground">Current: {depreciationInput.openingBalance}</div>
                   </div>
 
                   <div className="space-y-2">
@@ -1146,6 +1359,7 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
                       value={depreciationInput.monthlyCapex}
                       onChange={(e) => setDepreciationInput(prev => ({ ...prev, monthlyCapex: parseFloat(e.target.value) || 0 }))}
                     />
+                    <div className="text-xs text-muted-foreground">Current: {depreciationInput.monthlyCapex}</div>
                   </div>
                 </div>
 
@@ -1180,15 +1394,7 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="salvageValue">Salvage Value</Label>
-                    <Input
-                      id="salvageValue"
-                      type="number"
-                      value={depreciationInput.salvageValue || 0}
-                      onChange={(e) => setDepreciationInput(prev => ({ ...prev, salvageValue: parseFloat(e.target.value) || 0 }))}
-                    />
-                  </div>
+
                 </div>
 
                 <Button 
@@ -1596,6 +1802,47 @@ export default function CalculationEngine({ projectId = "05632bb7-b506-453d-9ca1
           )}
         </TabsContent>
       </Tabs>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+          {/* Calculation History */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">Calculation History</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CalculationHistory />
+            </CardContent>
+          </Card>
+
+          {/* Calculation Status */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">Calculation Status</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {calculationPersistence.isRunning && (
+                <div className="flex items-center gap-2 text-blue-600">
+                  <Clock className="h-4 w-4 animate-spin" />
+                  <span>Calculation running...</span>
+                </div>
+              )}
+              {calculationPersistence.currentRunId && (
+                <div className="text-sm text-muted-foreground">
+                  Run ID: {calculationPersistence.currentRunId.slice(0, 8)}...
+                </div>
+              )}
+              {calculationPersistence.error && (
+                <div className="flex items-center gap-2 text-red-600">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>Calculation failed</span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 } 

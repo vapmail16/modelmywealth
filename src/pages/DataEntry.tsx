@@ -1,22 +1,24 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Save, Download } from "lucide-react";
 import { useProjectStore } from "@/stores/projectStore";
-import { SupabaseDataService } from "@/services/api/SupabaseDataService";
+import { DataService } from "@/services/api/DataService";
+import { configService } from "@/services/config/ConfigService";
+// Removed useAutoSave hook - using simple save on Next button instead
 
-// Import form components
-import CompanyDetailsForm from "@/components/data-entry/CompanyDetailsForm";
-import ProfitLossForm from "@/components/data-entry/ProfitLossForm";
-import BalanceSheetForm from "@/components/data-entry/BalanceSheetForm";
-import DebtStructureForm from "@/components/data-entry/DebtStructureForm";
-import GrowthAssumptionsForm from "@/components/data-entry/GrowthAssumptionsForm";
-import WorkingCapitalForm from "@/components/data-entry/WorkingCapitalForm";
-import SeasonalityForm from "@/components/data-entry/SeasonalityForm";
-import CashFlowForm from "@/components/data-entry/CashFlowForm";
+// Import form components  
+import { CompanyDetailsForm } from "@/components/forms/CompanyDetailsForm";
+import { ProfitLossForm } from "@/components/forms/ProfitLossForm";
+import BalanceSheetForm from "@/components/forms/BalanceSheetForm";
+import { DebtStructureForm } from "@/components/forms/DebtStructureForm";
+import { GrowthAssumptionsForm } from "@/components/forms/GrowthAssumptionsForm";
+import { WorkingCapitalForm } from "@/components/forms/WorkingCapitalForm";
+import { SeasonalityForm } from "@/components/forms/SeasonalityForm";
+import { CashFlowForm } from "@/components/forms/CashFlowForm";
 
 interface DataEntryFormData {
   // Company Details (from company_details table)
@@ -180,53 +182,227 @@ export default function DataEntry() {
   const [formData, setFormData] = useState<DataEntryFormData>(initialFormData);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log('DataEntry: Component rendered, selectedProject:', selectedProject);
+  // Helper function to get section-specific data
+  const getSectionData = (section: string, data: DataEntryFormData) => {
+    switch (section) {
+      case 'company-details':
+        return {
+          company_name: data.company_name,
+          industry: data.industry,
+          region: data.region,
+          country: data.country,
+          employee_count: data.employee_count,
+          founded: data.founded,
+          company_website: data.company_website,
+          business_case: data.business_case,
+          notes: data.notes,
+          projection_start_month: data.projection_start_month,
+          projection_start_year: data.projection_start_year,
+          projections_year: data.projections_year,
+          reporting_currency: data.reporting_currency
+        };
+      case 'profit-loss':
+        return {
+          revenue: data.revenue,
+          cogs: data.cogs,
+          gross_profit: data.gross_profit,
+          operating_expenses: data.operating_expenses,
+          ebitda: data.ebitda,
+          depreciation: data.depreciation,
+          ebit: data.ebit,
+          interest_expense: data.interest_expense,
+          pretax_income: data.pretax_income,
+          tax_rates: data.tax_rates,
+          taxes: data.taxes,
+          net_income: data.net_income
+        };
+      case 'balance-sheet':
+        return {
+          cash: data.cash,
+          accounts_receivable: data.accounts_receivable,
+          inventory: data.inventory,
+          other_current_assets: data.other_current_assets,
+          ppe: data.ppe,
+          other_assets: data.other_assets,
+          total_assets: data.total_assets,
+          accounts_payable_provisions: data.accounts_payable_provisions,
+          short_term_debt: data.short_term_debt,
+          other_long_term_debt: data.other_long_term_debt,
+          senior_secured: data.senior_secured,
+          debt_tranche1: data.debt_tranche1,
+          retained_earnings: data.retained_earnings,
+          equity: data.equity,
+          total_liabilities_and_equity: data.total_liabilities_and_equity,
+          capital_expenditure_additions: data.capital_expenditure_additions,
+          asset_depreciated_over_years: data.asset_depreciated_over_years
+        };
+      case 'debt-structure':
+        return {
+          senior_secured_loan_type: data.senior_secured_loan_type,
+          additional_loan_senior_secured: data.additional_loan_senior_secured,
+          bank_base_rate_senior_secured: data.bank_base_rate_senior_secured,
+          liquidity_premiums_senior_secured: data.liquidity_premiums_senior_secured,
+          credit_risk_premiums_senior_secured: data.credit_risk_premiums_senior_secured,
+          maturity_y_senior_secured: data.maturity_y_senior_secured,
+          amortization_y_senior_secured: data.amortization_y_senior_secured,
+          short_term_loan_type: data.short_term_loan_type,
+          additional_loan_short_term: data.additional_loan_short_term,
+          bank_base_rate_short_term: data.bank_base_rate_short_term,
+          liquidity_premiums_short_term: data.liquidity_premiums_short_term,
+          credit_risk_premiums_short_term: data.credit_risk_premiums_short_term,
+          maturity_y_short_term: data.maturity_y_short_term,
+          amortization_y_short_term: data.amortization_y_short_term
+        };
+      case 'growth-assumptions':
+        return {
+          gr_revenue_1: data.gr_revenue_1, gr_revenue_2: data.gr_revenue_2, gr_revenue_3: data.gr_revenue_3,
+          gr_revenue_4: data.gr_revenue_4, gr_revenue_5: data.gr_revenue_5, gr_revenue_6: data.gr_revenue_6,
+          gr_revenue_7: data.gr_revenue_7, gr_revenue_8: data.gr_revenue_8, gr_revenue_9: data.gr_revenue_9,
+          gr_revenue_10: data.gr_revenue_10, gr_revenue_11: data.gr_revenue_11, gr_revenue_12: data.gr_revenue_12,
+          gr_cost_1: data.gr_cost_1, gr_cost_2: data.gr_cost_2, gr_cost_3: data.gr_cost_3,
+          gr_cost_4: data.gr_cost_4, gr_cost_5: data.gr_cost_5, gr_cost_6: data.gr_cost_6,
+          gr_cost_7: data.gr_cost_7, gr_cost_8: data.gr_cost_8, gr_cost_9: data.gr_cost_9,
+          gr_cost_10: data.gr_cost_10, gr_cost_11: data.gr_cost_11, gr_cost_12: data.gr_cost_12,
+          gr_cost_oper_1: data.gr_cost_oper_1, gr_cost_oper_2: data.gr_cost_oper_2, gr_cost_oper_3: data.gr_cost_oper_3,
+          gr_cost_oper_4: data.gr_cost_oper_4, gr_cost_oper_5: data.gr_cost_oper_5, gr_cost_oper_6: data.gr_cost_oper_6,
+          gr_cost_oper_7: data.gr_cost_oper_7, gr_cost_oper_8: data.gr_cost_oper_8, gr_cost_oper_9: data.gr_cost_oper_9,
+          gr_cost_oper_10: data.gr_cost_oper_10, gr_cost_oper_11: data.gr_cost_oper_11, gr_cost_oper_12: data.gr_cost_oper_12,
+          gr_capex_1: data.gr_capex_1, gr_capex_2: data.gr_capex_2, gr_capex_3: data.gr_capex_3,
+          gr_capex_4: data.gr_capex_4, gr_capex_5: data.gr_capex_5, gr_capex_6: data.gr_capex_6,
+          gr_capex_7: data.gr_capex_7, gr_capex_8: data.gr_capex_8, gr_capex_9: data.gr_capex_9,
+          gr_capex_10: data.gr_capex_10, gr_capex_11: data.gr_capex_11, gr_capex_12: data.gr_capex_12
+        };
+      case 'working-capital':
+        return {
+          account_receivable_percent: data.account_receivable_percent,
+          inventory_percent: data.inventory_percent,
+          other_current_assets_percent: data.other_current_assets_percent,
+          accounts_payable_percent: data.accounts_payable_percent
+        };
+      case 'seasonality':
+        return {
+          january: data.january, february: data.february, march: data.march, april: data.april,
+          may: data.may, june: data.june, july: data.july, august: data.august,
+          september: data.september, october: data.october, november: data.november, december: data.december,
+          seasonal_working_capital: data.seasonal_working_capital,
+          seasonality_pattern: data.seasonality_pattern
+        };
+      case 'cash-flow':
+        return {
+          operating_cash_flow: data.operating_cash_flow,
+          capital_expenditures: data.capital_expenditures,
+          free_cash_flow: data.free_cash_flow,
+          debt_service: data.debt_service
+        };
+      default:
+        return {};
+    }
+  };
+
+  // Simple save function using existing database structure
+  const saveCurrentSection = async () => {
+    if (!selectedProject?.id) {
+      throw new Error('No project selected');
+    }
+
+    const sectionData = getSectionData(currentStep, formData);
+    
+    // Map flat form data to nested format expected by the API
+    let updatePayload = {};
+    
+    switch (currentStep) {
+      case 'company-details':
+        updatePayload = {
+          companyDetails: sectionData
+        };
+        break;
+      case 'profit-loss':
+        updatePayload = {
+          profitLossData: sectionData
+        };
+        break;
+      case 'balance-sheet':
+        updatePayload = {
+          balanceSheetData: sectionData
+        };
+        break;
+      case 'debt-structure':
+        updatePayload = {
+          debtStructureData: sectionData
+        };
+        break;
+      case 'growth-assumptions':
+        updatePayload = {
+          growthAssumptionsData: sectionData
+        };
+        break;
+      case 'working-capital':
+        updatePayload = {
+          workingCapitalData: sectionData
+        };
+        break;
+      case 'seasonality':
+        updatePayload = {
+          seasonalityData: sectionData
+        };
+        break;
+      case 'cash-flow':
+        updatePayload = {
+          cashFlowData: sectionData
+        };
+        break;
+      default:
+        throw new Error(`Unknown section: ${currentStep}`);
+    }
+    
+    // Use the existing project data update endpoint
+    const response = await fetch(
+      `${configService.get('api').baseURL}/projects/${selectedProject.id}/data`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        },
+        body: JSON.stringify(updatePayload)
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Save failed: ${response.statusText}`);
+    }
+
+    return await response.json();
+  };
 
   const updateFormData = (data: Partial<DataEntryFormData>) => {
     setFormData(prev => ({ ...prev, ...data }));
   };
 
-  // Load existing data when a project is selected
-  useEffect(() => {
-    console.log('DataEntry: selectedProject changed:', selectedProject);
-    if (selectedProject?.id) {
-      console.log('DataEntry: Loading data for project ID:', selectedProject.id);
-      console.log('DataEntry: About to call loadProjectData...');
-      loadProjectData(selectedProject.id);
-      console.log('DataEntry: loadProjectData called successfully');
-    } else {
-      console.log('DataEntry: No selectedProject.id found');
-    }
-  }, [selectedProject?.id]);
-
-  const loadProjectData = async (projectId: string) => {
-    console.log('DataEntry: loadProjectData called with projectId:', projectId);
+  const loadProjectData = useCallback(async (projectId: string) => {
     setIsLoading(true);
     try {
-      console.log('Loading data for project:', projectId);
-      
-      const projectData = await SupabaseDataService.loadProjectData(projectId);
-      console.log('Project data loaded:', projectData);
+      const projectData = await DataService.loadProjectData(projectId);
       
       if (projectData) {
         // Map the loaded data to form fields
         const mappedData: Partial<DataEntryFormData> = {};
         
         // Company Details - Use dedicated company_details table
-        if (projectData.companyDetailsData) {
-          mappedData.company_name = projectData.companyDetailsData.company_name || '';
-          mappedData.industry = projectData.companyDetailsData.industry || '';
-          mappedData.region = projectData.companyDetailsData.region || '';
-          mappedData.country = projectData.companyDetailsData.country || '';
-          mappedData.employee_count = projectData.companyDetailsData.employee_count || '';
-          mappedData.founded = projectData.companyDetailsData.founded || '';
-          mappedData.company_website = projectData.companyDetailsData.company_website || '';
-          mappedData.business_case = projectData.companyDetailsData.business_case || '';
-          mappedData.notes = projectData.companyDetailsData.notes || '';
-          mappedData.projection_start_month = projectData.companyDetailsData.projection_start_month || '';
-          mappedData.projection_start_year = projectData.companyDetailsData.projection_start_year || '';
-          mappedData.projections_year = projectData.companyDetailsData.projections_year || '';
-          mappedData.reporting_currency = projectData.companyDetailsData.reporting_currency || 'USD';
+        if (projectData.companyDetails) {
+          mappedData.company_name = projectData.companyDetails.company_name || '';
+          mappedData.industry = projectData.companyDetails.industry || '';
+          mappedData.region = projectData.companyDetails.region || '';
+          mappedData.country = projectData.companyDetails.country || '';
+          mappedData.employee_count = projectData.companyDetails.employee_count?.toString() || '';
+          mappedData.founded = projectData.companyDetails.founded?.toString() || '';
+          mappedData.company_website = projectData.companyDetails.company_website || '';
+          mappedData.business_case = projectData.companyDetails.business_case || '';
+          mappedData.notes = projectData.companyDetails.notes || '';
+          mappedData.projection_start_month = projectData.companyDetails.projection_start_month?.toString() || '';
+          mappedData.projection_start_year = projectData.companyDetails.projection_start_year?.toString() || '';
+          mappedData.projections_year = projectData.companyDetails.projections_year?.toString() || '';
+          mappedData.reporting_currency = projectData.companyDetails.reporting_currency || 'USD';
         }
         
         // Profit & Loss Data
@@ -239,7 +415,7 @@ export default function DataEntry() {
           mappedData.depreciation = projectData.profitLossData.depreciation?.toString() || '';
           mappedData.ebit = projectData.profitLossData.ebit?.toString() || '';
           mappedData.interest_expense = projectData.profitLossData.interest_expense?.toString() || '';
-          mappedData.pretax_income = projectData.profitLossData.pretax_income?.toString() || '';
+          mappedData.pretax_income = projectData.profitLossData.ebt?.toString() || ''; // Map ebt to pretax_income
           mappedData.tax_rates = projectData.profitLossData.tax_rates?.toString() || '';
           mappedData.taxes = projectData.profitLossData.taxes?.toString() || '';
           mappedData.net_income = projectData.profitLossData.net_income?.toString() || '';
@@ -254,18 +430,16 @@ export default function DataEntry() {
           mappedData.ppe = projectData.balanceSheetData.ppe?.toString() || '';
           mappedData.other_assets = projectData.balanceSheetData.other_assets?.toString() || '';
           mappedData.total_assets = projectData.balanceSheetData.total_assets?.toString() || '';
-          mappedData.accounts_payable_provisions = projectData.balanceSheetData.accounts_payable_provisions?.toString() || '';
+          mappedData.accounts_payable_provisions = projectData.balanceSheetData.accounts_payable?.toString() || '';
           mappedData.short_term_debt = projectData.balanceSheetData.short_term_debt?.toString() || '';
-          mappedData.other_long_term_debt = projectData.balanceSheetData.other_long_term_debt?.toString() || '';
-          mappedData.senior_secured = projectData.balanceSheetData.senior_secured?.toString() || '';
-          mappedData.debt_tranche1 = projectData.balanceSheetData.debt_tranche1?.toString() || '';
+          mappedData.other_long_term_debt = projectData.balanceSheetData.long_term_debt?.toString() || '';
+          mappedData.senior_secured = projectData.balanceSheetData.long_term_debt?.toString() || ''; // Map long_term_debt to senior_secured
+          mappedData.debt_tranche1 = projectData.balanceSheetData.short_term_debt?.toString() || ''; // Map short_term_debt to debt_tranche1
           mappedData.retained_earnings = projectData.balanceSheetData.retained_earnings?.toString() || '';
-          mappedData.equity = projectData.balanceSheetData.equity?.toString() || '';
-          mappedData.total_liabilities_and_equity = projectData.balanceSheetData.total_liabilities_and_equity?.toString() || '';
+          mappedData.equity = projectData.balanceSheetData.common_stock?.toString() || ''; // Map common_stock to equity
+          mappedData.total_liabilities_and_equity = projectData.balanceSheetData.total_liabilities_equity?.toString() || '';
           mappedData.capital_expenditure_additions = projectData.balanceSheetData.capital_expenditure_additions?.toString() || '';
           mappedData.asset_depreciated_over_years = projectData.balanceSheetData.asset_depreciated_over_years?.toString() || '';
-          mappedData.additional_capex_planned_next_year = projectData.balanceSheetData.additional_capex_planned_next_year?.toString() || '';
-          mappedData.asset_depreciated_over_years_new = projectData.balanceSheetData.asset_depreciated_over_years_new?.toString() || '';
         }
         
         // Debt Structure Data
@@ -331,12 +505,7 @@ export default function DataEntry() {
           mappedData.debt_service = projectData.cashFlowData.debt_service?.toString() || '';
         }
         
-        console.log('Loaded project data:', mappedData);
-        setFormData(prev => {
-          const newFormData = { ...prev, ...mappedData };
-          console.log('DataEntry: Updated formData:', newFormData);
-          return newFormData;
-        });
+        setFormData(prev => ({ ...prev, ...mappedData }));
         
         toast({
           title: "Data Loaded",
@@ -353,7 +522,14 @@ export default function DataEntry() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedProject?.name, toast]);
+
+  // Load existing data when a project is selected
+  useEffect(() => {
+    if (selectedProject?.id) {
+      loadProjectData(selectedProject.id);
+    }
+  }, [selectedProject?.id, loadProjectData]);
 
   const calculateProgress = (): { completed: number; total: number; percentage: number } => {
     const allFields = Object.values(formData);
@@ -376,11 +552,31 @@ export default function DataEntry() {
     return { completed, total, percentage };
   };
 
-  const handleSave = () => {
-    toast({
-      title: "Data Saved",
-      description: "Your financial data has been saved successfully.",
-    });
+  const handleSave = async () => {
+    if (!selectedProject?.id) {
+      toast({
+        title: "Error",
+        description: "No project selected. Please select a project first.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      await saveCurrentSection();
+      
+      toast({
+        title: "Data Saved",
+        description: "Your financial data has been saved successfully.",
+      });
+    } catch (error) {
+      console.error('Save error:', error);
+      toast({
+        title: "Save Failed",
+        description: "Failed to save your data. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleExport = () => {
@@ -388,6 +584,17 @@ export default function DataEntry() {
       title: "Export Started",
       description: "Your data export is being prepared.",
     });
+  };
+
+  // Simplified save status - no auto-save
+  const SaveStatusIndicator = () => {
+    if (!selectedProject?.id) return null;
+
+    return (
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <span>Data will be saved when you click "Next" or "Save Progress"</span>
+      </div>
+    );
   };
 
   const progress = calculateProgress();
@@ -432,158 +639,65 @@ export default function DataEntry() {
 
               <TabsContent value="company-details" className="space-y-4">
                 <CompanyDetailsForm 
-                  data={{
-                    company_name: formData.company_name,
-                    industry: formData.industry,
-                    region: formData.region,
-                    country: formData.country,
-                    employee_count: formData.employee_count,
-                    founded: formData.founded,
-                    company_website: formData.company_website,
-                    business_case: formData.business_case,
-                    notes: formData.notes,
-                    projection_start_month: formData.projection_start_month,
-                    projection_start_year: formData.projection_start_year,
-                    projections_year: formData.projections_year,
-                    reporting_currency: formData.reporting_currency,
+                  projectId={selectedProject?.id || ''}
+                  autoSave={false}
+                  showAuditInfo={true}
+                  onSave={(data) => {
+                    // Update progress when company data is saved
+                    // Note: The new component manages its own state, so we don't need to sync formData
+                    console.log('Company data saved:', data);
                   }}
-                  onChange={(data) => updateFormData(data)}
+                  onError={(error) => {
+                    toast({
+                      title: "Save Error",
+                      description: error,
+                      variant: "destructive"
+                    });
+                  }}
                 />
               </TabsContent>
 
               <TabsContent value="profit-loss" className="space-y-4">
-                <ProfitLossForm 
-                  data={{
-                    revenue: formData.revenue,
-                    cogs: formData.cogs,
-                    gross_profit: formData.gross_profit,
-                    operating_expenses: formData.operating_expenses,
-                    ebitda: formData.ebitda,
-                    depreciation: formData.depreciation,
-                    ebit: formData.ebit,
-                    interest_expense: formData.interest_expense,
-                    pretax_income: formData.pretax_income,
-                    tax_rates: formData.tax_rates,
-                    taxes: formData.taxes,
-                    net_income: formData.net_income,
+                <ProfitLossForm
+                  projectId={selectedProject?.id || ''}
+                  autoSave={false}
+                  showAuditInfo={true}
+                  onSave={(data) => {
+                    console.log('P&L data saved:', data);
+                    // P&L form manages its own state
                   }}
-                  onChange={(data) => updateFormData(data)}
+                  onError={(error) => {
+                    toast({
+                      title: "Save Error",
+                      description: error,
+                      variant: "destructive"
+                    });
+                  }}
                 />
               </TabsContent>
 
               <TabsContent value="balance-sheet" className="space-y-4">
-                <BalanceSheetForm 
-                  data={{
-                    cash: formData.cash,
-                    accounts_receivable: formData.accounts_receivable,
-                    inventory: formData.inventory,
-                    other_current_assets: formData.other_current_assets,
-                    ppe: formData.ppe,
-                    other_assets: formData.other_assets,
-                    total_assets: formData.total_assets,
-                    accounts_payable_provisions: formData.accounts_payable_provisions,
-                    short_term_debt: formData.short_term_debt,
-                    other_long_term_debt: formData.other_long_term_debt,
-                    senior_secured: formData.senior_secured,
-                    debt_tranche1: formData.debt_tranche1,
-                    retained_earnings: formData.retained_earnings,
-                    equity: formData.equity,
-                    total_liabilities_and_equity: formData.total_liabilities_and_equity,
-                    capital_expenditure_additions: formData.capital_expenditure_additions,
-                    asset_depreciated_over_years: formData.asset_depreciated_over_years,
-                    additional_capex_planned_next_year: formData.additional_capex_planned_next_year,
-                    asset_depreciated_over_years_new: formData.asset_depreciated_over_years_new,
-                  }}
-                  onChange={(data) => updateFormData(data)}
-                />
+                <BalanceSheetForm projectId={selectedProject?.id || ''} />
               </TabsContent>
 
               <TabsContent value="debt-structure" className="space-y-4">
-                <DebtStructureForm 
-                  data={{
-                    senior_secured_loan_type: formData.senior_secured_loan_type,
-                    additional_loan_senior_secured: formData.additional_loan_senior_secured,
-                    bank_base_rate_senior_secured: formData.bank_base_rate_senior_secured,
-                    liquidity_premiums_senior_secured: formData.liquidity_premiums_senior_secured,
-                    credit_risk_premiums_senior_secured: formData.credit_risk_premiums_senior_secured,
-                    maturity_y_senior_secured: formData.maturity_y_senior_secured,
-                    amortization_y_senior_secured: formData.amortization_y_senior_secured,
-                    short_term_loan_type: formData.short_term_loan_type,
-                    additional_loan_short_term: formData.additional_loan_short_term,
-                    bank_base_rate_short_term: formData.bank_base_rate_short_term,
-                    liquidity_premiums_short_term: formData.liquidity_premiums_short_term,
-                    credit_risk_premiums_short_term: formData.credit_risk_premiums_short_term,
-                    maturity_y_short_term: formData.maturity_y_short_term,
-                    amortization_y_short_term: formData.amortization_y_short_term,
-                  }}
-                  onChange={(data) => updateFormData(data)}
-                />
+                <DebtStructureForm projectId={selectedProject?.id || ''} />
               </TabsContent>
 
               <TabsContent value="growth-assumptions" className="space-y-4">
-                <GrowthAssumptionsForm 
-                  data={{
-                    gr_revenue_1: formData.gr_revenue_1, gr_revenue_2: formData.gr_revenue_2, gr_revenue_3: formData.gr_revenue_3, gr_revenue_4: formData.gr_revenue_4, gr_revenue_5: formData.gr_revenue_5,
-                    gr_revenue_6: formData.gr_revenue_6, gr_revenue_7: formData.gr_revenue_7, gr_revenue_8: formData.gr_revenue_8, gr_revenue_9: formData.gr_revenue_9, gr_revenue_10: formData.gr_revenue_10,
-                    gr_revenue_11: formData.gr_revenue_11, gr_revenue_12: formData.gr_revenue_12,
-                    gr_cost_1: formData.gr_cost_1, gr_cost_2: formData.gr_cost_2, gr_cost_3: formData.gr_cost_3, gr_cost_4: formData.gr_cost_4, gr_cost_5: formData.gr_cost_5,
-                    gr_cost_6: formData.gr_cost_6, gr_cost_7: formData.gr_cost_7, gr_cost_8: formData.gr_cost_8, gr_cost_9: formData.gr_cost_9, gr_cost_10: formData.gr_cost_10,
-                    gr_cost_11: formData.gr_cost_11, gr_cost_12: formData.gr_cost_12,
-                    gr_cost_oper_1: formData.gr_cost_oper_1, gr_cost_oper_2: formData.gr_cost_oper_2, gr_cost_oper_3: formData.gr_cost_oper_3, gr_cost_oper_4: formData.gr_cost_oper_4, gr_cost_oper_5: formData.gr_cost_oper_5,
-                    gr_cost_oper_6: formData.gr_cost_oper_6, gr_cost_oper_7: formData.gr_cost_oper_7, gr_cost_oper_8: formData.gr_cost_oper_8, gr_cost_oper_9: formData.gr_cost_oper_9, gr_cost_oper_10: formData.gr_cost_oper_10,
-                    gr_cost_oper_11: formData.gr_cost_oper_11, gr_cost_oper_12: formData.gr_cost_oper_12,
-                    gr_capex_1: formData.gr_capex_1, gr_capex_2: formData.gr_capex_2, gr_capex_3: formData.gr_capex_3, gr_capex_4: formData.gr_capex_4, gr_capex_5: formData.gr_capex_5,
-                    gr_capex_6: formData.gr_capex_6, gr_capex_7: formData.gr_capex_7, gr_capex_8: formData.gr_capex_8, gr_capex_9: formData.gr_capex_9, gr_capex_10: formData.gr_capex_10,
-                    gr_capex_11: formData.gr_capex_11, gr_capex_12: formData.gr_capex_12,
-                  }}
-                  onChange={(data) => updateFormData(data)}
-                />
+                <GrowthAssumptionsForm projectId={selectedProject?.id || ''} />
               </TabsContent>
 
               <TabsContent value="working-capital" className="space-y-4">
-                <WorkingCapitalForm 
-                  data={{
-                    account_receivable_percent: formData.account_receivable_percent,
-                    inventory_percent: formData.inventory_percent,
-                    other_current_assets_percent: formData.other_current_assets_percent,
-                    accounts_payable_percent: formData.accounts_payable_percent,
-                  }}
-                  onChange={(data) => updateFormData(data)}
-                />
+                <WorkingCapitalForm projectId={selectedProject?.id || ''} />
               </TabsContent>
 
               <TabsContent value="seasonality" className="space-y-4">
-                <SeasonalityForm 
-                  data={{
-                    january: formData.january,
-                    february: formData.february,
-                    march: formData.march,
-                    april: formData.april,
-                    may: formData.may,
-                    june: formData.june,
-                    july: formData.july,
-                    august: formData.august,
-                    september: formData.september,
-                    october: formData.october,
-                    november: formData.november,
-                    december: formData.december,
-                    seasonal_working_capital: formData.seasonal_working_capital,
-                    seasonality_pattern: formData.seasonality_pattern,
-                  }}
-                  onChange={(data) => updateFormData(data)}
-                />
+                <SeasonalityForm projectId={selectedProject?.id || ''} />
               </TabsContent>
 
               <TabsContent value="cash-flow" className="space-y-4">
-                <CashFlowForm 
-                  data={{
-                    operating_cash_flow: formData.operating_cash_flow,
-                    capital_expenditures: formData.capital_expenditures,
-                    free_cash_flow: formData.free_cash_flow,
-                    debt_service: formData.debt_service,
-                  }}
-                  onChange={(data) => updateFormData(data)}
-                />
+                <CashFlowForm projectId={selectedProject?.id || ''} />
               </TabsContent>
 
             </Tabs>
@@ -604,7 +718,26 @@ export default function DataEntry() {
                 Previous
               </Button>
               <Button
-                onClick={() => {
+                onClick={async () => {
+                  // Save current section data before navigating
+                  if (selectedProject?.id) {
+                    try {
+                      await saveCurrentSection();
+                      toast({
+                        title: "Data Saved",
+                        description: "Current section saved successfully.",
+                        duration: 2000
+                      });
+                    } catch (error) {
+                      console.error('Save failed before navigation:', error);
+                      toast({
+                        title: "Save Warning",
+                        description: "Failed to save current section data, but continuing navigation.",
+                        variant: "destructive"
+                      });
+                    }
+                  }
+
                   const steps = ["company-details", "profit-loss", "balance-sheet", "debt-structure", "growth-assumptions", "working-capital", "seasonality", "cash-flow"];
                   const currentIndex = steps.indexOf(currentStep);
                   if (currentIndex < steps.length - 1) {
@@ -657,6 +790,12 @@ export default function DataEntry() {
                   <Download className="h-4 w-4" />
                   Export Data
                 </Button>
+                
+                {/* Save Status */}
+                <div className="pt-3 border-t">
+                  <div className="text-sm font-medium mb-2">Save Status</div>
+                  <SaveStatusIndicator />
+                </div>
               </div>
             </div>
           </div>

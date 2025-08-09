@@ -17,6 +17,7 @@ interface CashFlowFormProps {
 }
 
 export default function CashFlowForm({ data, onChange }: CashFlowFormProps) {
+  console.log('CashFlowForm: Received data:', data);
   return (
     <Card>
       <CardHeader>

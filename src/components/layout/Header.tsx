@@ -29,8 +29,8 @@ export function Header() {
   };
 
   const getUserInitials = () => {
-    if (!user?.profile?.full_name) return 'U';
-    return user.profile.full_name
+    if (!user?.name) return 'U';
+    return user.name
       .split(' ')
       .map(name => name[0])
       .join('')
@@ -65,7 +65,7 @@ export function Header() {
                 </AvatarFallback>
               </Avatar>
               <span className="hidden md:block font-medium">
-                {user?.profile?.full_name || 'User'}
+                {user?.name || 'User'}
               </span>
             </Button>
           </DropdownMenuTrigger>

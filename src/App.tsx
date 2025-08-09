@@ -34,6 +34,8 @@ import CompanyProjectSelection from "./pages/CompanyProjectSelection";
 import { SecurityDashboard } from "./components/security/SecurityDashboard";
 import SupabaseConnectionTest from "./components/SupabaseConnectionTest";
 import CalculationEngine from "./pages/CalculationEngine";
+import CalculationEngineNew from "./pages/CalculationEngineNew";
+import Charts from "./pages/Charts";
 
 const queryClient = new QueryClient();
 
@@ -70,7 +72,7 @@ const App = () => {
               <Route path="covenant-testing" element={<CovenantTesting />} />
               <Route path="governance" element={<Governance />} />
               <Route path="introduction" element={<Introduction />} />
-              <Route path="charts" element={<SpecificCharts />} />
+              <Route path="charts" element={<Charts />} />
               <Route path="profile" element={<Profile />} />
               <Route path="settings" element={<Settings />} />
               <Route path="help" element={<Help />} />
@@ -81,6 +83,7 @@ const App = () => {
               <Route path="security" element={<SecurityDashboard />} />
               <Route path="test-supabase" element={<SupabaseConnectionTest />} />
               <Route path="calculation-engine" element={<CalculationEngine />} />
+              <Route path="calculation-engine-new" element={<CalculationEngineNew />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

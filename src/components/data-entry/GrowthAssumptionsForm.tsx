@@ -25,6 +25,7 @@ interface GrowthAssumptionsFormProps {
 }
 
 export default function GrowthAssumptionsForm({ data, onChange }: GrowthAssumptionsFormProps) {
+  console.log('GrowthAssumptionsForm: Received data:', data);
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   
   return (

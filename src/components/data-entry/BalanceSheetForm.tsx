@@ -22,8 +22,6 @@ interface BalanceSheetData {
   total_liabilities_and_equity: string;
   capital_expenditure_additions: string;
   asset_depreciated_over_years: string;
-  additional_capex_planned_next_year: string;
-  asset_depreciated_over_years_new: string;
 }
 
 interface BalanceSheetFormProps {
@@ -32,6 +30,7 @@ interface BalanceSheetFormProps {
 }
 
 export default function BalanceSheetForm({ data, onChange }: BalanceSheetFormProps) {
+  console.log('BalanceSheetForm: Received data:', data);
   return (
     <Card>
       <CardHeader>
@@ -287,31 +286,7 @@ export default function BalanceSheetForm({ data, onChange }: BalanceSheetFormPro
               />
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="additional_capex_planned_next_year">Additional Capex Planned Next Year</Label>
-              <Input
-                id="additional_capex_planned_next_year"
-                type="number"
-                step="0.01"
-                min="0"
-                value={data.additional_capex_planned_next_year}
-                onChange={(e) => onChange({ additional_capex_planned_next_year: e.target.value })}
-                placeholder="Additional capex planned in millions"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="asset_depreciated_over_years_new">New Asset Depreciation Years</Label>
-              <Input
-                id="asset_depreciated_over_years_new"
-                type="number"
-                min="1"
-                max="50"
-                value={data.asset_depreciated_over_years_new}
-                onChange={(e) => onChange({ asset_depreciated_over_years_new: e.target.value })}
-                placeholder="New asset depreciation period (1-50 years)"
-              />
-            </div>
+
           </div>
         </div>
       </CardContent>

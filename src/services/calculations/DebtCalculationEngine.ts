@@ -61,7 +61,17 @@ export class DebtCalculationEngine {
     const interestRatePerAnnum = bankBaseRateDecimal + liquidityPremiumDecimal + creditRiskPremiumDecimal;
     const interestRatePerMonth = interestRatePerAnnum / 12;
 
-    // Generate 10 years of monthly data (120 months) - matching Excel logic
+    // Calculate total loan amount
+    const totalLoanAmount = principal + additionalLoan;
+
+    // Calculate monthly payment (PMT) for the amortization period
+    let monthlyPayment = 0;
+    if (amortizationYears > 0 && maturityYears > amortizationYears) {
+      const remainingPeriod = (maturityYears - amortizationYears) * 12;
+      monthlyPayment = this.calculatePMT(interestRatePerMonth, remainingPeriod, totalLoanAmount);
+    }
+
+    // Generate 10 years of monthly data (120 months)
     const schedule: DebtScheduleRow[] = [];
 
     for (let monthCum = 1; monthCum <= 120; monthCum++) {
@@ -76,70 +86,48 @@ export class DebtCalculationEngine {
       let repayment: number;
 
       if (monthCum === 1) {
-        // First month - match Streamlit app logic
+        // First month
         openingBalance = principal;
         additionalLoanAmount = additionalLoan;
         
-        // Amortisation calculation
-        if (monthCum <= amortizationYears * 12) {
-          amortisation = openingBalance * interestRatePerMonth;
-        } else {
-          amortisation = 0;
-        }
-        
-        // Interest calculation
-        if (monthCum <= maturityYears * 12 && monthCum > amortizationYears * 12) {
-          interest = (openingBalance + additionalLoanAmount) * interestRatePerMonth;
-        } else {
-          interest = 0;
-        }
+        // Interest calculation (on total outstanding balance)
+        interest = (openingBalance + additionalLoanAmount) * interestRatePerMonth;
         
         // Repayment calculation
-        if (amortizationYears * 12 !== 0) {
+        if (monthCum <= amortizationYears * 12) {
+          // During interest-only period
           repayment = 0;
+          amortisation = 0;
         } else {
-          if (monthCum > amortizationYears * 12) {
-            repayment = this.calculatePMT(interestRatePerMonth, (maturityYears - amortizationYears) * 12, principal + additionalLoan);
-          } else {
-            repayment = 0;
-          }
+          // During amortization period
+          repayment = monthlyPayment;
+          amortisation = -repayment; // Amortization is negative (reduces principal)
         }
       } else {
         // Subsequent months
         openingBalance = schedule[monthCum - 2].closingBalance;
         additionalLoanAmount = 0;
         
-        // Amortisation calculation
-        if (monthCum <= amortizationYears * 12) {
-          amortisation = openingBalance * interestRatePerMonth;
-        } else {
-          amortisation = 0;
-        }
-        
-        // Interest calculation
-        if (monthCum <= maturityYears * 12 && monthCum > amortizationYears * 12) {
-          interest = openingBalance * interestRatePerMonth;
-        } else {
-          interest = 0;
-        }
+        // Interest calculation (on outstanding balance)
+        interest = openingBalance * interestRatePerMonth;
         
         // Repayment calculation
-        if (schedule[monthCum - 2].closingBalance < 1) {
+        if (monthCum <= amortizationYears * 12) {
+          // During interest-only period
           repayment = 0;
+          amortisation = 0;
         } else {
-          if (monthCum > amortizationYears * 12 && schedule[monthCum - 2].repayment === 0) {
-            repayment = this.calculatePMT(interestRatePerMonth, (maturityYears - amortizationYears) * 12, principal + additionalLoan);
-          } else {
-            repayment = schedule[monthCum - 2].repayment;
-          }
+          // During amortization period
+          repayment = monthlyPayment;
+          amortisation = -repayment; // Amortization is negative (reduces principal)
         }
       }
 
-      // Calculate closing balance - match Streamlit app: Opening + Additional Loan + Amortisation + Interest + Repayment
-      const closingBalance = openingBalance + additionalLoanAmount + amortisation + interest + repayment;
+      // Calculate closing balance: Opening + Additional Loan + Interest + Repayment
+      const closingBalance = openingBalance + additionalLoanAmount + interest + repayment;
 
-      // Set to 0 if very small
-      const finalClosingBalance = Math.abs(closingBalance) < 1 ? 0 : closingBalance;
+      // Set to 0 if very small or negative
+      const finalClosingBalance = closingBalance < 1 ? 0 : closingBalance;
 
       schedule.push({
         monthCum,
@@ -167,6 +155,16 @@ export class DebtCalculationEngine {
 
     const pvif = Math.pow(1 + rate, nper);
     const pmt = rate * pv * (pvif + 1) / (pvif - 1);
+    
+    // Debug logging
+    console.log('DebtCalculationEngine: PMT calculation:', {
+      rate,
+      nper,
+      pv,
+      pvif,
+      pmt
+    });
+    
     return -pmt;
   }
 
@@ -235,6 +233,17 @@ export class DebtCalculationEngine {
     const totalRepayment = schedule.reduce((sum, row) => sum + row.repayment, 0);
     const totalAdditionalLoan = schedule.reduce((sum, row) => sum + row.additionalLoan, 0);
     const finalBalance = schedule[schedule.length - 1]?.closingBalance || 0;
+
+    // Debug logging
+    console.log('DebtCalculationEngine: Summary calculation:', {
+      totalInterest,
+      totalRepayment,
+      totalAdditionalLoan,
+      finalBalance,
+      scheduleLength: schedule.length,
+      firstRow: schedule[0],
+      lastRow: schedule[schedule.length - 1]
+    });
 
     return {
       totalInterest,
