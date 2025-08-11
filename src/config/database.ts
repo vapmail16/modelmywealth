@@ -8,7 +8,7 @@ export const DATABASE_CONFIG = {
     user: import.meta.env.VITE_POSTGRESQL_USER || "postgres",
     password: import.meta.env.VITE_POSTGRESQL_PASSWORD || "",
   },
-  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api",
+  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || "/api",
   get currentDatabase() {
     if (this.USE_POSTGRESQL) return "postgresql";
     if (this.USE_SUPABASE) return "supabase";

@@ -23,7 +23,7 @@ export interface TokenResponse {
 }
 
 export class AuthService {
-  private baseUrl = 'http://localhost:3001/api';
+  private baseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
 
   // Token management
   private getAccessToken(): string | null {
