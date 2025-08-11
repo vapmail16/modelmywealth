@@ -25,8 +25,8 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Create non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
+RUN groupadd -g 1001 nodejs
+RUN useradd -u 1001 -g nodejs -s /bin/bash -m nextjs
 
 # Change ownership of the app directory
 RUN chown -R nextjs:nodejs /app
