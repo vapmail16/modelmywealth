@@ -4,14 +4,19 @@ Debt Schedule Calculation Script
 Uses exact logic from streamlit_app.py to calculate 120-month debt schedule
 """
 
-import psycopg2
-import numpy_financial as npf
-import pandas as pd
 import sys
 import json
-from datetime import datetime
 import os
 from dotenv import load_dotenv
+try:
+    import psycopg2
+except ImportError:
+    print("Error: psycopg2 module not found. Please ensure it's installed.")
+    print("Try: pip install psycopg2-binary")
+    sys.exit(1)
+import numpy_financial as npf
+import pandas as pd
+from datetime import datetime
 
 # Load environment variables
 load_dotenv()

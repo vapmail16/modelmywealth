@@ -2,7 +2,12 @@
 
 import sys
 import json
-import psycopg2
+try:
+    import psycopg2
+except ImportError:
+    print("Error: psycopg2 module not found. Please ensure it's installed.")
+    print("Try: pip install psycopg2-binary")
+    sys.exit(1)
 import pandas as pd
 import numpy as np
 from datetime import datetime

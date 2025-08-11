@@ -7,7 +7,12 @@ Calculates Key Performance Indicators from consolidated financial data
 import sys
 import os
 import argparse
-import psycopg2
+try:
+    import psycopg2
+except ImportError:
+    print("Error: psycopg2 module not found. Please ensure it's installed.")
+    print("Try: pip install psycopg2-binary")
+    sys.exit(1)
 import pandas as pd
 from datetime import datetime
 from decimal import Decimal
