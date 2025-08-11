@@ -1,7 +1,6 @@
 const express = require('express');
 const companyController = require('../controllers/companyController');
 const authMiddleware = require('../middleware/auth');
-const rateLimiters = require('../middleware/rateLimiter');
 const loggerService = require('../services/logger');
 const logger = loggerService.logger;
 
@@ -84,7 +83,6 @@ const projectOwnershipMiddleware = async (req, res, next) => {
  * Get company details for a project
  */
 router.get('/:projectId/company', 
-  rateLimiters.general, // Use existing rate limiter
   authMiddleware.authenticateUser,
   projectOwnershipMiddleware,
   companyRequestLogger,
@@ -96,7 +94,6 @@ router.get('/:projectId/company',
  * Create or update company details (full replace)
  */
 router.put('/:projectId/company',
-  rateLimiters.general,
   authMiddleware.authenticateUser,
   projectOwnershipMiddleware,
   companyRequestLogger,
@@ -108,7 +105,6 @@ router.put('/:projectId/company',
  * Partially update company details (only provided fields)
  */
 router.patch('/:projectId/company',
-  rateLimiters.general,
   authMiddleware.authenticateUser,
   projectOwnershipMiddleware,
   companyRequestLogger,
@@ -120,7 +116,6 @@ router.patch('/:projectId/company',
  * Get audit history for company details
  */
 router.get('/:projectId/company/history',
-  rateLimiters.general,
   authMiddleware.authenticateUser,
   projectOwnershipMiddleware,
   companyRequestLogger,
@@ -132,7 +127,6 @@ router.get('/:projectId/company/history',
  * Get audit statistics for company details
  */
 router.get('/:projectId/company/audit-stats',
-  rateLimiters.general,
   authMiddleware.authenticateUser,
   projectOwnershipMiddleware,
   companyRequestLogger,
@@ -144,7 +138,6 @@ router.get('/:projectId/company/audit-stats',
  * Delete company details (soft delete with audit trail)
  */
 router.delete('/:projectId/company',
-  rateLimiters.general,
   authMiddleware.authenticateUser,
   projectOwnershipMiddleware,
   companyRequestLogger,
