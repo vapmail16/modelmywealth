@@ -4,6 +4,9 @@ FROM node:18-alpine AS builder
 # Accept build arguments for environment variables
 ARG VITE_API_BASE_URL
 
+# Set environment variables for the build process
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 # Set working directory
 WORKDIR /app
 
@@ -17,6 +20,7 @@ RUN npm ci
 COPY . .
 
 # Build the application with environment variables
+RUN echo "Building with VITE_API_BASE_URL: $VITE_API_BASE_URL"
 RUN npm run build
 
 # Production stage
