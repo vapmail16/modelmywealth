@@ -1,6 +1,9 @@
 # Frontend Dockerfile - Multi-stage build
 FROM node:18-alpine AS builder
 
+# Accept build arguments for environment variables
+ARG VITE_API_BASE_URL
+
 # Set working directory
 WORKDIR /app
 
@@ -13,7 +16,7 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build the application
+# Build the application with environment variables
 RUN npm run build
 
 # Production stage

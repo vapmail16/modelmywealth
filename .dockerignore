@@ -3,7 +3,7 @@ npm-debug.log
 .git
 .gitignore
 README.md
-.env
+# .env - Removed to allow environment variables in Docker build
 .env.local
 .env.development.local
 .env.test.local
