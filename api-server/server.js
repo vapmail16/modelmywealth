@@ -73,6 +73,8 @@ app.use("/api/kpi", require("./routes/kpiRoutes")); // KPI routes
 app.use("/api", require("./routes/autoSaveRoutes"));
 app.use("/api", require("./routes/calculationPersistenceRoutes"));
 
+// Force rebuild to apply latest Python calculation engine fixes
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ 
