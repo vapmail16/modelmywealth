@@ -256,31 +256,31 @@ const Platform = () => {
 const Solutions = () => {
   const solutions = [
     {
-      image: "/src/assets/homepage/1.jpg",
+      image: "src/assets/homepage/1.jpg",
       title: "Project Financing",
       description: "Comprehensive models for complex project finance structures, cash flow analysis, and risk assessment.",
       features: ["NPV & IRR Analysis", "Sensitivity Testing", "Risk Scenarios", "Debt Sizing"]
     },
     {
-      image: "/src/assets/homepage/2.jpg",
+      image: "src/assets/homepage/2.jpg",
       title: "Debt Refinancing", 
       description: "Analyze refinancing opportunities with different rates, maturity periods, and grace periods.",
       features: ["Rate Comparison", "Maturity Analysis", "Grace Period Impact", "Cost-Benefit Analysis"]
     },
     {
-      image: "/src/assets/homepage/3.jpg",
+      image: "src/assets/homepage/3.jpg",
       title: "Debt Restructuring",
       description: "Model various restructuring scenarios to optimize debt terms and improve cash flow.",
       features: ["Term Modifications", "Payment Restructuring", "Covenant Adjustments", "Recovery Analysis"]
     },
     {
-      image: "/src/assets/homepage/4.jpg",
+      image: "src/assets/homepage/4.jpg",
       title: "Covenant Testing",
       description: "Automated covenant testing with early warning alerts and compliance tracking.",
       features: ["Real-time Monitoring", "Alert Systems", "Compliance Reports", "Risk Assessment"]
     },
     {
-      image: "/src/assets/homepage/5.jpg",
+      image: "src/assets/homepage/5.jpg",
       title: "Industry Benchmarking",
       description: "Compare your performance against industry standards and peer companies.",
       features: ["Peer Analysis", "Industry Standards", "Performance Metrics", "Competitive Insights"]
@@ -586,7 +586,7 @@ const Resources = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {resourceCategories.map((category, index) => {
             const IconComponent = category.icon;
-            return (
+    return (
               <Card key={index} className="p-6 hover:shadow-md transition-all duration-300 group">
                 <IconComponent className="h-10 w-10 text-[#2563eb] mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-lg font-semibold mb-3 text-[#1e293b]">{category.title}</h3>
@@ -605,7 +605,7 @@ const Resources = () => {
               </Card>
             );
           })}
-        </div>
+              </div>
 
         {/* Featured Resources */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
@@ -625,7 +625,7 @@ const Resources = () => {
                   <span className="font-medium">{download}</span>
                   <Button variant="outline" size="sm">
                     Download
-                  </Button>
+              </Button>
                 </div>
               ))}
             </div>
@@ -643,21 +643,21 @@ const Resources = () => {
                   <div className="text-center min-w-[60px]">
                     <div className="text-lg font-bold text-[#2563eb]">{event.date}</div>
                     <div className="text-xs text-muted-foreground">{event.time}</div>
-                  </div>
+          </div>
                   <div className="flex-1">
                     <h4 className="font-semibold mb-1">{event.title}</h4>
                     <span className="text-xs bg-[#2563eb] text-white px-2 py-1 rounded">
                       {event.type}
-                    </span>
+                  </span>
                   </div>
                   <Button variant="outline" size="sm">
                     Register
                   </Button>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
           </Card>
-        </div>
+              </div>
 
         {/* Knowledge Base CTA */}
         <div className="bg-white rounded-2xl p-12 text-center shadow-lg">
@@ -674,9 +674,9 @@ const Resources = () => {
             <Button variant="outline" size="lg">
               Browse Knowledge Base
             </Button>
-          </div>
-        </div>
-      </div>
+                      </div>
+                        </div>
+                        </div>
     </section>
   );
 };
@@ -726,7 +726,7 @@ const Demo = () => {
           <p className="text-lg text-muted-foreground">
             Experience the power of advanced financial modeling with our comprehensive demo options
           </p>
-        </div>
+                        </div>
 
         {/* Demo Video/Preview */}
         <div className="relative max-w-4xl mx-auto mb-16">
@@ -740,10 +740,10 @@ const Demo = () => {
                   <Play className="mr-2 h-5 w-5" />
                   Play Demo Video
                 </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
         {/* Demo Options */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -770,16 +770,16 @@ const Demo = () => {
                   {option.action}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-              </div>
-              
+            </div>
+
               {index === 1 && (
                 <div className="absolute top-0 right-0 bg-[#2563eb] text-white px-3 py-1 text-xs font-semibold">
                   POPULAR
                 </div>
               )}
             </Card>
-          ))}
-        </div>
+              ))}
+            </div>
 
         {/* What You'll See Section */}
         <div className="bg-gradient-to-b from-background to-secondary rounded-2xl p-12">
@@ -793,7 +793,7 @@ const Demo = () => {
                 <div key={index} className="flex items-center space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
                   <span className="text-foreground">{feature}</span>
-                </div>
+                    </div>
               ))}
             </div>
 
@@ -832,9 +832,9 @@ const Demo = () => {
               <span>Cancel anytime</span>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+            </div>
+          </div>
+        </section>
   );
 };
 
@@ -889,7 +889,7 @@ const Footer = () => {
         {/* Main Footer Content */}
         <div className="py-16">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-            {/* Company Info */}
+              {/* Company Info */}
             <div className="lg:col-span-2">
               <h3 className="text-2xl font-bold mb-4">ModelMyWealth</h3>
               <p className="text-white/80 mb-6 max-w-md">
@@ -901,7 +901,7 @@ const Footer = () => {
                 <div className="flex items-center space-x-3">
                   <Mail className="h-4 w-4 text-[#2563eb]" />
                   <span className="text-white/80">contact@modelmywealth.com</span>
-                </div>
+                  </div>
                 <div className="flex items-center space-x-3">
                   <Phone className="h-4 w-4 text-[#2563eb]" />
                   <span className="text-white/80">+1 (555) 123-4567</span>
@@ -920,7 +920,7 @@ const Footer = () => {
                   <Twitter className="h-4 w-4" />
                 </Button>
               </div>
-            </div>
+              </div>
 
             {/* Footer Links */}
             {footerSections.map((section, index) => (
@@ -940,8 +940,8 @@ const Footer = () => {
                 </ul>
               </div>
             ))}
-          </div>
-        </div>
+                  </div>
+                </div>
 
         <Separator className="bg-white/20" />
 
@@ -954,14 +954,14 @@ const Footer = () => {
               <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
               <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
             </div>
-            
+
             <div className="flex items-center space-x-4 text-sm text-white/70">
               <span>Made with expertise by financial professionals</span>
             </div>
           </div>
-        </div>
-      </div>
-    </footer>
+            </div>
+          </div>
+        </footer>
   );
 };
 
