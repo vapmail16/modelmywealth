@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const growthAssumptionsController = require('../controllers/growthAssumptionsController');
 const authMiddleware = require('../middleware/auth');
-const rateLimiters = require('../middleware/rateLimiter');
 const DatabaseService = require('../services/database');
 
 // Project ownership middleware
@@ -40,9 +39,6 @@ const projectOwnershipMiddleware = async (req, res, next) => {
 
 // Apply authentication middleware to all routes
 router.use(authMiddleware.authenticateUser);
-
-// Apply rate limiting to all routes
-router.use(rateLimiters.general);
 
 // Apply project ownership middleware to all routes
 router.use('/:projectId', projectOwnershipMiddleware);
