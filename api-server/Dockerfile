@@ -21,6 +21,9 @@ RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 RUN pip3 install --no-cache-dir -r requirements.txt
 
+# Create symlink for expected Python path
+RUN ln -sf /opt/venv/bin/python3 /usr/local/bin/python3
+
 # Copy source code
 COPY . .
 
