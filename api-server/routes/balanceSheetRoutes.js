@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const balanceSheetController = require('../controllers/balanceSheetController');
 const authMiddleware = require('../middleware/auth');
-const rateLimiters = require('../middleware/rateLimiter');
 
 // Project ownership middleware (defined inline to avoid import issues)
 const projectOwnershipMiddleware = async (req, res, next) => {
@@ -36,9 +35,8 @@ const projectOwnershipMiddleware = async (req, res, next) => {
   }
 };
 
-// Apply authentication and rate limiting to all routes
+// Apply authentication to all routes
 router.use(authMiddleware.authenticateUser);
-router.use(rateLimiters.general);
 
 // GET /api/balance-sheet/:projectId - Get balance sheet data
 router.get('/:projectId', projectOwnershipMiddleware, balanceSheetController.getBalanceSheetData);
