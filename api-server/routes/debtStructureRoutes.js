@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const debtStructureController = require('../controllers/debtStructureController');
 const authMiddleware = require('../middleware/auth');
-const rateLimiters = require('../middleware/rateLimiter');
 
 // Project ownership middleware
 const projectOwnershipMiddleware = async (req, res, next) => {
@@ -44,7 +43,6 @@ const projectOwnershipMiddleware = async (req, res, next) => {
 
 // Apply middleware to all routes
 router.use(authMiddleware.authenticateUser);
-router.use(rateLimiters.general);
 
 // GET /api/debt-structure/:projectId - Get debt structure data
 router.get('/:projectId', projectOwnershipMiddleware, debtStructureController.getDebtStructureData);
