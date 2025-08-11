@@ -293,20 +293,25 @@ def main():
     parser = argparse.ArgumentParser(description='Calculate monthly consolidated financial statements')
     parser.add_argument('project_id', help='Project ID')
     parser.add_argument('calculation_run_id', help='Calculation Run ID')
-    parser.add_argument('--host', default='localhost', help='Database host')
-    parser.add_argument('--port', default=5432, type=int, help='Database port')
-    parser.add_argument('--database', default='refi_wizard', help='Database name')
-    parser.add_argument('--user', default='postgres', help='Database user')
-    parser.add_argument('--password', default='', help='Database password')
+    parser.add_argument('--host', default=None, help='Database host')
+    parser.add_argument('--port', default=None, type=int, help='Database port')
+    parser.add_argument('--database', default=None, help='Database name')
+    parser.add_argument('--user', default=None, help='Database user')
+    parser.add_argument('--password', default=None, help='Database password')
     
     args = parser.parse_args()
     
+    # Load environment variables as fallback
+    from dotenv import load_dotenv
+    import os
+    load_dotenv()
+    
     db_config = {
-        'host': args.host,
-        'port': args.port,
-        'database': args.database,
-        'user': args.user,
-        'password': args.password
+        'host': args.host or os.getenv('POSTGRESQL_HOST', 'localhost'),
+        'port': args.port or int(os.getenv('POSTGRESQL_PORT', '5432')),
+        'database': args.database or os.getenv('POSTGRESQL_DB', 'refi_wizard'),
+        'user': args.user or os.getenv('POSTGRESQL_USER', 'postgres'),
+        'password': args.password or os.getenv('POSTGRESQL_PASSWORD', ''),
     }
     
     calculator = MonthlyConsolidatedCalculator(db_config)

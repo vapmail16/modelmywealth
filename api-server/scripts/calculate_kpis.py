@@ -456,16 +456,28 @@ def main():
     parser = argparse.ArgumentParser(description='Calculate KPIs from consolidated data')
     parser.add_argument('project_id', help='Project ID')
     parser.add_argument('calculation_run_id', help='Calculation Run ID')
-    parser.add_argument('--db-host', default='localhost', help='Database host')
-    parser.add_argument('--db-port', default='5432', help='Database port')
-    parser.add_argument('--db-name', default='refi_wizard', help='Database name')
-    parser.add_argument('--db-user', default='postgres', help='Database user')
-    parser.add_argument('--db-password', default='', help='Database password')
+    parser.add_argument('--db-host', default=None, help='Database host')
+    parser.add_argument('--db-port', default=None, help='Database port')
+    parser.add_argument('--db-name', default=None, help='Database name')
+    parser.add_argument('--db-user', default=None, help='Database user')
+    parser.add_argument('--db-password', default=None, help='Database password')
     
     args = parser.parse_args()
     
+    # Load environment variables as fallback
+    from dotenv import load_dotenv
+    import os
+    load_dotenv()
+    
+    # Use command line args or fall back to environment variables
+    db_host = args.db_host or os.getenv('POSTGRESQL_HOST', 'localhost')
+    db_port = args.db_port or os.getenv('POSTGRESQL_PORT', '5432')
+    db_name = args.db_name or os.getenv('POSTGRESQL_DB', 'refi_wizard')
+    db_user = args.db_user or os.getenv('POSTGRESQL_USER', 'postgres')
+    db_password = args.db_password or os.getenv('POSTGRESQL_PASSWORD', '')
+    
     calculator = KPICalculator(
-        args.db_host, args.db_port, args.db_name, args.db_user, args.db_password
+        db_host, db_port, db_name, db_user, db_password
     )
     
     # Calculate all KPI types - use None to get latest consolidated data, but pass calculation_run_id for saving

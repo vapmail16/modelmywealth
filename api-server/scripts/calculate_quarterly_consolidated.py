@@ -253,13 +253,18 @@ def main():
     
     args = parser.parse_args()
     
-    # Database configuration
+    # Load environment variables
+    from dotenv import load_dotenv
+    import os
+    load_dotenv()
+    
+    # Database configuration from environment variables
     db_config = {
-        'host': 'localhost',
-        'port': 5432,
-        'database': 'refi_wizard',
-        'user': 'postgres',
-        'password': 'postgres'
+        'host': os.getenv('POSTGRESQL_HOST', 'localhost'),
+        'port': int(os.getenv('POSTGRESQL_PORT', '5432')),
+        'database': os.getenv('POSTGRESQL_DB', 'refi_wizard'),
+        'user': os.getenv('POSTGRESQL_USER', 'postgres'),
+        'password': os.getenv('POSTGRESQL_PASSWORD', 'postgres')
     }
     
     # Create calculator and perform calculation
