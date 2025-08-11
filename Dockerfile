@@ -1,5 +1,5 @@
-# Frontend Dockerfile
-FROM node:18-alpine
+# Frontend Dockerfile - Multi-stage build
+FROM node:18-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install ALL dependencies (including devDependencies needed for build)
+RUN npm ci
 
 # Copy source code
 COPY . .
@@ -16,8 +16,17 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Install serve to run the built app
+# Production stage
+FROM node:18-alpine AS production
+
+# Set working directory
+WORKDIR /app
+
+# Install serve globally
 RUN npm install -g serve
+
+# Copy built application from builder stage
+COPY --from=builder /app/dist ./dist
 
 # Expose port
 EXPOSE 8080
