@@ -1,0 +1,62 @@
+[2025-08-11T11:48:57.338Z] [INFO] 🚀 Starting production database schema creation...
+[2025-08-11T11:48:57.357Z] [INFO] Connecting to local database...
+[2025-08-11T11:48:57.408Z] [INFO] ✅ Connected to local database
+[2025-08-11T11:48:57.409Z] [INFO] Connecting to production database...
+[2025-08-11T11:48:57.617Z] [INFO] ✅ Connected to production database
+[2025-08-11T11:48:57.618Z] [INFO] 🏗️ Creating all tables in production...
+[2025-08-11T11:48:57.634Z] [INFO] Found 27 tables to create
+[2025-08-11T11:48:57.634Z] [INFO]   🏗️ Creating table: balance_sheet_data
+[2025-08-11T11:48:57.718Z] [ERROR]     ❌ Error creating table balance_sheet_data: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:57.719Z] [INFO]   🏗️ Creating table: calculation_iterations
+[2025-08-11T11:48:57.769Z] [ERROR]     ❌ Error creating table calculation_iterations: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:57.769Z] [INFO]   🏗️ Creating table: calculation_runs
+[2025-08-11T11:48:57.817Z] [ERROR]     ❌ Error creating table calculation_runs: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:57.817Z] [INFO]   🏗️ Creating table: calculation_schedules
+[2025-08-11T11:48:57.861Z] [ERROR]     ❌ Error creating table calculation_schedules: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:57.861Z] [INFO]   🏗️ Creating table: cash_flow_data
+[2025-08-11T11:48:57.904Z] [ERROR]     ❌ Error creating table cash_flow_data: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:57.904Z] [INFO]   🏗️ Creating table: companies
+[2025-08-11T11:48:57.955Z] [ERROR]     ❌ Error creating table companies: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:57.955Z] [INFO]   🏗️ Creating table: company_details
+[2025-08-11T11:48:58.003Z] [ERROR]     ❌ Error creating table company_details: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:58.004Z] [INFO]   🏗️ Creating table: data_entry_audit_log
+[2025-08-11T11:48:58.045Z] [ERROR]     ❌ Error creating table data_entry_audit_log: syntax error at or near "ARRAY"
+[2025-08-11T11:48:58.045Z] [INFO]   🏗️ Creating table: debt_calculations
+[2025-08-11T11:48:58.088Z] [ERROR]     ❌ Error creating table debt_calculations: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:58.089Z] [INFO]   🏗️ Creating table: debt_structure_data
+[2025-08-11T11:48:58.138Z] [ERROR]     ❌ Error creating table debt_structure_data: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:58.138Z] [INFO]   🏗️ Creating table: depreciation_schedule
+[2025-08-11T11:48:58.182Z] [ERROR]     ❌ Error creating table depreciation_schedule: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:58.182Z] [INFO]   🏗️ Creating table: growth_assumptions_data
+[2025-08-11T11:48:58.232Z] [ERROR]     ❌ Error creating table growth_assumptions_data: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:58.232Z] [INFO]   🏗️ Creating table: monthly_consolidated
+[2025-08-11T11:48:58.294Z] [INFO]     ✅ Successfully created table: monthly_consolidated
+[2025-08-11T11:48:58.294Z] [INFO]   🏗️ Creating table: monthly_kpis
+[2025-08-11T11:48:58.337Z] [INFO]     ✅ Successfully created table: monthly_kpis
+[2025-08-11T11:48:58.337Z] [INFO]   🏗️ Creating table: profiles
+[2025-08-11T11:48:58.419Z] [ERROR]     ❌ Error creating table profiles: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:58.426Z] [INFO]   🏗️ Creating table: profit_loss_data
+[2025-08-11T11:48:58.473Z] [ERROR]     ❌ Error creating table profit_loss_data: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:58.475Z] [INFO]   🏗️ Creating table: projects
+[2025-08-11T11:48:58.578Z] [ERROR]     ❌ Error creating table projects: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:58.580Z] [INFO]   🏗️ Creating table: quarterly_consolidated
+[2025-08-11T11:48:58.689Z] [INFO]     ✅ Successfully created table: quarterly_consolidated
+[2025-08-11T11:48:58.690Z] [INFO]   🏗️ Creating table: quarterly_kpis
+[2025-08-11T11:48:58.737Z] [INFO]     ✅ Successfully created table: quarterly_kpis
+[2025-08-11T11:48:58.737Z] [INFO]   🏗️ Creating table: role_capabilities
+[2025-08-11T11:48:58.776Z] [ERROR]     ❌ Error creating table role_capabilities: syntax error at or near "USER"
+[2025-08-11T11:48:58.777Z] [INFO]   🏗️ Creating table: seasonality_data
+[2025-08-11T11:48:58.819Z] [ERROR]     ❌ Error creating table seasonality_data: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:58.819Z] [INFO]   🏗️ Creating table: user_roles
+[2025-08-11T11:48:58.855Z] [ERROR]     ❌ Error creating table user_roles: syntax error at or near "USER"
+[2025-08-11T11:48:58.855Z] [INFO]   🏗️ Creating table: user_sessions
+[2025-08-11T11:48:58.898Z] [ERROR]     ❌ Error creating table user_sessions: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:58.898Z] [INFO]   🏗️ Creating table: users
+[2025-08-11T11:48:58.938Z] [ERROR]     ❌ Error creating table users: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:58.938Z] [INFO]   🏗️ Creating table: working_capital_data
+[2025-08-11T11:48:58.981Z] [ERROR]     ❌ Error creating table working_capital_data: function uuid_generate_v4() does not exist
+[2025-08-11T11:48:58.981Z] [INFO]   🏗️ Creating table: yearly_consolidated
+[2025-08-11T11:48:59.027Z] [INFO]     ✅ Successfully created table: yearly_consolidated
+[2025-08-11T11:48:59.027Z] [INFO]   🏗️ Creating table: yearly_kpis
+[2025-08-11T11:48:59.074Z] [INFO]     ✅ Successfully created table: yearly_kpis
+[2025-08-11T11:48:59.074Z] [INFO] 📊 Table creation completed: 6/27 tables created successfully

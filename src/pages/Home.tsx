@@ -256,31 +256,31 @@ const Platform = () => {
 const Solutions = () => {
   const solutions = [
     {
-      image: "src/assets/homepage/1.jpg",
+      image: "/assets/homepage/1.jpg",
       title: "Project Financing",
       description: "Comprehensive models for complex project finance structures, cash flow analysis, and risk assessment.",
       features: ["NPV & IRR Analysis", "Sensitivity Testing", "Risk Scenarios", "Debt Sizing"]
     },
     {
-      image: "src/assets/homepage/2.jpg",
+      image: "/assets/homepage/2.jpg",
       title: "Debt Refinancing", 
       description: "Analyze refinancing opportunities with different rates, maturity periods, and grace periods.",
       features: ["Rate Comparison", "Maturity Analysis", "Grace Period Impact", "Cost-Benefit Analysis"]
     },
     {
-      image: "src/assets/homepage/3.jpg",
+      image: "/assets/homepage/3.jpg",
       title: "Debt Restructuring",
       description: "Model various restructuring scenarios to optimize debt terms and improve cash flow.",
       features: ["Term Modifications", "Payment Restructuring", "Covenant Adjustments", "Recovery Analysis"]
     },
     {
-      image: "src/assets/homepage/4.jpg",
+      image: "/assets/homepage/4.jpg",
       title: "Covenant Testing",
       description: "Automated covenant testing with early warning alerts and compliance tracking.",
       features: ["Real-time Monitoring", "Alert Systems", "Compliance Reports", "Risk Assessment"]
     },
     {
-      image: "src/assets/homepage/5.jpg",
+      image: "/assets/homepage/5.jpg",
       title: "Industry Benchmarking",
       description: "Compare your performance against industry standards and peer companies.",
       features: ["Peer Analysis", "Industry Standards", "Performance Metrics", "Competitive Insights"]

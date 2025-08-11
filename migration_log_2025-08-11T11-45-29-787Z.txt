@@ -1,0 +1,67 @@
+[2025-08-11T11:45:27.619Z] [INFO] 🔄 Starting database migration from local to production...
+[2025-08-11T11:45:27.660Z] [INFO] Connecting to local database...
+[2025-08-11T11:45:27.817Z] [INFO] ✅ Connected to local database
+[2025-08-11T11:45:27.817Z] [INFO] Connecting to production database...
+[2025-08-11T11:45:28.016Z] [INFO] ✅ Connected to production database
+[2025-08-11T11:45:28.017Z] [INFO] 🔍 Comparing database schemas...
+[2025-08-11T11:45:28.149Z] [INFO] Local tables: 27
+[2025-08-11T11:45:28.149Z] [INFO] Production tables: 0
+[2025-08-11T11:45:28.150Z] [WARNING] ❌ Missing tables in production: balance_sheet_data, calculation_iterations, calculation_runs, calculation_schedules, cash_flow_data, companies, company_details, data_entry_audit_log, debt_calculations, debt_structure_data, depreciation_schedule, growth_assumptions_data, monthly_consolidated, monthly_kpis, profiles, profit_loss_data, projects, quarterly_consolidated, quarterly_kpis, role_capabilities, seasonality_data, user_roles, user_sessions, users, working_capital_data, yearly_consolidated, yearly_kpis
+[2025-08-11T11:45:28.150Z] [INFO] ✅ Schema comparison completed
+[2025-08-11T11:45:28.150Z] [INFO] 🚀 Starting data migration...
+[2025-08-11T11:45:28.153Z] [INFO]   📊 Migrating data for table: balance_sheet_data
+[2025-08-11T11:45:28.189Z] [ERROR]     ❌ Error migrating table balance_sheet_data: relation "balance_sheet_data" does not exist
+[2025-08-11T11:45:28.190Z] [INFO]   📊 Migrating data for table: calculation_iterations
+[2025-08-11T11:45:28.226Z] [ERROR]     ❌ Error migrating table calculation_iterations: relation "calculation_iterations" does not exist
+[2025-08-11T11:45:28.226Z] [INFO]   📊 Migrating data for table: calculation_runs
+[2025-08-11T11:45:28.263Z] [ERROR]     ❌ Error migrating table calculation_runs: relation "calculation_runs" does not exist
+[2025-08-11T11:45:28.263Z] [INFO]   📊 Migrating data for table: calculation_schedules
+[2025-08-11T11:45:28.352Z] [ERROR]     ❌ Error migrating table calculation_schedules: relation "calculation_schedules" does not exist
+[2025-08-11T11:45:28.352Z] [INFO]   📊 Migrating data for table: cash_flow_data
+[2025-08-11T11:45:28.439Z] [ERROR]     ❌ Error migrating table cash_flow_data: relation "cash_flow_data" does not exist
+[2025-08-11T11:45:28.439Z] [INFO]   📊 Migrating data for table: companies
+[2025-08-11T11:45:28.730Z] [ERROR]     ❌ Error migrating table companies: relation "companies" does not exist
+[2025-08-11T11:45:28.730Z] [INFO]   📊 Migrating data for table: company_details
+[2025-08-11T11:45:28.797Z] [ERROR]     ❌ Error migrating table company_details: relation "company_details" does not exist
+[2025-08-11T11:45:28.797Z] [INFO]   📊 Migrating data for table: data_entry_audit_log
+[2025-08-11T11:45:28.969Z] [ERROR]     ❌ Error migrating table data_entry_audit_log: relation "data_entry_audit_log" does not exist
+[2025-08-11T11:45:28.969Z] [INFO]   📊 Migrating data for table: debt_calculations
+[2025-08-11T11:45:29.021Z] [ERROR]     ❌ Error migrating table debt_calculations: relation "debt_calculations" does not exist
+[2025-08-11T11:45:29.021Z] [INFO]   📊 Migrating data for table: debt_structure_data
+[2025-08-11T11:45:29.057Z] [ERROR]     ❌ Error migrating table debt_structure_data: relation "debt_structure_data" does not exist
+[2025-08-11T11:45:29.057Z] [INFO]   📊 Migrating data for table: depreciation_schedule
+[2025-08-11T11:45:29.169Z] [ERROR]     ❌ Error migrating table depreciation_schedule: relation "depreciation_schedule" does not exist
+[2025-08-11T11:45:29.169Z] [INFO]   📊 Migrating data for table: growth_assumptions_data
+[2025-08-11T11:45:29.203Z] [ERROR]     ❌ Error migrating table growth_assumptions_data: relation "growth_assumptions_data" does not exist
+[2025-08-11T11:45:29.203Z] [INFO]   📊 Migrating data for table: monthly_consolidated
+[2025-08-11T11:45:29.257Z] [ERROR]     ❌ Error migrating table monthly_consolidated: relation "monthly_consolidated" does not exist
+[2025-08-11T11:45:29.257Z] [INFO]   📊 Migrating data for table: monthly_kpis
+[2025-08-11T11:45:29.296Z] [ERROR]     ❌ Error migrating table monthly_kpis: relation "monthly_kpis" does not exist
+[2025-08-11T11:45:29.296Z] [INFO]   📊 Migrating data for table: profiles
+[2025-08-11T11:45:29.334Z] [ERROR]     ❌ Error migrating table profiles: relation "profiles" does not exist
+[2025-08-11T11:45:29.334Z] [INFO]   📊 Migrating data for table: profit_loss_data
+[2025-08-11T11:45:29.369Z] [ERROR]     ❌ Error migrating table profit_loss_data: relation "profit_loss_data" does not exist
+[2025-08-11T11:45:29.369Z] [INFO]   📊 Migrating data for table: projects
+[2025-08-11T11:45:29.405Z] [ERROR]     ❌ Error migrating table projects: relation "projects" does not exist
+[2025-08-11T11:45:29.406Z] [INFO]   📊 Migrating data for table: quarterly_consolidated
+[2025-08-11T11:45:29.459Z] [ERROR]     ❌ Error migrating table quarterly_consolidated: relation "quarterly_consolidated" does not exist
+[2025-08-11T11:45:29.459Z] [INFO]   📊 Migrating data for table: quarterly_kpis
+[2025-08-11T11:45:29.499Z] [ERROR]     ❌ Error migrating table quarterly_kpis: relation "quarterly_kpis" does not exist
+[2025-08-11T11:45:29.499Z] [INFO]   📊 Migrating data for table: role_capabilities
+[2025-08-11T11:45:29.537Z] [ERROR]     ❌ Error migrating table role_capabilities: relation "role_capabilities" does not exist
+[2025-08-11T11:45:29.537Z] [INFO]   📊 Migrating data for table: seasonality_data
+[2025-08-11T11:45:29.571Z] [ERROR]     ❌ Error migrating table seasonality_data: relation "seasonality_data" does not exist
+[2025-08-11T11:45:29.571Z] [INFO]   📊 Migrating data for table: user_roles
+[2025-08-11T11:45:29.607Z] [ERROR]     ❌ Error migrating table user_roles: relation "user_roles" does not exist
+[2025-08-11T11:45:29.607Z] [INFO]   📊 Migrating data for table: user_sessions
+[2025-08-11T11:45:29.642Z] [ERROR]     ❌ Error migrating table user_sessions: relation "user_sessions" does not exist
+[2025-08-11T11:45:29.642Z] [INFO]   📊 Migrating data for table: users
+[2025-08-11T11:45:29.676Z] [ERROR]     ❌ Error migrating table users: relation "users" does not exist
+[2025-08-11T11:45:29.677Z] [INFO]   📊 Migrating data for table: working_capital_data
+[2025-08-11T11:45:29.713Z] [ERROR]     ❌ Error migrating table working_capital_data: relation "working_capital_data" does not exist
+[2025-08-11T11:45:29.713Z] [INFO]   📊 Migrating data for table: yearly_consolidated
+[2025-08-11T11:45:29.751Z] [ERROR]     ❌ Error migrating table yearly_consolidated: relation "yearly_consolidated" does not exist
+[2025-08-11T11:45:29.751Z] [INFO]   📊 Migrating data for table: yearly_kpis
+[2025-08-11T11:45:29.787Z] [ERROR]     ❌ Error migrating table yearly_kpis: relation "yearly_kpis" does not exist
+[2025-08-11T11:45:29.787Z] [INFO] 📈 Migration completed: 0/27 tables successful
+[2025-08-11T11:45:29.787Z] [ERROR] ❌ 27 errors occurred during migration

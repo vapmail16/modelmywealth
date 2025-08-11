@@ -19,11 +19,11 @@ load_dotenv()
 class DebtScheduleCalculator:
     def __init__(self):
         self.db_config = {
-            'host': os.getenv('DB_HOST', 'localhost'),
-            'database': os.getenv('DB_NAME', 'refi_wizard'),
-            'user': os.getenv('DB_USER', 'postgres'),
-            'password': os.getenv('DB_PASSWORD', 'admin123'),
-            'port': os.getenv('DB_PORT', '5432')
+            'host': os.getenv('POSTGRESQL_HOST', 'localhost'),
+            'database': os.getenv('POSTGRESQL_DB', 'refi_wizard'),
+            'user': os.getenv('POSTGRESQL_USER', 'postgres'),
+            'password': os.getenv('POSTGRESQL_PASSWORD', 'admin123'),
+            'port': os.getenv('POSTGRESQL_PORT', '5432')
         }
 
     def get_connection(self):

@@ -1,0 +1,65 @@
+[2025-08-11T11:51:05.426Z] [INFO] 🚀 Starting robust production database schema creation...
+[2025-08-11T11:51:05.435Z] [INFO] Connecting to local database...
+[2025-08-11T11:51:05.459Z] [INFO] ✅ Connected to local database
+[2025-08-11T11:51:05.460Z] [INFO] Connecting to production database...
+[2025-08-11T11:51:05.684Z] [INFO] ✅ Connected to production database
+[2025-08-11T11:51:05.708Z] [INFO] 🔧 Setting up PostgreSQL extensions...
+[2025-08-11T11:51:05.779Z] [INFO]   ✅ UUID extension enabled
+[2025-08-11T11:51:05.837Z] [INFO]   ✅ PGCrypto extension enabled
+[2025-08-11T11:51:05.840Z] [INFO] 🏗️ Creating all tables in production...
+[2025-08-11T11:51:05.963Z] [INFO] Found 27 tables to create
+[2025-08-11T11:51:05.963Z] [INFO]   🏗️ Creating table: balance_sheet_data
+[2025-08-11T11:51:06.090Z] [INFO]     ✅ Successfully created table: balance_sheet_data
+[2025-08-11T11:51:06.091Z] [INFO]   🏗️ Creating table: calculation_iterations
+[2025-08-11T11:51:06.147Z] [INFO]     ✅ Successfully created table: calculation_iterations
+[2025-08-11T11:51:06.147Z] [INFO]   🏗️ Creating table: calculation_runs
+[2025-08-11T11:51:06.276Z] [INFO]     ✅ Successfully created table: calculation_runs
+[2025-08-11T11:51:06.276Z] [INFO]   🏗️ Creating table: calculation_schedules
+[2025-08-11T11:51:06.322Z] [INFO]     ✅ Successfully created table: calculation_schedules
+[2025-08-11T11:51:06.322Z] [INFO]   🏗️ Creating table: cash_flow_data
+[2025-08-11T11:51:06.384Z] [INFO]     ✅ Successfully created table: cash_flow_data
+[2025-08-11T11:51:06.437Z] [INFO]   🏗️ Creating table: companies
+[2025-08-11T11:51:06.488Z] [INFO]     ✅ Successfully created table: companies
+[2025-08-11T11:51:06.488Z] [INFO]   🏗️ Creating table: company_details
+[2025-08-11T11:51:06.549Z] [INFO]     ✅ Successfully created table: company_details
+[2025-08-11T11:51:06.550Z] [INFO]   🏗️ Creating table: data_entry_audit_log
+[2025-08-11T11:51:06.673Z] [ERROR]     ❌ Error creating table data_entry_audit_log: syntax error at or near "ARRAY"
+[2025-08-11T11:51:06.673Z] [INFO]   🏗️ Creating table: debt_calculations
+[2025-08-11T11:51:06.724Z] [INFO]     ✅ Successfully created table: debt_calculations
+[2025-08-11T11:51:06.725Z] [INFO]   🏗️ Creating table: debt_structure_data
+[2025-08-11T11:51:06.772Z] [INFO]     ✅ Successfully created table: debt_structure_data
+[2025-08-11T11:51:06.772Z] [INFO]   🏗️ Creating table: depreciation_schedule
+[2025-08-11T11:51:06.815Z] [INFO]     ✅ Successfully created table: depreciation_schedule
+[2025-08-11T11:51:06.815Z] [INFO]   🏗️ Creating table: growth_assumptions_data
+[2025-08-11T11:51:06.864Z] [INFO]     ✅ Successfully created table: growth_assumptions_data
+[2025-08-11T11:51:06.865Z] [INFO]   🏗️ Creating table: monthly_consolidated
+[2025-08-11T11:51:06.904Z] [ERROR]     ❌ Error creating table monthly_consolidated: relation "monthly_consolidated" already exists
+[2025-08-11T11:51:06.905Z] [INFO]   🏗️ Creating table: monthly_kpis
+[2025-08-11T11:51:06.945Z] [ERROR]     ❌ Error creating table monthly_kpis: relation "monthly_kpis" already exists
+[2025-08-11T11:51:06.945Z] [INFO]   🏗️ Creating table: profiles
+[2025-08-11T11:51:06.992Z] [INFO]     ✅ Successfully created table: profiles
+[2025-08-11T11:51:06.992Z] [INFO]   🏗️ Creating table: profit_loss_data
+[2025-08-11T11:51:07.039Z] [INFO]     ✅ Successfully created table: profit_loss_data
+[2025-08-11T11:51:07.039Z] [INFO]   🏗️ Creating table: projects
+[2025-08-11T11:51:07.083Z] [INFO]     ✅ Successfully created table: projects
+[2025-08-11T11:51:07.083Z] [INFO]   🏗️ Creating table: quarterly_consolidated
+[2025-08-11T11:51:07.123Z] [ERROR]     ❌ Error creating table quarterly_consolidated: relation "quarterly_consolidated" already exists
+[2025-08-11T11:51:07.123Z] [INFO]   🏗️ Creating table: quarterly_kpis
+[2025-08-11T11:51:07.165Z] [ERROR]     ❌ Error creating table quarterly_kpis: relation "quarterly_kpis" already exists
+[2025-08-11T11:51:07.165Z] [INFO]   🏗️ Creating table: role_capabilities
+[2025-08-11T11:51:07.204Z] [ERROR]     ❌ Error creating table role_capabilities: syntax error at or near "USER"
+[2025-08-11T11:51:07.204Z] [INFO]   🏗️ Creating table: seasonality_data
+[2025-08-11T11:51:07.249Z] [INFO]     ✅ Successfully created table: seasonality_data
+[2025-08-11T11:51:07.249Z] [INFO]   🏗️ Creating table: user_roles
+[2025-08-11T11:51:07.286Z] [ERROR]     ❌ Error creating table user_roles: syntax error at or near "USER"
+[2025-08-11T11:51:07.286Z] [INFO]   🏗️ Creating table: user_sessions
+[2025-08-11T11:51:07.325Z] [INFO]     ✅ Successfully created table: user_sessions
+[2025-08-11T11:51:07.325Z] [INFO]   🏗️ Creating table: users
+[2025-08-11T11:51:07.370Z] [INFO]     ✅ Successfully created table: users
+[2025-08-11T11:51:07.370Z] [INFO]   🏗️ Creating table: working_capital_data
+[2025-08-11T11:51:07.417Z] [INFO]     ✅ Successfully created table: working_capital_data
+[2025-08-11T11:51:07.417Z] [INFO]   🏗️ Creating table: yearly_consolidated
+[2025-08-11T11:51:07.457Z] [ERROR]     ❌ Error creating table yearly_consolidated: relation "yearly_consolidated" already exists
+[2025-08-11T11:51:07.457Z] [INFO]   🏗️ Creating table: yearly_kpis
+[2025-08-11T11:51:07.495Z] [ERROR]     ❌ Error creating table yearly_kpis: relation "yearly_kpis" already exists
+[2025-08-11T11:51:07.495Z] [INFO] 📊 Table creation completed: 18/27 tables created successfully

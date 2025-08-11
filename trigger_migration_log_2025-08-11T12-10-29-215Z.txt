@@ -1,0 +1,60 @@
+[2025-08-11T12:10:25.223Z] [INFO] 🚀 Starting trigger migration...
+[2025-08-11T12:10:25.240Z] [INFO] 🔌 Connecting to local database...
+[2025-08-11T12:10:25.293Z] [INFO] ✅ Connected to local database
+[2025-08-11T12:10:25.294Z] [INFO] 🔌 Connecting to production database...
+[2025-08-11T12:10:25.525Z] [INFO] ✅ Connected to production database
+[2025-08-11T12:10:25.526Z] [INFO] 🏗️ Creating trigger functions in production...
+[2025-08-11T12:10:25.526Z] [INFO] 🔍 Getting trigger functions from local database...
+[2025-08-11T12:10:25.852Z] [INFO] Found 12 trigger functions
+[2025-08-11T12:10:25.938Z] [INFO]   ✅ Created function: audit_data_changes
+[2025-08-11T12:10:26.007Z] [ERROR]   ❌ Error creating function pg_extension_update_paths: permission denied for schema pg_catalog
+[2025-08-11T12:10:26.072Z] [ERROR]   ❌ Error creating function pg_stat_get_db_tuples_updated: permission denied for schema pg_catalog
+[2025-08-11T12:10:26.163Z] [ERROR]   ❌ Error creating function pg_stat_get_tuples_hot_updated: permission denied for schema pg_catalog
+[2025-08-11T12:10:26.253Z] [ERROR]   ❌ Error creating function pg_stat_get_tuples_updated: permission denied for schema pg_catalog
+[2025-08-11T12:10:26.322Z] [ERROR]   ❌ Error creating function pg_stat_get_xact_tuples_hot_updated: permission denied for schema pg_catalog
+[2025-08-11T12:10:26.387Z] [ERROR]   ❌ Error creating function pg_stat_get_xact_tuples_updated: permission denied for schema pg_catalog
+[2025-08-11T12:10:26.456Z] [ERROR]   ❌ Error creating function suppress_redundant_updates_trigger: permission denied for schema pg_catalog
+[2025-08-11T12:10:26.526Z] [ERROR]   ❌ Error creating function tsvector_update_trigger: permission denied for schema pg_catalog
+[2025-08-11T12:10:26.594Z] [ERROR]   ❌ Error creating function tsvector_update_trigger_column: permission denied for schema pg_catalog
+[2025-08-11T12:10:26.660Z] [INFO]   ✅ Created function: update_last_modified_column
+[2025-08-11T12:10:26.726Z] [INFO]   ✅ Created function: update_updated_at_column
+[2025-08-11T12:10:26.726Z] [INFO] ✅ Functions created: 3/12
+[2025-08-11T12:10:26.728Z] [INFO] ⚡ Migrating triggers...
+[2025-08-11T12:10:26.819Z] [WARNING]   ⚠️ Could not create trigger audit_balance_sheet_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:26.882Z] [WARNING]   ⚠️ Could not create trigger audit_balance_sheet_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:26.951Z] [WARNING]   ⚠️ Could not create trigger audit_balance_sheet_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:27.020Z] [WARNING]   ⚠️ Could not create trigger update_balance_sheet_data_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:27.087Z] [WARNING]   ⚠️ Could not create trigger audit_cash_flow_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:27.154Z] [WARNING]   ⚠️ Could not create trigger audit_cash_flow_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:27.219Z] [WARNING]   ⚠️ Could not create trigger audit_cash_flow_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:27.285Z] [WARNING]   ⚠️ Could not create trigger update_cash_flow_data_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:27.353Z] [WARNING]   ⚠️ Could not create trigger audit_company_details_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:27.424Z] [WARNING]   ⚠️ Could not create trigger audit_company_details_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:27.490Z] [WARNING]   ⚠️ Could not create trigger audit_company_details_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:27.554Z] [WARNING]   ⚠️ Could not create trigger update_company_details_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:27.618Z] [WARNING]   ⚠️ Could not create trigger update_debt_calculations_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:27.682Z] [WARNING]   ⚠️ Could not create trigger audit_debt_structure_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:27.746Z] [WARNING]   ⚠️ Could not create trigger audit_debt_structure_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:27.817Z] [WARNING]   ⚠️ Could not create trigger audit_debt_structure_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:27.884Z] [WARNING]   ⚠️ Could not create trigger update_debt_structure_data_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:27.951Z] [WARNING]   ⚠️ Could not create trigger update_depreciation_schedule_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:28.021Z] [WARNING]   ⚠️ Could not create trigger audit_growth_assumptions_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:28.108Z] [WARNING]   ⚠️ Could not create trigger audit_growth_assumptions_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:28.172Z] [WARNING]   ⚠️ Could not create trigger audit_growth_assumptions_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:28.238Z] [WARNING]   ⚠️ Could not create trigger update_growth_assumptions_data_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:28.303Z] [WARNING]   ⚠️ Could not create trigger update_profiles_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:28.368Z] [WARNING]   ⚠️ Could not create trigger audit_profit_loss_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:28.437Z] [WARNING]   ⚠️ Could not create trigger audit_profit_loss_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:28.504Z] [WARNING]   ⚠️ Could not create trigger audit_profit_loss_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:28.568Z] [WARNING]   ⚠️ Could not create trigger update_profit_loss_data_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:28.635Z] [WARNING]   ⚠️ Could not create trigger update_projects_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:28.699Z] [WARNING]   ⚠️ Could not create trigger audit_seasonality_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:28.762Z] [WARNING]   ⚠️ Could not create trigger audit_seasonality_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:28.826Z] [WARNING]   ⚠️ Could not create trigger audit_seasonality_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:28.892Z] [WARNING]   ⚠️ Could not create trigger update_seasonality_data_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:28.956Z] [WARNING]   ⚠️ Could not create trigger update_users_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:29.022Z] [WARNING]   ⚠️ Could not create trigger audit_working_capital_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:29.086Z] [WARNING]   ⚠️ Could not create trigger audit_working_capital_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:29.150Z] [WARNING]   ⚠️ Could not create trigger audit_working_capital_data_changes: syntax error at or near "ROW"
+[2025-08-11T12:10:29.214Z] [WARNING]   ⚠️ Could not create trigger update_working_capital_data_updated_at: syntax error at or near "ROW"
+[2025-08-11T12:10:29.214Z] [INFO] ✅ Triggers migration: 0/37 successful

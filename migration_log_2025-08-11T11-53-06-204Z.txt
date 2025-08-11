@@ -1,0 +1,177 @@
+[2025-08-11T11:52:05.795Z] [INFO] 🔄 Starting database migration from local to production...
+[2025-08-11T11:52:05.802Z] [INFO] Connecting to local database...
+[2025-08-11T11:52:05.820Z] [INFO] ✅ Connected to local database
+[2025-08-11T11:52:05.820Z] [INFO] Connecting to production database...
+[2025-08-11T11:52:05.991Z] [INFO] ✅ Connected to production database
+[2025-08-11T11:52:05.992Z] [INFO] 🔍 Comparing database schemas...
+[2025-08-11T11:52:06.049Z] [INFO] Local tables: 27
+[2025-08-11T11:52:06.050Z] [INFO] Production tables: 27
+[2025-08-11T11:52:06.050Z] [INFO]   📋 Comparing schema for table: balance_sheet_data
+[2025-08-11T11:52:06.129Z] [INFO]     ✅ Schema matches for table: balance_sheet_data
+[2025-08-11T11:52:06.130Z] [INFO]   📋 Comparing schema for table: calculation_iterations
+[2025-08-11T11:52:06.177Z] [INFO]     ✅ Schema matches for table: calculation_iterations
+[2025-08-11T11:52:06.177Z] [INFO]   📋 Comparing schema for table: calculation_runs
+[2025-08-11T11:52:06.225Z] [INFO]     ✅ Schema matches for table: calculation_runs
+[2025-08-11T11:52:06.225Z] [INFO]   📋 Comparing schema for table: calculation_schedules
+[2025-08-11T11:52:06.270Z] [INFO]     ✅ Schema matches for table: calculation_schedules
+[2025-08-11T11:52:06.270Z] [INFO]   📋 Comparing schema for table: cash_flow_data
+[2025-08-11T11:52:06.320Z] [INFO]     ✅ Schema matches for table: cash_flow_data
+[2025-08-11T11:52:06.320Z] [INFO]   📋 Comparing schema for table: companies
+[2025-08-11T11:52:06.365Z] [INFO]     ✅ Schema matches for table: companies
+[2025-08-11T11:52:06.365Z] [INFO]   📋 Comparing schema for table: company_details
+[2025-08-11T11:52:06.419Z] [INFO]     ✅ Schema matches for table: company_details
+[2025-08-11T11:52:06.420Z] [INFO]   📋 Comparing schema for table: data_entry_audit_log
+[2025-08-11T11:52:06.469Z] [ERROR]     ❌ Column count mismatch: Local=13, Production=9
+[2025-08-11T11:52:06.469Z] [INFO]   📋 Comparing schema for table: debt_calculations
+[2025-08-11T11:52:06.516Z] [INFO]     ✅ Schema matches for table: debt_calculations
+[2025-08-11T11:52:06.516Z] [INFO]   📋 Comparing schema for table: debt_structure_data
+[2025-08-11T11:52:06.566Z] [INFO]     ✅ Schema matches for table: debt_structure_data
+[2025-08-11T11:52:06.566Z] [INFO]   📋 Comparing schema for table: depreciation_schedule
+[2025-08-11T11:52:06.612Z] [INFO]     ✅ Schema matches for table: depreciation_schedule
+[2025-08-11T11:52:06.612Z] [INFO]   📋 Comparing schema for table: growth_assumptions_data
+[2025-08-11T11:52:06.665Z] [INFO]     ✅ Schema matches for table: growth_assumptions_data
+[2025-08-11T11:52:06.665Z] [INFO]   📋 Comparing schema for table: monthly_consolidated
+[2025-08-11T11:52:06.717Z] [INFO]     ✅ Schema matches for table: monthly_consolidated
+[2025-08-11T11:52:06.717Z] [INFO]   📋 Comparing schema for table: monthly_kpis
+[2025-08-11T11:52:06.763Z] [INFO]     ✅ Schema matches for table: monthly_kpis
+[2025-08-11T11:52:06.763Z] [INFO]   📋 Comparing schema for table: profiles
+[2025-08-11T11:52:06.806Z] [INFO]     ✅ Schema matches for table: profiles
+[2025-08-11T11:52:06.806Z] [INFO]   📋 Comparing schema for table: profit_loss_data
+[2025-08-11T11:52:06.855Z] [INFO]     ✅ Schema matches for table: profit_loss_data
+[2025-08-11T11:52:06.856Z] [INFO]   📋 Comparing schema for table: projects
+[2025-08-11T11:52:06.902Z] [INFO]     ✅ Schema matches for table: projects
+[2025-08-11T11:52:06.902Z] [INFO]   📋 Comparing schema for table: quarterly_consolidated
+[2025-08-11T11:52:06.953Z] [INFO]     ✅ Schema matches for table: quarterly_consolidated
+[2025-08-11T11:52:06.953Z] [INFO]   📋 Comparing schema for table: quarterly_kpis
+[2025-08-11T11:52:07.001Z] [INFO]     ✅ Schema matches for table: quarterly_kpis
+[2025-08-11T11:52:07.001Z] [INFO]   📋 Comparing schema for table: role_capabilities
+[2025-08-11T11:52:07.045Z] [ERROR]     ❌ Column mismatch at position 1: role vs role_name
+[2025-08-11T11:52:07.045Z] [ERROR]     ❌ Column mismatch at position 2: user_type vs capability
+[2025-08-11T11:52:07.045Z] [ERROR]     ❌ Column mismatch at position 3: capability vs created_at
+[2025-08-11T11:52:07.045Z] [ERROR]     ❌ Column mismatch at position 4: created_at vs created_by
+[2025-08-11T11:52:07.045Z] [INFO]   📋 Comparing schema for table: seasonality_data
+[2025-08-11T11:52:07.096Z] [INFO]     ✅ Schema matches for table: seasonality_data
+[2025-08-11T11:52:07.096Z] [INFO]   📋 Comparing schema for table: user_roles
+[2025-08-11T11:52:07.143Z] [ERROR]     ❌ Column mismatch at position 2: role vs role_name
+[2025-08-11T11:52:07.143Z] [ERROR]     ❌ Column mismatch at position 3: user_type vs created_at
+[2025-08-11T11:52:07.143Z] [ERROR]     ❌ Column mismatch at position 4: created_at vs created_by
+[2025-08-11T11:52:07.143Z] [INFO]   📋 Comparing schema for table: user_sessions
+[2025-08-11T11:52:07.188Z] [INFO]     ✅ Schema matches for table: user_sessions
+[2025-08-11T11:52:07.189Z] [INFO]   📋 Comparing schema for table: users
+[2025-08-11T11:52:07.236Z] [INFO]     ✅ Schema matches for table: users
+[2025-08-11T11:52:07.236Z] [INFO]   📋 Comparing schema for table: working_capital_data
+[2025-08-11T11:52:07.285Z] [INFO]     ✅ Schema matches for table: working_capital_data
+[2025-08-11T11:52:07.285Z] [INFO]   📋 Comparing schema for table: yearly_consolidated
+[2025-08-11T11:52:07.334Z] [INFO]     ✅ Schema matches for table: yearly_consolidated
+[2025-08-11T11:52:07.334Z] [INFO]   📋 Comparing schema for table: yearly_kpis
+[2025-08-11T11:52:07.380Z] [INFO]     ✅ Schema matches for table: yearly_kpis
+[2025-08-11T11:52:07.381Z] [INFO] ✅ Schema comparison completed
+[2025-08-11T11:52:07.382Z] [INFO] 🚀 Starting data migration...
+[2025-08-11T11:52:07.384Z] [INFO]   📊 Migrating data for table: balance_sheet_data
+[2025-08-11T11:52:07.424Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:52:07.461Z] [INFO]     🗑️ Cleared production table: balance_sheet_data
+[2025-08-11T11:52:07.535Z] [INFO]     ✅ Successfully migrated 1 rows to production
+[2025-08-11T11:52:07.535Z] [INFO]   📊 Migrating data for table: calculation_iterations
+[2025-08-11T11:52:07.569Z] [INFO]     Local rows: 0, Production rows: 0
+[2025-08-11T11:52:07.570Z] [INFO]     ⚠️ No data to migrate for table: calculation_iterations
+[2025-08-11T11:52:07.570Z] [INFO]   📊 Migrating data for table: calculation_runs
+[2025-08-11T11:52:07.606Z] [INFO]     Local rows: 47, Production rows: 0
+[2025-08-11T11:52:07.639Z] [INFO]     🗑️ Cleared production table: calculation_runs
+[2025-08-11T11:52:09.279Z] [INFO]     ✅ Successfully migrated 47 rows to production
+[2025-08-11T11:52:09.279Z] [INFO]   📊 Migrating data for table: calculation_schedules
+[2025-08-11T11:52:09.314Z] [INFO]     Local rows: 0, Production rows: 0
+[2025-08-11T11:52:09.314Z] [INFO]     ⚠️ No data to migrate for table: calculation_schedules
+[2025-08-11T11:52:09.314Z] [INFO]   📊 Migrating data for table: cash_flow_data
+[2025-08-11T11:52:09.347Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:52:09.379Z] [INFO]     🗑️ Cleared production table: cash_flow_data
+[2025-08-11T11:52:09.447Z] [INFO]     ✅ Successfully migrated 1 rows to production
+[2025-08-11T11:52:09.447Z] [INFO]   📊 Migrating data for table: companies
+[2025-08-11T11:52:09.482Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:52:09.515Z] [INFO]     🗑️ Cleared production table: companies
+[2025-08-11T11:52:09.583Z] [INFO]     ✅ Successfully migrated 1 rows to production
+[2025-08-11T11:52:09.583Z] [INFO]   📊 Migrating data for table: company_details
+[2025-08-11T11:52:09.617Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:52:09.649Z] [INFO]     🗑️ Cleared production table: company_details
+[2025-08-11T11:52:09.717Z] [INFO]     ✅ Successfully migrated 1 rows to production
+[2025-08-11T11:52:09.717Z] [INFO]   📊 Migrating data for table: data_entry_audit_log
+[2025-08-11T11:52:09.759Z] [INFO]     Local rows: 128, Production rows: 0
+[2025-08-11T11:52:09.791Z] [INFO]     🗑️ Cleared production table: data_entry_audit_log
+[2025-08-11T11:52:09.844Z] [ERROR]     ❌ Error migrating table data_entry_audit_log: column "project_id" of relation "data_entry_audit_log" does not exist
+[2025-08-11T11:52:09.845Z] [INFO]   📊 Migrating data for table: debt_calculations
+[2025-08-11T11:52:09.879Z] [INFO]     Local rows: 120, Production rows: 0
+[2025-08-11T11:52:09.911Z] [INFO]     🗑️ Cleared production table: debt_calculations
+[2025-08-11T11:52:14.132Z] [INFO]     ✅ Successfully migrated 120 rows to production
+[2025-08-11T11:52:14.132Z] [INFO]   📊 Migrating data for table: debt_structure_data
+[2025-08-11T11:52:14.168Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:52:14.201Z] [INFO]     🗑️ Cleared production table: debt_structure_data
+[2025-08-11T11:52:14.269Z] [INFO]     ✅ Successfully migrated 1 rows to production
+[2025-08-11T11:52:14.269Z] [INFO]   📊 Migrating data for table: depreciation_schedule
+[2025-08-11T11:52:14.306Z] [INFO]     Local rows: 120, Production rows: 0
+[2025-08-11T11:52:14.341Z] [INFO]     🗑️ Cleared production table: depreciation_schedule
+[2025-08-11T11:52:18.533Z] [INFO]     ✅ Successfully migrated 120 rows to production
+[2025-08-11T11:52:18.534Z] [INFO]   📊 Migrating data for table: growth_assumptions_data
+[2025-08-11T11:52:18.568Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:52:18.601Z] [INFO]     🗑️ Cleared production table: growth_assumptions_data
+[2025-08-11T11:52:18.669Z] [INFO]     ✅ Successfully migrated 1 rows to production
+[2025-08-11T11:52:18.670Z] [INFO]   📊 Migrating data for table: monthly_consolidated
+[2025-08-11T11:52:18.710Z] [INFO]     Local rows: 960, Production rows: 0
+[2025-08-11T11:52:18.743Z] [INFO]     🗑️ Cleared production table: monthly_consolidated
+[2025-08-11T11:52:52.776Z] [INFO]     ✅ Successfully migrated 960 rows to production
+[2025-08-11T11:52:52.776Z] [INFO]   📊 Migrating data for table: monthly_kpis
+[2025-08-11T11:52:52.811Z] [INFO]     Local rows: 120, Production rows: 0
+[2025-08-11T11:52:52.843Z] [INFO]     🗑️ Cleared production table: monthly_kpis
+[2025-08-11T11:52:56.950Z] [INFO]     ✅ Successfully migrated 120 rows to production
+[2025-08-11T11:52:56.950Z] [INFO]   📊 Migrating data for table: profiles
+[2025-08-11T11:52:56.984Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:52:57.017Z] [INFO]     🗑️ Cleared production table: profiles
+[2025-08-11T11:52:57.083Z] [INFO]     ✅ Successfully migrated 1 rows to production
+[2025-08-11T11:52:57.083Z] [INFO]   📊 Migrating data for table: profit_loss_data
+[2025-08-11T11:52:57.121Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:52:57.153Z] [INFO]     🗑️ Cleared production table: profit_loss_data
+[2025-08-11T11:52:57.221Z] [INFO]     ✅ Successfully migrated 1 rows to production
+[2025-08-11T11:52:57.222Z] [INFO]   📊 Migrating data for table: projects
+[2025-08-11T11:52:57.256Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:52:57.288Z] [INFO]     🗑️ Cleared production table: projects
+[2025-08-11T11:52:57.356Z] [INFO]     ✅ Successfully migrated 1 rows to production
+[2025-08-11T11:52:57.356Z] [INFO]   📊 Migrating data for table: quarterly_consolidated
+[2025-08-11T11:52:57.420Z] [INFO]     Local rows: 40, Production rows: 0
+[2025-08-11T11:52:57.455Z] [INFO]     🗑️ Cleared production table: quarterly_consolidated
+[2025-08-11T11:52:58.859Z] [INFO]     ✅ Successfully migrated 40 rows to production
+[2025-08-11T11:52:58.859Z] [INFO]   📊 Migrating data for table: quarterly_kpis
+[2025-08-11T11:52:58.892Z] [INFO]     Local rows: 40, Production rows: 0
+[2025-08-11T11:52:58.929Z] [INFO]     🗑️ Cleared production table: quarterly_kpis
+[2025-08-11T11:53:00.421Z] [INFO]     ✅ Successfully migrated 40 rows to production
+[2025-08-11T11:53:00.421Z] [INFO]   📊 Migrating data for table: role_capabilities
+[2025-08-11T11:53:00.456Z] [INFO]     Local rows: 42, Production rows: 0
+[2025-08-11T11:53:00.547Z] [INFO]     🗑️ Cleared production table: role_capabilities
+[2025-08-11T11:53:00.683Z] [ERROR]     ❌ Error migrating table role_capabilities: column "role" of relation "role_capabilities" does not exist
+[2025-08-11T11:53:00.683Z] [INFO]   📊 Migrating data for table: seasonality_data
+[2025-08-11T11:53:00.729Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:53:00.764Z] [INFO]     🗑️ Cleared production table: seasonality_data
+[2025-08-11T11:53:00.844Z] [INFO]     ✅ Successfully migrated 1 rows to production
+[2025-08-11T11:53:00.844Z] [INFO]   📊 Migrating data for table: user_roles
+[2025-08-11T11:53:00.878Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:53:00.911Z] [INFO]     🗑️ Cleared production table: user_roles
+[2025-08-11T11:53:00.945Z] [ERROR]     ❌ Error migrating table user_roles: column "role" of relation "user_roles" does not exist
+[2025-08-11T11:53:00.945Z] [INFO]   📊 Migrating data for table: user_sessions
+[2025-08-11T11:53:00.985Z] [INFO]     Local rows: 116, Production rows: 0
+[2025-08-11T11:53:01.021Z] [INFO]     🗑️ Cleared production table: user_sessions
+[2025-08-11T11:53:05.054Z] [INFO]     ✅ Successfully migrated 116 rows to production
+[2025-08-11T11:53:05.054Z] [INFO]   📊 Migrating data for table: users
+[2025-08-11T11:53:05.088Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:53:05.119Z] [INFO]     🗑️ Cleared production table: users
+[2025-08-11T11:53:05.187Z] [INFO]     ✅ Successfully migrated 1 rows to production
+[2025-08-11T11:53:05.187Z] [INFO]   📊 Migrating data for table: working_capital_data
+[2025-08-11T11:53:05.222Z] [INFO]     Local rows: 1, Production rows: 0
+[2025-08-11T11:53:05.255Z] [INFO]     🗑️ Cleared production table: working_capital_data
+[2025-08-11T11:53:05.323Z] [INFO]     ✅ Successfully migrated 1 rows to production
+[2025-08-11T11:53:05.323Z] [INFO]   📊 Migrating data for table: yearly_consolidated
+[2025-08-11T11:53:05.357Z] [INFO]     Local rows: 10, Production rows: 0
+[2025-08-11T11:53:05.389Z] [INFO]     🗑️ Cleared production table: yearly_consolidated
+[2025-08-11T11:53:05.763Z] [INFO]     ✅ Successfully migrated 10 rows to production
+[2025-08-11T11:53:05.763Z] [INFO]   📊 Migrating data for table: yearly_kpis
+[2025-08-11T11:53:05.798Z] [INFO]     Local rows: 10, Production rows: 0
+[2025-08-11T11:53:05.831Z] [INFO]     🗑️ Cleared production table: yearly_kpis
+[2025-08-11T11:53:06.204Z] [INFO]     ✅ Successfully migrated 10 rows to production
+[2025-08-11T11:53:06.204Z] [INFO] 📈 Migration completed: 24/27 tables successful
+[2025-08-11T11:53:06.204Z] [ERROR] ❌ 3 errors occurred during migration

@@ -1,0 +1,30 @@
+[2025-08-11T12:11:44.838Z] [INFO] 🚀 Starting essential trigger addition...
+[2025-08-11T12:11:44.852Z] [INFO] 🔌 Connecting to production database...
+[2025-08-11T12:11:45.094Z] [INFO] ✅ Connected to production database
+[2025-08-11T12:11:45.097Z] [INFO] 🕒 Adding updated_at triggers...
+[2025-08-11T12:11:45.190Z] [INFO]   ✅ Created trigger: update_balance_sheet_data_updated_at
+[2025-08-11T12:11:45.263Z] [INFO]   ✅ Created trigger: update_cash_flow_data_updated_at
+[2025-08-11T12:11:45.334Z] [INFO]   ✅ Created trigger: update_company_details_updated_at
+[2025-08-11T12:11:45.402Z] [INFO]   ✅ Created trigger: update_debt_calculations_updated_at
+[2025-08-11T12:11:45.472Z] [INFO]   ✅ Created trigger: update_debt_structure_data_updated_at
+[2025-08-11T12:11:45.542Z] [INFO]   ✅ Created trigger: update_depreciation_schedule_updated_at
+[2025-08-11T12:11:45.612Z] [INFO]   ✅ Created trigger: update_growth_assumptions_data_updated_at
+[2025-08-11T12:11:45.680Z] [INFO]   ✅ Created trigger: update_profit_loss_data_updated_at
+[2025-08-11T12:11:45.748Z] [INFO]   ✅ Created trigger: update_projects_updated_at
+[2025-08-11T12:11:45.816Z] [INFO]   ✅ Created trigger: update_seasonality_data_updated_at
+[2025-08-11T12:11:45.886Z] [INFO]   ✅ Created trigger: update_users_updated_at
+[2025-08-11T12:11:45.954Z] [INFO]   ✅ Created trigger: update_working_capital_data_updated_at
+[2025-08-11T12:11:45.954Z] [INFO] ✅ Updated_at triggers: 12/12 created
+[2025-08-11T12:11:45.954Z] [INFO] 📝 Adding audit triggers...
+[2025-08-11T12:11:46.026Z] [INFO]   ✅ Created audit trigger: audit_balance_sheet_data_changes
+[2025-08-11T12:11:46.098Z] [INFO]   ✅ Created audit trigger: audit_cash_flow_data_changes
+[2025-08-11T12:11:46.170Z] [INFO]   ✅ Created audit trigger: audit_company_details_changes
+[2025-08-11T12:11:46.239Z] [INFO]   ✅ Created audit trigger: audit_debt_structure_data_changes
+[2025-08-11T12:11:46.308Z] [INFO]   ✅ Created audit trigger: audit_growth_assumptions_data_changes
+[2025-08-11T12:11:46.378Z] [INFO]   ✅ Created audit trigger: audit_profit_loss_data_changes
+[2025-08-11T12:11:46.446Z] [INFO]   ✅ Created audit trigger: audit_seasonality_data_changes
+[2025-08-11T12:11:46.514Z] [INFO]   ✅ Created audit trigger: audit_working_capital_data_changes
+[2025-08-11T12:11:46.514Z] [INFO] ✅ Audit triggers: 8/8 created
+[2025-08-11T12:11:46.514Z] [INFO] 📅 Adding last_modified triggers...
+[2025-08-11T12:11:46.584Z] [INFO]   ✅ Created trigger: update_profiles_last_modified
+[2025-08-11T12:11:46.584Z] [INFO] ✅ Last_modified triggers: 1/1 created

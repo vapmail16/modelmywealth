@@ -1,0 +1,38 @@
+[2025-08-11T12:11:57.269Z] [INFO] 🚀 Starting comprehensive database validation...
+[2025-08-11T12:11:57.281Z] [INFO] 🔌 Connecting to local database...
+[2025-08-11T12:11:57.319Z] [INFO] ✅ Connected to local database
+[2025-08-11T12:11:57.320Z] [INFO] 🔌 Connecting to production database...
+[2025-08-11T12:11:57.522Z] [INFO] ✅ Connected to production database
+[2025-08-11T12:11:57.523Z] [INFO] 📊 Validating table counts...
+[2025-08-11T12:11:57.591Z] [INFO]   Local tables: 27
+[2025-08-11T12:11:57.591Z] [INFO]   Production tables: 27
+[2025-08-11T12:11:57.592Z] [INFO] ✅ Table count matches
+[2025-08-11T12:11:57.594Z] [INFO] 🔑 Validating primary keys...
+[2025-08-11T12:11:57.719Z] [INFO]   Local primary keys: 27
+[2025-08-11T12:11:57.719Z] [INFO]   Production primary keys: 27
+[2025-08-11T12:11:57.719Z] [INFO] ✅ Primary key count matches
+[2025-08-11T12:11:57.719Z] [INFO] 🔗 Validating foreign keys...
+[2025-08-11T12:11:58.114Z] [INFO]   Local foreign keys: 50
+[2025-08-11T12:11:58.114Z] [INFO]   Production foreign keys: 50
+[2025-08-11T12:11:58.114Z] [INFO] ✅ Foreign key count matches
+[2025-08-11T12:11:58.114Z] [INFO] 📇 Validating indexes...
+[2025-08-11T12:11:58.194Z] [INFO]   Local indexes: 82
+[2025-08-11T12:11:58.195Z] [INFO]   Production indexes: 82
+[2025-08-11T12:11:58.195Z] [INFO] ✅ Index count matches
+[2025-08-11T12:11:58.195Z] [INFO] ⚡ Validating triggers...
+[2025-08-11T12:11:58.241Z] [INFO]   Local triggers: 37
+[2025-08-11T12:11:58.242Z] [INFO]   Production triggers: 37
+[2025-08-11T12:11:58.242Z] [INFO] ✅ Trigger count matches
+[2025-08-11T12:11:58.243Z] [INFO] 🔢 Validating sequences...
+[2025-08-11T12:11:58.282Z] [INFO]   Local sequences: 0
+[2025-08-11T12:11:58.282Z] [INFO]   Production sequences: 0
+[2025-08-11T12:11:58.282Z] [INFO] ✅ Sequence count matches
+[2025-08-11T12:11:58.282Z] [INFO] 🔌 Validating extensions...
+[2025-08-11T12:11:58.317Z] [INFO]   Local extensions: plpgsql, uuid-ossp
+[2025-08-11T12:11:58.317Z] [INFO]   Production extensions: pgcrypto, plpgsql, uuid-ossp
+[2025-08-11T12:11:58.317Z] [INFO] ✅ All essential extensions are present
+[2025-08-11T12:11:58.317Z] [INFO] 🔍 Validating data integrity...
+[2025-08-11T12:11:58.353Z] [INFO]   ✅ users: 1 rows match
+[2025-08-11T12:11:58.392Z] [INFO]   ✅ companies: 1 rows match
+[2025-08-11T12:11:58.430Z] [INFO]   ✅ projects: 1 rows match
+[2025-08-11T12:11:58.430Z] [INFO] ✅ Data integrity validation passed

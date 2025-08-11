@@ -1,0 +1,182 @@
+[2025-08-11T12:08:11.084Z] [INFO] 🚀 Starting migration of missing database objects...
+[2025-08-11T12:08:11.098Z] [INFO] 🔌 Connecting to local database...
+[2025-08-11T12:08:11.133Z] [INFO] ✅ Connected to local database
+[2025-08-11T12:08:11.133Z] [INFO] 🔌 Connecting to production database...
+[2025-08-11T12:08:11.308Z] [INFO] ✅ Connected to production database
+[2025-08-11T12:08:11.310Z] [INFO] 🔑 Migrating primary keys...
+[2025-08-11T12:08:11.433Z] [INFO]   ✅ Added PK to balance_sheet_data on id
+[2025-08-11T12:08:11.504Z] [INFO]   ✅ Added PK to calculation_iterations on id
+[2025-08-11T12:08:11.577Z] [INFO]   ✅ Added PK to calculation_runs on id
+[2025-08-11T12:08:11.650Z] [INFO]   ✅ Added PK to calculation_schedules on id
+[2025-08-11T12:08:11.720Z] [INFO]   ✅ Added PK to cash_flow_data on id
+[2025-08-11T12:08:11.791Z] [INFO]   ✅ Added PK to companies on id
+[2025-08-11T12:08:11.865Z] [INFO]   ✅ Added PK to company_details on id
+[2025-08-11T12:08:11.908Z] [INFO]   ⚠️ PK already exists on data_entry_audit_log
+[2025-08-11T12:08:11.983Z] [INFO]   ✅ Added PK to debt_calculations on id
+[2025-08-11T12:08:12.059Z] [INFO]   ✅ Added PK to debt_structure_data on id
+[2025-08-11T12:08:12.146Z] [INFO]   ✅ Added PK to depreciation_schedule on id
+[2025-08-11T12:08:12.231Z] [INFO]   ✅ Added PK to growth_assumptions_data on id
+[2025-08-11T12:08:12.313Z] [INFO]   ✅ Added PK to monthly_consolidated on id
+[2025-08-11T12:08:12.385Z] [INFO]   ✅ Added PK to monthly_kpis on id
+[2025-08-11T12:08:12.461Z] [INFO]   ✅ Added PK to profiles on id
+[2025-08-11T12:08:12.535Z] [INFO]   ✅ Added PK to profit_loss_data on id
+[2025-08-11T12:08:12.606Z] [INFO]   ✅ Added PK to projects on id
+[2025-08-11T12:08:12.680Z] [INFO]   ✅ Added PK to quarterly_consolidated on id
+[2025-08-11T12:08:12.753Z] [INFO]   ✅ Added PK to quarterly_kpis on id
+[2025-08-11T12:08:12.788Z] [INFO]   ⚠️ PK already exists on role_capabilities
+[2025-08-11T12:08:12.859Z] [INFO]   ✅ Added PK to seasonality_data on id
+[2025-08-11T12:08:12.894Z] [INFO]   ⚠️ PK already exists on user_roles
+[2025-08-11T12:08:12.966Z] [INFO]   ✅ Added PK to user_sessions on id
+[2025-08-11T12:08:13.035Z] [INFO]   ✅ Added PK to users on id
+[2025-08-11T12:08:13.105Z] [INFO]   ✅ Added PK to working_capital_data on id
+[2025-08-11T12:08:13.178Z] [INFO]   ✅ Added PK to yearly_consolidated on id
+[2025-08-11T12:08:13.251Z] [INFO]   ✅ Added PK to yearly_kpis on id
+[2025-08-11T12:08:13.251Z] [INFO] ✅ Primary keys migration: 24/27 successful
+[2025-08-11T12:08:13.251Z] [INFO] 🔗 Migrating foreign keys...
+[2025-08-11T12:08:13.721Z] [INFO]   ✅ Added FK balance_sheet_data_created_by_fkey to balance_sheet_data
+[2025-08-11T12:08:13.808Z] [INFO]   ✅ Added FK balance_sheet_data_project_id_fkey to balance_sheet_data
+[2025-08-11T12:08:13.912Z] [INFO]   ✅ Added FK balance_sheet_data_updated_by_fkey to balance_sheet_data
+[2025-08-11T12:08:14.036Z] [INFO]   ✅ Added FK calculation_iterations_created_by_fkey to calculation_iterations
+[2025-08-11T12:08:14.135Z] [INFO]   ✅ Added FK calculation_iterations_calculation_run_id_fkey to calculation_iterations
+[2025-08-11T12:08:14.291Z] [INFO]   ✅ Added FK calculation_runs_created_by_fkey to calculation_runs
+[2025-08-11T12:08:14.360Z] [INFO]   ✅ Added FK calculation_runs_project_id_fkey to calculation_runs
+[2025-08-11T12:08:14.470Z] [INFO]   ✅ Added FK calculation_schedules_calculation_run_id_fkey to calculation_schedules
+[2025-08-11T12:08:14.546Z] [INFO]   ✅ Added FK cash_flow_data_project_id_fkey to cash_flow_data
+[2025-08-11T12:08:14.622Z] [INFO]   ✅ Added FK cash_flow_data_updated_by_fkey to cash_flow_data
+[2025-08-11T12:08:14.691Z] [INFO]   ✅ Added FK cash_flow_data_created_by_fkey to cash_flow_data
+[2025-08-11T12:08:14.768Z] [INFO]   ✅ Added FK company_details_project_id_fkey to company_details
+[2025-08-11T12:08:14.841Z] [INFO]   ✅ Added FK company_details_updated_by_fkey to company_details
+[2025-08-11T12:08:14.912Z] [INFO]   ✅ Added FK company_details_created_by_fkey to company_details
+[2025-08-11T12:08:14.982Z] [INFO]   ✅ Added FK data_entry_audit_log_project_id_fkey to data_entry_audit_log
+[2025-08-11T12:08:15.056Z] [INFO]   ✅ Added FK data_entry_audit_log_created_by_fkey to data_entry_audit_log
+[2025-08-11T12:08:15.185Z] [INFO]   ✅ Added FK debt_calculations_calculation_run_id_fkey to debt_calculations
+[2025-08-11T12:08:15.271Z] [INFO]   ✅ Added FK debt_calculations_project_id_fkey to debt_calculations
+[2025-08-11T12:08:15.377Z] [INFO]   ✅ Added FK debt_structure_data_created_by_fkey to debt_structure_data
+[2025-08-11T12:08:15.461Z] [INFO]   ✅ Added FK debt_structure_data_updated_by_fkey to debt_structure_data
+[2025-08-11T12:08:15.536Z] [INFO]   ✅ Added FK debt_structure_data_project_id_fkey to debt_structure_data
+[2025-08-11T12:08:15.608Z] [INFO]   ✅ Added FK depreciation_schedule_project_id_fkey to depreciation_schedule
+[2025-08-11T12:08:15.679Z] [INFO]   ✅ Added FK depreciation_schedule_calculation_run_id_fkey to depreciation_schedule
+[2025-08-11T12:08:15.752Z] [INFO]   ✅ Added FK growth_assumptions_data_created_by_fkey to growth_assumptions_data
+[2025-08-11T12:08:15.824Z] [INFO]   ✅ Added FK growth_assumptions_data_project_id_fkey to growth_assumptions_data
+[2025-08-11T12:08:15.897Z] [INFO]   ✅ Added FK growth_assumptions_data_updated_by_fkey to growth_assumptions_data
+[2025-08-11T12:08:15.968Z] [INFO]   ✅ Added FK monthly_consolidated_project_id_fkey to monthly_consolidated
+[2025-08-11T12:08:16.040Z] [INFO]   ✅ Added FK monthly_consolidated_calculation_run_id_fkey to monthly_consolidated
+[2025-08-11T12:08:16.113Z] [INFO]   ✅ Added FK monthly_kpis_project_id_fkey to monthly_kpis
+[2025-08-11T12:08:16.186Z] [INFO]   ✅ Added FK monthly_kpis_calculation_run_id_fkey to monthly_kpis
+[2025-08-11T12:08:16.257Z] [INFO]   ✅ Added FK profiles_user_id_fkey to profiles
+[2025-08-11T12:08:16.331Z] [INFO]   ✅ Added FK profit_loss_data_project_id_fkey to profit_loss_data
+[2025-08-11T12:08:16.403Z] [INFO]   ✅ Added FK profit_loss_data_updated_by_fkey to profit_loss_data
+[2025-08-11T12:08:16.473Z] [INFO]   ✅ Added FK profit_loss_data_created_by_fkey to profit_loss_data
+[2025-08-11T12:08:16.543Z] [INFO]   ✅ Added FK quarterly_consolidated_calculation_run_id_fkey to quarterly_consolidated
+[2025-08-11T12:08:16.617Z] [INFO]   ✅ Added FK quarterly_consolidated_project_id_fkey to quarterly_consolidated
+[2025-08-11T12:08:16.689Z] [INFO]   ✅ Added FK quarterly_kpis_project_id_fkey to quarterly_kpis
+[2025-08-11T12:08:16.759Z] [INFO]   ✅ Added FK quarterly_kpis_calculation_run_id_fkey to quarterly_kpis
+[2025-08-11T12:08:16.834Z] [INFO]   ✅ Added FK seasonality_data_project_id_fkey to seasonality_data
+[2025-08-11T12:08:16.910Z] [INFO]   ✅ Added FK seasonality_data_created_by_fkey to seasonality_data
+[2025-08-11T12:08:16.979Z] [INFO]   ✅ Added FK seasonality_data_updated_by_fkey to seasonality_data
+[2025-08-11T12:08:17.051Z] [INFO]   ✅ Added FK user_roles_user_id_fkey to user_roles
+[2025-08-11T12:08:17.121Z] [INFO]   ✅ Added FK user_sessions_user_id_fkey to user_sessions
+[2025-08-11T12:08:17.193Z] [INFO]   ✅ Added FK working_capital_data_updated_by_fkey to working_capital_data
+[2025-08-11T12:08:17.263Z] [INFO]   ✅ Added FK working_capital_data_created_by_fkey to working_capital_data
+[2025-08-11T12:08:17.333Z] [INFO]   ✅ Added FK working_capital_data_project_id_fkey to working_capital_data
+[2025-08-11T12:08:17.403Z] [INFO]   ✅ Added FK yearly_consolidated_project_id_fkey to yearly_consolidated
+[2025-08-11T12:08:17.473Z] [INFO]   ✅ Added FK yearly_consolidated_calculation_run_id_fkey to yearly_consolidated
+[2025-08-11T12:08:17.543Z] [INFO]   ✅ Added FK yearly_kpis_calculation_run_id_fkey to yearly_kpis
+[2025-08-11T12:08:17.613Z] [INFO]   ✅ Added FK yearly_kpis_project_id_fkey to yearly_kpis
+[2025-08-11T12:08:17.613Z] [INFO] ✅ Foreign keys migration: 50/50 successful
+[2025-08-11T12:08:17.614Z] [INFO] 📇 Migrating indexes...
+[2025-08-11T12:08:17.707Z] [INFO]   ✅ Created index balance_sheet_data_project_id_unique on balance_sheet_data
+[2025-08-11T12:08:17.777Z] [INFO]   ✅ Created index idx_balance_sheet_data_project_id on balance_sheet_data
+[2025-08-11T12:08:17.850Z] [INFO]   ✅ Created index idx_calculation_runs_created_at on calculation_runs
+[2025-08-11T12:08:17.919Z] [INFO]   ✅ Created index idx_calculation_runs_project_id on calculation_runs
+[2025-08-11T12:08:17.990Z] [INFO]   ✅ Created index idx_calculation_runs_type on calculation_runs
+[2025-08-11T12:08:18.060Z] [INFO]   ✅ Created index idx_calculation_schedules_run_id on calculation_schedules
+[2025-08-11T12:08:18.133Z] [INFO]   ✅ Created index cash_flow_data_project_id_unique on cash_flow_data
+[2025-08-11T12:08:18.203Z] [INFO]   ✅ Created index idx_cash_flow_data_project_id on cash_flow_data
+[2025-08-11T12:08:18.273Z] [INFO]   ✅ Created index company_details_project_id_unique on company_details
+[2025-08-11T12:08:18.343Z] [INFO]   ✅ Created index idx_company_details_project_id on company_details
+[2025-08-11T12:08:18.414Z] [INFO]   ✅ Created index idx_audit_log_created_at on data_entry_audit_log
+[2025-08-11T12:08:18.485Z] [INFO]   ✅ Created index idx_audit_log_project_id on data_entry_audit_log
+[2025-08-11T12:08:18.556Z] [INFO]   ✅ Created index idx_audit_log_table_name on data_entry_audit_log
+[2025-08-11T12:08:18.625Z] [INFO]   ✅ Created index idx_debt_calculations_project_id on debt_calculations
+[2025-08-11T12:08:18.700Z] [INFO]   ✅ Created index idx_debt_calculations_run_id on debt_calculations
+[2025-08-11T12:08:18.769Z] [INFO]   ✅ Created index debt_structure_data_project_id_unique on debt_structure_data
+[2025-08-11T12:08:18.839Z] [INFO]   ✅ Created index idx_debt_structure_data_project_id on debt_structure_data
+[2025-08-11T12:08:18.909Z] [INFO]   ✅ Created index idx_depreciation_schedule_calculation_run_id on depreciation_schedule
+[2025-08-11T12:08:18.980Z] [INFO]   ✅ Created index idx_depreciation_schedule_project_id on depreciation_schedule
+[2025-08-11T12:08:19.184Z] [INFO]   ✅ Created index growth_assumptions_data_project_id_unique on growth_assumptions_data
+[2025-08-11T12:08:19.255Z] [INFO]   ✅ Created index idx_growth_assumptions_data_project_id on growth_assumptions_data
+[2025-08-11T12:08:19.327Z] [INFO]   ✅ Created index idx_monthly_consolidated_calculation_run_id on monthly_consolidated
+[2025-08-11T12:08:19.400Z] [INFO]   ✅ Created index idx_monthly_consolidated_month_year on monthly_consolidated
+[2025-08-11T12:08:19.471Z] [INFO]   ✅ Created index idx_monthly_consolidated_project_id on monthly_consolidated
+[2025-08-11T12:08:19.542Z] [INFO]   ✅ Created index idx_monthly_kpis_calculation_run_id on monthly_kpis
+[2025-08-11T12:08:19.612Z] [INFO]   ✅ Created index idx_monthly_kpis_project_id on monthly_kpis
+[2025-08-11T12:08:19.685Z] [INFO]   ✅ Created index idx_monthly_kpis_year_month on monthly_kpis
+[2025-08-11T12:08:19.782Z] [INFO]   ✅ Created index idx_profiles_user_id on profiles
+[2025-08-11T12:08:19.868Z] [INFO]   ✅ Created index profiles_email_key on profiles
+[2025-08-11T12:08:19.939Z] [INFO]   ✅ Created index idx_profit_loss_data_project_id on profit_loss_data
+[2025-08-11T12:08:20.010Z] [INFO]   ✅ Created index profit_loss_data_project_id_unique on profit_loss_data
+[2025-08-11T12:08:20.080Z] [INFO]   ✅ Created index idx_projects_user_id on projects
+[2025-08-11T12:08:20.152Z] [INFO]   ✅ Created index idx_quarterly_consolidated_calculation_run_id on quarterly_consolidated
+[2025-08-11T12:08:20.223Z] [INFO]   ✅ Created index idx_quarterly_consolidated_project_id on quarterly_consolidated
+[2025-08-11T12:08:20.294Z] [INFO]   ✅ Created index idx_quarterly_consolidated_quarter_year on quarterly_consolidated
+[2025-08-11T12:08:20.379Z] [INFO]   ✅ Created index idx_quarterly_kpis_calculation_run_id on quarterly_kpis
+[2025-08-11T12:08:20.451Z] [INFO]   ✅ Created index idx_quarterly_kpis_project_id on quarterly_kpis
+[2025-08-11T12:08:20.525Z] [INFO]   ✅ Created index idx_quarterly_kpis_year_quarter on quarterly_kpis
+[2025-08-11T12:08:20.619Z] [INFO]   ✅ Created index role_capabilities_role_user_type_capability_key on role_capabilities
+[2025-08-11T12:08:20.709Z] [INFO]   ✅ Created index idx_seasonality_data_project_id on seasonality_data
+[2025-08-11T12:08:20.779Z] [INFO]   ✅ Created index seasonality_data_project_id_unique on seasonality_data
+[2025-08-11T12:08:20.849Z] [INFO]   ✅ Created index idx_user_roles_user_id on user_roles
+[2025-08-11T12:08:20.919Z] [INFO]   ✅ Created index user_roles_user_id_role_user_type_key on user_roles
+[2025-08-11T12:08:20.990Z] [INFO]   ✅ Created index idx_user_sessions_expires_at on user_sessions
+[2025-08-11T12:08:21.070Z] [INFO]   ✅ Created index idx_user_sessions_token_hash on user_sessions
+[2025-08-11T12:08:21.140Z] [INFO]   ✅ Created index idx_user_sessions_user_id on user_sessions
+[2025-08-11T12:08:21.210Z] [INFO]   ✅ Created index users_email_key on users
+[2025-08-11T12:08:21.281Z] [INFO]   ✅ Created index idx_working_capital_data_project_id on working_capital_data
+[2025-08-11T12:08:21.358Z] [INFO]   ✅ Created index working_capital_data_project_id_unique on working_capital_data
+[2025-08-11T12:08:21.427Z] [INFO]   ✅ Created index idx_yearly_consolidated_calculation_run_id on yearly_consolidated
+[2025-08-11T12:08:21.497Z] [INFO]   ✅ Created index idx_yearly_consolidated_project_id on yearly_consolidated
+[2025-08-11T12:08:21.567Z] [INFO]   ✅ Created index idx_yearly_consolidated_year on yearly_consolidated
+[2025-08-11T12:08:21.637Z] [INFO]   ✅ Created index idx_yearly_kpis_calculation_run_id on yearly_kpis
+[2025-08-11T12:08:21.713Z] [INFO]   ✅ Created index idx_yearly_kpis_project_id on yearly_kpis
+[2025-08-11T12:08:21.785Z] [INFO]   ✅ Created index idx_yearly_kpis_year on yearly_kpis
+[2025-08-11T12:08:21.785Z] [INFO] ✅ Indexes migration: 55/55 successful
+[2025-08-11T12:08:21.786Z] [INFO] ⚡ Migrating triggers...
+[2025-08-11T12:08:21.864Z] [WARNING]   ⚠️ Could not create trigger audit_balance_sheet_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:21.933Z] [WARNING]   ⚠️ Could not create trigger audit_balance_sheet_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.000Z] [WARNING]   ⚠️ Could not create trigger audit_balance_sheet_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.074Z] [WARNING]   ⚠️ Could not create trigger update_balance_sheet_data_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.140Z] [WARNING]   ⚠️ Could not create trigger audit_cash_flow_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.206Z] [WARNING]   ⚠️ Could not create trigger audit_cash_flow_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.272Z] [WARNING]   ⚠️ Could not create trigger audit_cash_flow_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.338Z] [WARNING]   ⚠️ Could not create trigger update_cash_flow_data_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.404Z] [WARNING]   ⚠️ Could not create trigger audit_company_details_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.471Z] [WARNING]   ⚠️ Could not create trigger audit_company_details_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.535Z] [WARNING]   ⚠️ Could not create trigger audit_company_details_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.602Z] [WARNING]   ⚠️ Could not create trigger update_company_details_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.668Z] [WARNING]   ⚠️ Could not create trigger update_debt_calculations_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.733Z] [WARNING]   ⚠️ Could not create trigger audit_debt_structure_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.800Z] [WARNING]   ⚠️ Could not create trigger audit_debt_structure_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.866Z] [WARNING]   ⚠️ Could not create trigger audit_debt_structure_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:22.934Z] [WARNING]   ⚠️ Could not create trigger update_debt_structure_data_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.000Z] [WARNING]   ⚠️ Could not create trigger update_depreciation_schedule_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.066Z] [WARNING]   ⚠️ Could not create trigger audit_growth_assumptions_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.132Z] [WARNING]   ⚠️ Could not create trigger audit_growth_assumptions_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.199Z] [WARNING]   ⚠️ Could not create trigger audit_growth_assumptions_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.266Z] [WARNING]   ⚠️ Could not create trigger update_growth_assumptions_data_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.332Z] [WARNING]   ⚠️ Could not create trigger update_profiles_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.400Z] [WARNING]   ⚠️ Could not create trigger audit_profit_loss_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.466Z] [WARNING]   ⚠️ Could not create trigger audit_profit_loss_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.533Z] [WARNING]   ⚠️ Could not create trigger audit_profit_loss_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.600Z] [WARNING]   ⚠️ Could not create trigger update_profit_loss_data_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.674Z] [WARNING]   ⚠️ Could not create trigger update_projects_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.741Z] [WARNING]   ⚠️ Could not create trigger audit_seasonality_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.810Z] [WARNING]   ⚠️ Could not create trigger audit_seasonality_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.876Z] [WARNING]   ⚠️ Could not create trigger audit_seasonality_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:23.942Z] [WARNING]   ⚠️ Could not create trigger update_seasonality_data_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:24.010Z] [WARNING]   ⚠️ Could not create trigger update_users_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:24.082Z] [WARNING]   ⚠️ Could not create trigger audit_working_capital_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:24.148Z] [WARNING]   ⚠️ Could not create trigger audit_working_capital_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:24.214Z] [WARNING]   ⚠️ Could not create trigger audit_working_capital_data_changes: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:24.294Z] [WARNING]   ⚠️ Could not create trigger update_working_capital_data_updated_at: syntax error at or near "FUNCTION"
+[2025-08-11T12:08:24.294Z] [INFO] ✅ Triggers migration: 0/37 successful

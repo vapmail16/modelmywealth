@@ -1,0 +1,62 @@
+[2025-08-11T11:46:28.113Z] [INFO] 🚀 Starting production database schema creation...
+[2025-08-11T11:46:28.127Z] [INFO] Connecting to local database...
+[2025-08-11T11:46:28.177Z] [INFO] ✅ Connected to local database
+[2025-08-11T11:46:28.177Z] [INFO] Connecting to production database...
+[2025-08-11T11:46:28.340Z] [INFO] ✅ Connected to production database
+[2025-08-11T11:46:28.341Z] [INFO] 🏗️ Creating all tables in production...
+[2025-08-11T11:46:28.350Z] [INFO] Found 27 tables to create
+[2025-08-11T11:46:28.351Z] [INFO]   🏗️ Creating table: balance_sheet_data
+[2025-08-11T11:46:28.440Z] [ERROR] Error generating SQL for table balance_sheet_data: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.441Z] [INFO]   🏗️ Creating table: calculation_iterations
+[2025-08-11T11:46:28.449Z] [ERROR] Error generating SQL for table calculation_iterations: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.449Z] [INFO]   🏗️ Creating table: calculation_runs
+[2025-08-11T11:46:28.477Z] [ERROR] Error generating SQL for table calculation_runs: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.477Z] [INFO]   🏗️ Creating table: calculation_schedules
+[2025-08-11T11:46:28.493Z] [ERROR] Error generating SQL for table calculation_schedules: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.493Z] [INFO]   🏗️ Creating table: cash_flow_data
+[2025-08-11T11:46:28.498Z] [ERROR] Error generating SQL for table cash_flow_data: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.499Z] [INFO]   🏗️ Creating table: companies
+[2025-08-11T11:46:28.505Z] [ERROR] Error generating SQL for table companies: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.505Z] [INFO]   🏗️ Creating table: company_details
+[2025-08-11T11:46:28.516Z] [ERROR] Error generating SQL for table company_details: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.516Z] [INFO]   🏗️ Creating table: data_entry_audit_log
+[2025-08-11T11:46:28.528Z] [ERROR] Error generating SQL for table data_entry_audit_log: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.529Z] [INFO]   🏗️ Creating table: debt_calculations
+[2025-08-11T11:46:28.538Z] [ERROR] Error generating SQL for table debt_calculations: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.539Z] [INFO]   🏗️ Creating table: debt_structure_data
+[2025-08-11T11:46:28.549Z] [ERROR] Error generating SQL for table debt_structure_data: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.549Z] [INFO]   🏗️ Creating table: depreciation_schedule
+[2025-08-11T11:46:28.562Z] [ERROR] Error generating SQL for table depreciation_schedule: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.562Z] [INFO]   🏗️ Creating table: growth_assumptions_data
+[2025-08-11T11:46:28.574Z] [ERROR] Error generating SQL for table growth_assumptions_data: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.574Z] [INFO]   🏗️ Creating table: monthly_consolidated
+[2025-08-11T11:46:28.590Z] [ERROR] Error generating SQL for table monthly_consolidated: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.590Z] [INFO]   🏗️ Creating table: monthly_kpis
+[2025-08-11T11:46:28.600Z] [ERROR] Error generating SQL for table monthly_kpis: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.600Z] [INFO]   🏗️ Creating table: profiles
+[2025-08-11T11:46:28.606Z] [ERROR] Error generating SQL for table profiles: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.606Z] [INFO]   🏗️ Creating table: profit_loss_data
+[2025-08-11T11:46:28.618Z] [ERROR] Error generating SQL for table profit_loss_data: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.618Z] [INFO]   🏗️ Creating table: projects
+[2025-08-11T11:46:28.634Z] [ERROR] Error generating SQL for table projects: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.635Z] [INFO]   🏗️ Creating table: quarterly_consolidated
+[2025-08-11T11:46:28.651Z] [ERROR] Error generating SQL for table quarterly_consolidated: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.651Z] [INFO]   🏗️ Creating table: quarterly_kpis
+[2025-08-11T11:46:28.657Z] [ERROR] Error generating SQL for table quarterly_kpis: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.657Z] [INFO]   🏗️ Creating table: role_capabilities
+[2025-08-11T11:46:28.664Z] [ERROR] Error generating SQL for table role_capabilities: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.664Z] [INFO]   🏗️ Creating table: seasonality_data
+[2025-08-11T11:46:28.671Z] [ERROR] Error generating SQL for table seasonality_data: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.671Z] [INFO]   🏗️ Creating table: user_roles
+[2025-08-11T11:46:28.677Z] [ERROR] Error generating SQL for table user_roles: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.677Z] [INFO]   🏗️ Creating table: user_sessions
+[2025-08-11T11:46:28.681Z] [ERROR] Error generating SQL for table user_sessions: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.682Z] [INFO]   🏗️ Creating table: users
+[2025-08-11T11:46:28.687Z] [ERROR] Error generating SQL for table users: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.687Z] [INFO]   🏗️ Creating table: working_capital_data
+[2025-08-11T11:46:28.693Z] [ERROR] Error generating SQL for table working_capital_data: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.694Z] [INFO]   🏗️ Creating table: yearly_consolidated
+[2025-08-11T11:46:28.701Z] [ERROR] Error generating SQL for table yearly_consolidated: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.701Z] [INFO]   🏗️ Creating table: yearly_kpis
+[2025-08-11T11:46:28.712Z] [ERROR] Error generating SQL for table yearly_kpis: column reference "constraint_name" is ambiguous
+[2025-08-11T11:46:28.712Z] [INFO] 📊 Table creation completed: 0/27 tables created successfully
