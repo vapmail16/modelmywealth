@@ -1,7 +1,6 @@
 const express = require('express');
 const profitLossController = require('../controllers/profitLossController');
 const authMiddleware = require('../middleware/auth');
-const rateLimiters = require('../middleware/rateLimiter');
 const loggerService = require('../services/logger');
 const logger = loggerService.logger;
 
@@ -68,7 +67,6 @@ const profitLossRequestLogger = (req, res, next) => {
 
 // Get profit loss data for a project
 router.get('/:projectId/profit-loss',
-  rateLimiters.general,
   authMiddleware.authenticateUser,
   projectOwnershipMiddleware,
   profitLossRequestLogger,
@@ -77,7 +75,6 @@ router.get('/:projectId/profit-loss',
 
 // Save/create profit loss data for a project (full replacement)
 router.put('/:projectId/profit-loss',
-  rateLimiters.general,
   authMiddleware.authenticateUser,
   projectOwnershipMiddleware,
   profitLossRequestLogger,
@@ -86,7 +83,6 @@ router.put('/:projectId/profit-loss',
 
 // Update profit loss data for a project (partial update)
 router.patch('/:projectId/profit-loss',
-  rateLimiters.general,
   authMiddleware.authenticateUser,
   projectOwnershipMiddleware,
   profitLossRequestLogger,
@@ -95,7 +91,6 @@ router.patch('/:projectId/profit-loss',
 
 // Get audit history for profit loss data
 router.get('/:projectId/profit-loss/history',
-  rateLimiters.general,
   authMiddleware.authenticateUser,
   projectOwnershipMiddleware,
   profitLossRequestLogger,
@@ -104,7 +99,6 @@ router.get('/:projectId/profit-loss/history',
 
 // Get audit statistics for profit loss data
 router.get('/:projectId/profit-loss/audit-stats',
-  rateLimiters.general,
   authMiddleware.authenticateUser,
   projectOwnershipMiddleware,
   profitLossRequestLogger,
@@ -113,7 +107,6 @@ router.get('/:projectId/profit-loss/audit-stats',
 
 // Delete profit loss data for a project
 router.delete('/:projectId/profit-loss',
-  rateLimiters.general,
   authMiddleware.authenticateUser,
   projectOwnershipMiddleware,
   profitLossRequestLogger,
