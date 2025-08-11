@@ -204,7 +204,7 @@ class ConsolidatedService {
     async executePythonScript(scriptName, args) {
         return new Promise((resolve, reject) => {
             const scriptPath = path.join(this.scriptsPath, scriptName);
-            const pythonProcess = spawn('/usr/local/bin/python3', [scriptPath, ...args]);
+            const pythonProcess = spawn('/opt/venv/bin/python3', [scriptPath, ...args]);
 
             let stdout = '';
             let stderr = '';

@@ -6,7 +6,7 @@ const path = require('path');
 
 class KpiService {
     constructor() {
-        this.pythonPath = '/usr/local/bin/python3';
+        this.pythonPath = '/opt/venv/bin/python3';
     }
 
     async validateRequiredData(projectId) {
