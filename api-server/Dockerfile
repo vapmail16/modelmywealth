@@ -1,8 +1,8 @@
 # Backend Dockerfile
-FROM node:18-alpine
+FROM node:18-slim
 
 # Install Python and required packages for financial calculations
-RUN apk add --no-cache python3 py3-pip gcc musl-dev postgresql-dev
+RUN apt-get update && apt-get install -y python3 python3-pip python3-dev && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
