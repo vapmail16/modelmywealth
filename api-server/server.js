@@ -56,6 +56,7 @@ app.get("/api/health", (req, res) => {
 
 // Routes
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/companies", require("./routes/companiesRoutes")); // Companies listing route
 app.use("/api/projects", require("./routes/projectRoutes"));
 app.use("/api/projects", require("./routes/companyRoutes")); // Company-specific routes
 app.use("/api/projects", require("./routes/profitLossRoutes")); // Profit & Loss routes
