@@ -252,7 +252,7 @@ def main():
     db_config = {
         'host': os.getenv('POSTGRESQL_HOST', 'localhost'),
         'port': int(os.getenv('POSTGRESQL_PORT', '5432')),
-        'database': os.getenv('POSTGRESQL_DB', 'refi_wizard'),
+        'database': os.getenv('POSTGRESQL_DATABASE', 'refi_wizard'),
         'user': os.getenv('POSTGRESQL_USER', 'postgres'),
         'password': os.getenv('POSTGRESQL_PASSWORD', 'postgres')
     }

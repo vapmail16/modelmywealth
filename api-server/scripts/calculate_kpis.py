@@ -472,7 +472,7 @@ def main():
     # Use command line args or fall back to environment variables
     db_host = args.db_host or os.getenv('POSTGRESQL_HOST', 'localhost')
     db_port = args.db_port or os.getenv('POSTGRESQL_PORT', '5432')
-    db_name = args.db_name or os.getenv('POSTGRESQL_DB', 'refi_wizard')
+    db_name = args.db_name or os.getenv('POSTGRESQL_DATABASE', 'refi_wizard')
     db_user = args.db_user or os.getenv('POSTGRESQL_USER', 'postgres')
     db_password = args.db_password or os.getenv('POSTGRESQL_PASSWORD', '')
     
