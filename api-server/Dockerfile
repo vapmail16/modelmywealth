@@ -2,7 +2,7 @@
 FROM node:18-alpine
 
 # Install Python and required packages for financial calculations
-RUN apk add --no-cache python3 py3-pip
+RUN apk add --no-cache python3 py3-pip gcc musl-dev postgresql-dev
 
 # Set working directory
 WORKDIR /app
@@ -17,7 +17,7 @@ RUN npm ci --only=production
 COPY requirements.txt ./
 
 # Install Python dependencies
-RUN pip3 install --no-cache-dir -r requirements.txt || true
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy source code
 COPY . .
